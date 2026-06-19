@@ -85,9 +85,10 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     getBatchActions?: (selectedResourcesBundle: Bundle<R>) => Array<QuestionnaireActionType<Extra> | CustomActionType>;
 
     /**
-     * Default launch context that will be added to all questionnaires
+     * Per-line clinical context for record questionnaire actions.
+     * When omitted, defaults to the row's primary resource (PascalCase + lowercase names).
      */
-    defaultLaunchContext?: ParametersParameter[];
+    lineToClinicalContext?: (record: RecordType<R>) => ParametersParameter[];
 
     /**
      * EXPERIMENTAL FEATURE. The interface might be changed

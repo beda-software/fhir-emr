@@ -1,7 +1,6 @@
 import {
     Bundle,
     Communication,
-    Encounter,
     Organization,
     ParametersParameter,
     Patient,
@@ -16,14 +15,12 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getParameterAsFirst, useClinicalContext } from '@beda.software/fhir-questionnaire';
+import { getFirstParameter, useClinicalContext } from '@beda.software/fhir-questionnaire';
 import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
     mapSuccess,
     RemoteData,
-    failure,
-    RemoteDataResult,
     resolveMap,
     sequenceMap,
     success,
@@ -39,7 +36,6 @@ import {
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources, service } from 'src/services/fhir';
-import { getProvenanceByEntity } from 'src/services/provenance';
 import { compileAsFirst } from 'src/utils';
 
 export interface Props {
@@ -84,9 +80,6 @@ async function onFormSubmit(
 function prepareFormInitialParams(
     props: Props & {
         clinicalParams: ParametersParameter[];
-        provenance?: WithId<Provenance>;
-        author?: WithId<Practitioner | Patient | Organization | Person>;
-        provenanceBundle?: Bundle<WithId<Provenance>>;
     },
 ): QuestionnaireResponseFormProps {
     const {
@@ -94,34 +87,9 @@ function prepareFormInitialParams(
         questionnaireResponse,
         questionnaireId,
         encounterId,
-        provenance,
-        author,
         clinicalParams,
         launchContextParameters = [],
-        provenanceBundle,
     } = props;
-
-    const fallbackParams: ParametersParameter[] = [];
-    if (!getParameterAsFirst(clinicalParams, 'Patient')) {
-        fallbackParams.push({ name: 'Patient', resource: patient });
-    }
-    if (!getParameterAsFirst(clinicalParams, 'Author') && author) {
-        fallbackParams.push({ name: 'Author', resource: author });
-    }
-    if (!getParameterAsFirst(clinicalParams, 'Encounter')) {
-        fallbackParams.push({
-            name: 'Encounter',
-            resource: encounterId
-                ? ({ resourceType: 'Encounter', id: encounterId } as Encounter)
-                : ({ resourceType: 'Encounter' } as Encounter),
-        });
-    }
-
-    const extraParams: ParametersParameter[] = [
-        ...(provenance ? [{ name: 'Provenance', resource: provenance }] : []),
-        ...(provenanceBundle ? [{ name: 'ProvenanceBundle', resource: provenanceBundle }] : []),
-        ...launchContextParameters,
-    ];
 
     const initialQuestionnaireResponse = _.merge(
         {
@@ -132,14 +100,12 @@ function prepareFormInitialParams(
         questionnaireResponse,
     );
 
-    const params: QuestionnaireResponseFormProps = {
+    return {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
-        launchContextParameters: [...clinicalParams, ...fallbackParams, ...extraParams],
+        launchContextParameters: [...clinicalParams, ...launchContextParameters],
         initialQuestionnaireResponse,
         serviceProvider: { service },
     };
-
-    return params;
 }
 
 export interface PatientDocumentData {
@@ -167,55 +133,32 @@ export function usePatientDocument(props: Props): {
     const { parameters: clinicalParams } = useClinicalContext();
 
     const [response, manager] = useService<PatientDocumentData>(async () => {
-        let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
+        const lastProvenance = getFirstParameter(clinicalParams, 'Provenance')?.resource as
+            | WithId<Provenance>
+            | undefined;
 
-        if (questionnaireResponse && questionnaireResponse.id) {
-            const uri = `${questionnaireResponse.resourceType}/${questionnaireResponse.id}`;
+        const formInitialParams = prepareFormInitialParams({
+            ...props,
+            clinicalParams,
+        });
 
-            provenanceResponse = await getProvenanceByEntity(uri);
-        }
-
-        if (isSuccess(provenanceResponse)) {
-            const descSortedProvenances = [...provenanceResponse.data].sort((a, b) =>
-                b.recorded.localeCompare(a.recorded),
-            );
-            const lastProvenance = descSortedProvenances[0];
-
-            const provenanceBundle: Bundle<WithId<Provenance>> = {
-                resourceType: 'Bundle',
-                type: 'collection',
-                entry: provenanceResponse.data.map((provenance) => ({ resource: provenance })),
-            };
-
-            const formInitialParams = prepareFormInitialParams({
-                ...props,
-                clinicalParams,
-                provenance: lastProvenance,
-                provenanceBundle: provenanceBundle,
+        const onSubmit = async (formData: QuestionnaireResponseFormData) =>
+            onFormSubmit({
+                ...formInitialParams,
+                formData,
+                onSuccess: onSuccess ? onSuccess : () => navigate(-1),
             });
 
-            const onSubmit = async (formData: QuestionnaireResponseFormData) =>
-                onFormSubmit({
-                    ...formInitialParams,
-                    formData,
-                    onSuccess: onSuccess ? onSuccess : () => navigate(-1),
-                });
-
-            return mapSuccess(
-                await resolveMap({
-                    formData: loadQuestionnaireResponseFormData(formInitialParams),
-                }),
-                ({ formData }) => {
-                    return {
-                        formData,
-                        onSubmit,
-                        provenance: lastProvenance,
-                    };
-                },
-            );
-        }
-
-        return failure({});
+        return mapSuccess(
+            await resolveMap({
+                formData: loadQuestionnaireResponseFormData(formInitialParams),
+            }),
+            ({ formData }) => ({
+                formData,
+                onSubmit,
+                provenance: lastProvenance,
+            }),
+        );
     }, [questionnaireResponse, clinicalParams]);
 
     const [sourceResponse] = useService(async () => {

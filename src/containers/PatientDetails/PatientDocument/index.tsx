@@ -31,6 +31,7 @@ import { service } from 'src/services';
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
+import { ProvenanceClinicalContext } from './ProvenanceClinicalContext';
 import { usePatientDocument } from './usePatientDocument';
 
 export interface PatientDocumentProps {
@@ -69,40 +70,42 @@ export function PatientDocument(props: PatientDocumentProps) {
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {(draftQuestionnaireResponse) => (
-                <PatientDocumentContent
-                    {...props}
-                    key="patient-document-content"
-                    questionnaireResponse={draftQuestionnaireResponse}
-                    onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
-                        if (qrDraftServiceType === 'local') {
-                            await deleteDraft();
-                        }
-                        props.onSuccess && props.onSuccess(resource);
-                    }}
-                    onEdit={handleEdit}
-                    onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
-                    alertComponent={
-                        <AlertMessage
-                            style={{ marginBottom: '20px' }}
-                            actionComponent={
-                                <Space>
-                                    {qrDraftServiceType === 'local' && (
-                                        <Tooltip title={t`Clear draft from local storage and reset form`}>
-                                            <Button
-                                                onClick={async () => {
-                                                    await deleteDraft();
-                                                }}
-                                                danger
-                                                icon={<DeleteOutlined />}
-                                            />
-                                        </Tooltip>
-                                    )}
-                                </Space>
+                <ProvenanceClinicalContext questionnaireResponse={draftQuestionnaireResponse}>
+                    <PatientDocumentContent
+                        {...props}
+                        key="patient-document-content"
+                        questionnaireResponse={draftQuestionnaireResponse}
+                        onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
+                            if (qrDraftServiceType === 'local') {
+                                await deleteDraft();
                             }
-                            message={draftInfoMessage}
-                        />
-                    }
-                />
+                            props.onSuccess && props.onSuccess(resource);
+                        }}
+                        onEdit={handleEdit}
+                        onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
+                        alertComponent={
+                            <AlertMessage
+                                style={{ marginBottom: '20px' }}
+                                actionComponent={
+                                    <Space>
+                                        {qrDraftServiceType === 'local' && (
+                                            <Tooltip title={t`Clear draft from local storage and reset form`}>
+                                                <Button
+                                                    onClick={async () => {
+                                                        await deleteDraft();
+                                                    }}
+                                                    danger
+                                                    icon={<DeleteOutlined />}
+                                                />
+                                            </Tooltip>
+                                        )}
+                                    </Space>
+                                }
+                                message={draftInfoMessage}
+                            />
+                        }
+                    />
+                </ProvenanceClinicalContext>
             )}
         </RenderRemoteData>
     );

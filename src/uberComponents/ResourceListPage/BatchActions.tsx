@@ -1,6 +1,6 @@
 import { plural, Trans } from '@lingui/macro';
 import { Button, Checkbox } from 'antd';
-import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
+import { Bundle, Resource } from 'fhir/r4b';
 
 import { Text } from 'src/components/Typography';
 
@@ -15,19 +15,10 @@ interface BatchActionsProps<R extends Resource> {
     setSelectedRowKeys: (keys: React.Key[]) => void;
     reload: () => void;
     selectedResourcesBundle: Bundle<R>;
-    defaultLaunchContext?: ParametersParameter[];
 }
 
 export function BatchActions<R extends Resource>(props: BatchActionsProps<R>) {
-    const {
-        batchActions,
-        selectedRowKeys,
-        setSelectedRowKeys,
-        reload,
-        selectedResourcesBundle,
-        defaultLaunchContext,
-        allKeys,
-    } = props;
+    const { batchActions, selectedRowKeys, setSelectedRowKeys, reload, selectedResourcesBundle, allKeys } = props;
 
     return (
         <S.BatchActionsContainer>
@@ -39,7 +30,6 @@ export function BatchActions<R extends Resource>(props: BatchActionsProps<R>) {
                         reload={reload}
                         bundle={selectedResourcesBundle}
                         disabled={!selectedRowKeys.length}
-                        defaultLaunchContext={defaultLaunchContext ?? []}
                     />
                 ))}
                 {selectedRowKeys.length ? (

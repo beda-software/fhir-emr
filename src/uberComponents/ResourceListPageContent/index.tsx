@@ -44,7 +44,7 @@ export function ResourceListPageContent<R extends Resource>({
     getFilters,
     getSorters,
     getTableColumns,
-    defaultLaunchContext,
+    lineToClinicalContext,
     getReportColumns,
     maxWidth,
     tableProps,
@@ -136,11 +136,7 @@ export function ResourceListPageContent<R extends Resource>({
                         if (isQuestionnaireAction(action)) {
                             return (
                                 <React.Fragment key={index}>
-                                    <HeaderQuestionnaireAction
-                                        action={action}
-                                        reload={reload}
-                                        defaultLaunchContext={defaultLaunchContext ?? []}
-                                    />
+                                    <HeaderQuestionnaireAction action={action} reload={reload} />
                                 </React.Fragment>
                             );
                         } else if (isNavigationAction(action)) {
@@ -172,7 +168,6 @@ export function ResourceListPageContent<R extends Resource>({
                     setSelectedRowKeys={setSelectedRowKeys}
                     reload={reload}
                     selectedResourcesBundle={selectedResourcesBundle}
-                    defaultLaunchContext={defaultLaunchContext}
                 />
             ) : null}
 
@@ -203,7 +198,7 @@ export function ResourceListPageContent<R extends Resource>({
                               getRecordActionsColumn({
                                   getRecordActions,
                                   reload,
-                                  defaultLaunchContext: defaultLaunchContext ?? [],
+                                  lineToClinicalContext,
                               }),
                           ]
                         : []),

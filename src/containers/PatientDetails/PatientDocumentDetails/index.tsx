@@ -24,6 +24,7 @@ import { Spinner } from 'src/components/Spinner';
 import { Paragraph, Title } from 'src/components/Typography';
 import { DocumentHistory } from 'src/containers/PatientDetails/DocumentHistory';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
+import { ProvenanceClinicalContext } from 'src/containers/PatientDetails/PatientDocument/ProvenanceClinicalContext';
 import {
     PatientDocumentData,
     usePatientDocument,
@@ -268,6 +269,27 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
 }
 
 function PatientDocumentDetailsFormData(props: {
+    questionnaireResponse: WithId<QuestionnaireResponse>;
+    patient: WithId<Patient>;
+    author: WithId<Practitioner | Patient | Organization>;
+    children: (props: PatientDocumentData) => ReactElement;
+}) {
+    const { questionnaireResponse, children, patient } = props;
+
+    return (
+        <ProvenanceClinicalContext questionnaireResponse={questionnaireResponse}>
+            <PatientDocumentDetailsFormDataContent
+                {...props}
+                patient={patient}
+                questionnaireResponse={questionnaireResponse}
+            >
+                {children}
+            </PatientDocumentDetailsFormDataContent>
+        </ProvenanceClinicalContext>
+    );
+}
+
+function PatientDocumentDetailsFormDataContent(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
     patient: WithId<Patient>;
     author: WithId<Practitioner | Patient | Organization>;

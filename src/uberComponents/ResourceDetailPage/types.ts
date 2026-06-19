@@ -1,25 +1,23 @@
-import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
 import { ReactElement } from 'react';
 
-import { SearchParams, WithId } from '@beda.software/fhir-react';
+import { WithId } from '@beda.software/fhir-react';
 
-import { RecordType } from '../ResourceListPage/types';
+import { BundleRecordContext } from 'src/components/RenderBundleResourceContext';
+import { BundleResourceContextProps } from 'src/components/RenderBundleResourceContext/types';
 
 export type Tab<R extends Resource, Extra = unknown> = {
     label: string;
     path?: string;
-    component: (context: RecordType<R>) => JSX.Element;
+    component: (context: BundleRecordContext<WithId<R>>) => JSX.Element;
 } & Extra;
 
-export interface DetailPageProps<R extends Resource> {
-    resourceType: R['resourceType'];
-    getSearchParams: (params: Readonly<Record<string, string | string[] | undefined>>) => SearchParams;
-    getTitle: (context: RecordType<WithId<R>>) => string | ReactElement;
-    getTitleLeftElement?: (context: RecordType<WithId<R>>) => string | ReactElement;
-    getTitleRightElement?: (context: RecordType<WithId<R>>) => string | ReactElement;
+export interface DetailPageProps<R extends Resource> extends BundleResourceContextProps<R> {
+    getTitle: (context: BundleRecordContext<WithId<R>>) => string | ReactElement;
+    getTitleLeftElement?: (context: BundleRecordContext<WithId<R>>) => string | ReactElement;
+    getTitleRightElement?: (context: BundleRecordContext<WithId<R>>) => string | ReactElement;
     tabs: Array<Tab<WithId<R>>>;
-    extractPrimaryResource?: (bundle: Bundle<R>) => WithId<R>;
-    toClinicalContext?: (bundle: Bundle) => ParametersParameter[];
+    renderHeaderContent?: (context: BundleRecordContext<WithId<R>>) => ReactElement;
 
     /* Page content max width */
     maxWidth?: number | string;

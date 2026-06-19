@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import type { ColumnsType } from 'antd/es/table/interface';
-import { Bundle, Consent, HumanName, ParametersParameter, Patient } from 'fhir/r4b';
+import { Bundle, Consent, HumanName, Patient } from 'fhir/r4b';
 import type { Resource } from 'fhir/r4b';
 
 import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
@@ -9,19 +9,12 @@ import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 import { SearchBarColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
-import { compileAsFirst } from 'src/utils';
+import { compileAsFirst, resourceToClinicalContext } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { getPatientSearchParamsForPractitioner, makePatientListFilters } from './utils';
-
-function patientLaunchContext(patient: Patient): ParametersParameter[] {
-    return [
-        { name: 'Patient', resource: patient },
-        { name: 'patient', resource: patient },
-    ];
-}
 
 const getHeaderActions = () => [
     questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
@@ -99,14 +92,7 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
         return [
             navigationAction(<Trans>Chart</Trans>, `/patients/${patient?.id}`),
             navigationAction(<Trans>Forms</Trans>, `/patients/${patient?.id}/forms`),
-            // Explicit params required: list page has no Patient ClinicalContext, unlike the patient detail page.
-            questionnaireAction(<Trans>Edit</Trans>, 'patient-edit', {
-                extra: {
-                    qrfProps: {
-                        launchContextParameters: patient ? patientLaunchContext(patient) : [],
-                    },
-                },
-            }),
+            questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
         ];
     };
 
@@ -123,6 +109,10 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
+            lineToClinicalContext={(record) => {
+                const patient = getPatientFromConsent(record.resource, record.bundle);
+                return patient ? resourceToClinicalContext('Patient', patient) : [];
+            }}
         />
     );
 }
@@ -135,14 +125,7 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
     const getRecordActions = (record: RecordType<Patient>) => [
         navigationAction(<Trans>Chart</Trans>, `/patients/${record.resource.id}`),
         navigationAction(<Trans>Forms</Trans>, `/patients/${record.resource.id}/forms`),
-        // Explicit params required: list page has no Patient ClinicalContext, unlike the patient detail page.
-        questionnaireAction(<Trans>Edit</Trans>, 'patient-edit', {
-            extra: {
-                qrfProps: {
-                    launchContextParameters: patientLaunchContext(record.resource),
-                },
-            },
-        }),
+        questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
     ];
 
     return (
@@ -158,6 +141,7 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
+            lineToClinicalContext={(record) => resourceToClinicalContext('Patient', record.resource)}
         />
     );
 }

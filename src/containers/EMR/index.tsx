@@ -1,5 +1,6 @@
+import { Patient, ParametersParameter } from 'fhir/r4b';
 import queryString from 'query-string';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { BrowserRouter, Routes, Navigate, Route, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -12,14 +13,14 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
+import { useDefaultUserClinicalContext } from 'src/containers/EMR/defaultUserClinicalContext';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import { PrintPatientClinicalContext } from 'src/containers/PatientDetails/DocumentPrint/PrintPatientClinicalContext';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-import { sharedCurrentUserRoleResource } from 'src/sharedState';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -28,6 +29,7 @@ interface EMRProps {
     UserWithNoRolesComponent?: () => ReactElement;
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
+    toUserClinicalContext?: () => ParametersParameter[];
 }
 
 export function EMR(props: EMRProps) {
@@ -38,6 +40,7 @@ export function EMR(props: EMRProps) {
         UserWithNoRolesComponent,
         menuLayout,
         footer,
+        toUserClinicalContext,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -55,7 +58,13 @@ export function EMR(props: EMRProps) {
 
             const layout = menuLayout();
             const defaultRoute = layout[0]?.path ?? '/encounters';
-            return <AuthenticatedUserEMR defaultRoute={defaultRoute} extra={authenticatedRoutes} />;
+            return (
+                <AuthenticatedUserEMR
+                    defaultRoute={defaultRoute}
+                    extra={authenticatedRoutes}
+                    toUserClinicalContext={toUserClinicalContext}
+                />
+            );
         }
 
         return <AnonymousUserEMR extra={anonymousRoutes} />;
@@ -94,18 +103,22 @@ function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
 interface RouteProps {
     defaultRoute: string;
     extra?: ReactElement;
+    toUserClinicalContext?: () => ParametersParameter[];
 }
 
-function AuthenticatedUserEMR({ defaultRoute, extra }: RouteProps) {
+function AuthenticatedUserEMR({ defaultRoute, extra, toUserClinicalContext }: RouteProps) {
     return (
-        <UserClinicalContext>
+        <UserClinicalContext toUserClinicalContext={toUserClinicalContext}>
             <Routes>
                 <Route
                     path={`/print-patient-document/:id/:qrId`}
                     element={
-                        <PrintPatientClinicalContext>
-                            <DocumentPrint />
-                        </PrintPatientClinicalContext>
+                        <RenderBundleResourceContext<Patient>
+                            resourceType="Patient"
+                            getSearchParams={({ id }) => ({ _id: id as string })}
+                        >
+                            {() => <DocumentPrint />}
+                        </RenderBundleResourceContext>
                     }
                 />
                 <Route path="/appointment/book" element={<PublicAppointment />} />
@@ -125,22 +138,15 @@ function AuthenticatedUserEMR({ defaultRoute, extra }: RouteProps) {
     );
 }
 
-function UserClinicalContext({ children }: { children: ReactElement }) {
-    const [resource] = sharedCurrentUserRoleResource.useSharedState();
-
-    const context = useMemo(() => {
-        if (!resource) {
-            return [];
-        }
-        return [
-            { name: 'User', resource },
-            { name: 'user', resource },
-            { name: resource.resourceType, resource },
-            { name: resource.resourceType.toLowerCase(), resource },
-            { name: 'Author', resource },
-            { name: 'author', resource },
-        ];
-    }, [resource]);
+function UserClinicalContext({
+    children,
+    toUserClinicalContext,
+}: {
+    children: ReactElement;
+    toUserClinicalContext?: () => ParametersParameter[];
+}) {
+    const defaultContext = useDefaultUserClinicalContext();
+    const context = toUserClinicalContext ? toUserClinicalContext() : defaultContext;
 
     return <ClinicalContext context={context}>{children}</ClinicalContext>;
 }

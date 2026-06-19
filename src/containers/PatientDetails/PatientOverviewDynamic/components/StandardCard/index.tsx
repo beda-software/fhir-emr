@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { ParametersParameter, Patient, Resource } from 'fhir/r4b';
+import { Patient, Resource } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
@@ -12,7 +12,6 @@ export interface StandardCardProps<T extends Resource> {
     reload: () => void;
     to?: string;
     action?: QuestionnaireActionType;
-    getLaunchContext?: () => Array<ParametersParameter>;
     seeAllThreshold: number;
 }
 
@@ -22,7 +21,6 @@ export function StandardCard<T extends Resource>({
     reload,
     to,
     action,
-    getLaunchContext,
     seeAllThreshold,
 }: StandardCardProps<T>) {
     const location = useLocation();
@@ -44,13 +42,7 @@ export function StandardCard<T extends Resource>({
                             </b>
                         </Link>
                     ) : null}
-                    {action ? (
-                        <HeaderQuestionnaireAction
-                            action={action}
-                            reload={reload}
-                            defaultLaunchContext={getLaunchContext ? getLaunchContext() : []}
-                        />
-                    ) : null}
+                    {action ? <HeaderQuestionnaireAction action={action} reload={reload} /> : null}
                 </>
             }
         >

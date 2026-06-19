@@ -69,7 +69,7 @@ export function ResourceListPage<R extends Resource>({
     getFilters,
     getSorters,
     getTableColumns,
-    defaultLaunchContext,
+    lineToClinicalContext,
     getReportColumns,
     tableProps,
     uniqueOrderSortSearchParam,
@@ -152,11 +152,7 @@ export function ResourceListPage<R extends Resource>({
                         if (isQuestionnaireAction(action)) {
                             return (
                                 <React.Fragment key={index}>
-                                    <HeaderQuestionnaireAction
-                                        action={action}
-                                        reload={reload}
-                                        defaultLaunchContext={defaultLaunchContext ?? []}
-                                    />
+                                    <HeaderQuestionnaireAction action={action} reload={reload} />
                                 </React.Fragment>
                             );
                         } else if (isNavigationAction(action)) {
@@ -191,7 +187,6 @@ export function ResourceListPage<R extends Resource>({
                     setSelectedRowKeys={setSelectedRowKeys}
                     reload={reload}
                     selectedResourcesBundle={selectedResourcesBundle}
-                    defaultLaunchContext={defaultLaunchContext}
                 />
             ) : null}
 
@@ -222,7 +217,7 @@ export function ResourceListPage<R extends Resource>({
                               getRecordActionsColumn({
                                   getRecordActions,
                                   reload,
-                                  defaultLaunchContext: defaultLaunchContext ?? [],
+                                  lineToClinicalContext,
                               }),
                           ]
                         : []),
@@ -258,14 +253,14 @@ export function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R
 
 export function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
-    defaultLaunchContext,
+    lineToClinicalContext,
     reload,
 }: {
     getRecordActions: (
         record: RecordType<R>,
         manager: TableManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
-    defaultLaunchContext?: ParametersParameter[];
+    lineToClinicalContext?: (record: RecordType<R>) => ParametersParameter[];
     reload: () => void;
 }) {
     return {
@@ -282,7 +277,7 @@ export function getRecordActionsColumn<R extends Resource>({
                                     action={action}
                                     reload={reload}
                                     resource={record.resource}
-                                    defaultLaunchContext={defaultLaunchContext ?? []}
+                                    lineClinicalContext={lineToClinicalContext?.(record)}
                                 />
                             ) : isNavigationAction(action) ? (
                                 <NavigationAction action={action} resource={record.resource} />
