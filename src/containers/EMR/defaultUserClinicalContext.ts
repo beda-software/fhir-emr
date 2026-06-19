@@ -15,19 +15,27 @@ import { Role } from 'src/utils/role';
 
 type UserRoleResource = WithId<Patient> | WithId<Practitioner> | WithId<Organization>;
 
-function getUserRoleResource(user: User): UserRoleResource | undefined {
+function getRoleResourceForUser(user: User): UserRoleResource | undefined {
     const role = user.role![0]!.name as Role;
-    switch (role) {
-        case Role.Admin:
-            return sharedAuthorizedOrganization.getSharedState();
-        case Role.Practitioner:
-        case Role.Receptionist:
-            return sharedAuthorizedPractitioner.getSharedState();
-        case Role.Patient:
-            return sharedAuthorizedPatient.getSharedState();
-        default:
-            return undefined;
+    try {
+        switch (role) {
+            case Role.Admin:
+                return sharedAuthorizedOrganization.getSharedState() ?? undefined;
+            case Role.Practitioner:
+            case Role.Receptionist:
+                return sharedAuthorizedPractitioner.getSharedState() ?? undefined;
+            case Role.Patient:
+                return sharedAuthorizedPatient.getSharedState() ?? undefined;
+            default:
+                return undefined;
+        }
+    } catch {
+        return undefined;
     }
+}
+
+function getUserRoleResource(user: User): UserRoleResource | undefined {
+    return getRoleResourceForUser(user);
 }
 
 export function defaultToUserClinicalContext(): ParametersParameter[] {
@@ -50,27 +58,13 @@ export function defaultToUserClinicalContext(): ParametersParameter[] {
 
 export function useCurrentUserRoleResource(): UserRoleResource | null {
     const [user] = sharedAuthorizedUser.useSharedState();
-    const [patient] = sharedAuthorizedPatient.useSharedState();
-    const [practitioner] = sharedAuthorizedPractitioner.useSharedState();
-    const [organization] = sharedAuthorizedOrganization.useSharedState();
 
     return useMemo(() => {
         if (!user?.role?.length) {
             return null;
         }
-        const role = user.role[0]!.name as Role;
-        switch (role) {
-            case Role.Admin:
-                return organization ?? null;
-            case Role.Practitioner:
-            case Role.Receptionist:
-                return practitioner ?? null;
-            case Role.Patient:
-                return patient ?? null;
-            default:
-                return null;
-        }
-    }, [user, patient, practitioner, organization]);
+        return getRoleResourceForUser(user) ?? null;
+    }, [user]);
 }
 
 export function useDefaultUserClinicalContext(): ParametersParameter[] {
