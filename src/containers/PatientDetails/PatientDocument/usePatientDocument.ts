@@ -15,7 +15,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getFirstParameter, useClinicalContext } from '@beda.software/fhir-questionnaire';
+import { getFirstParameter, mergeLaunchContextParameters, useClinicalContext } from '@beda.software/fhir-questionnaire';
 import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
@@ -102,7 +102,7 @@ function prepareFormInitialParams(
 
     return {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
-        launchContextParameters: [...clinicalParams, ...launchContextParameters],
+        launchContextParameters: mergeLaunchContextParameters(clinicalParams, launchContextParameters),
         initialQuestionnaireResponse,
         serviceProvider: { service },
     };
