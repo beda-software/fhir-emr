@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { extractBundleResources, WithId } from '@beda.software/fhir-react';
 
+import { PageContainer } from 'src/components';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { getFormLibraryDocumentCategories } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal/categories';
@@ -12,7 +13,6 @@ import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/c
 import { PatientDocumentDetailsReadonlyContext } from 'src/containers/PatientDetails/PatientDocumentDetails/context';
 import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
 import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
-import { ResourceDetailPage } from 'src/uberComponents/ResourceDetailPage';
 import { renderHumanName } from 'src/utils';
 import { encounterToClinicalContext } from 'src/utils/clinicalContext';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
@@ -219,35 +219,34 @@ function PatientDetailsContent({
 
 export const PatientDetails = (props: PatientDetailsProps) => {
     return (
-        <ResourceDetailPage<Patient>
+        <RenderBundleResourceContext<Patient>
             resourceType="Patient"
             getSearchParams={({ id }) => ({ _id: id!, _revinclude: 'CarePlan:subject' })}
-            getTitle={({ resource }) => renderHumanName(resource.name?.[0])}
-            renderHeaderContent={({ resource, bundle }) => {
-                const carePlans = (extractBundleResources(bundle).CarePlan ?? []) as CarePlan[];
-                const embeddedPages = props.embeddedPages?.(resource, carePlans);
+        >
+            {(context) => {
+                const carePlans = (extractBundleResources(context.bundle).CarePlan ?? []) as CarePlan[];
+                const embeddedPages = props.embeddedPages?.(context.resource, carePlans);
 
                 return (
-                    <PatientDetailsTabs
-                        extraMenuItems={embeddedPages}
-                        isDefaultRoutesDisabled={props.isDefaultRoutesDisabled}
-                    />
-                );
-            }}
-            tabs={[
-                {
-                    path: '',
-                    label: '',
-                    component: (context) => (
+                    <PageContainer
+                        title={renderHumanName(context.resource.name?.[0])}
+                        layoutVariant="with-tabs"
+                        headerContent={
+                            <PatientDetailsTabs
+                                extraMenuItems={embeddedPages}
+                                isDefaultRoutesDisabled={props.isDefaultRoutesDisabled}
+                            />
+                        }
+                    >
                         <PatientDetailsContent
                             patientDetailsProps={props}
                             patient={context.resource}
                             bundle={context.bundle}
                             reload={context.reload}
                         />
-                    ),
-                },
-            ]}
-        />
+                    </PageContainer>
+                );
+            }}
+        </RenderBundleResourceContext>
     );
 };
