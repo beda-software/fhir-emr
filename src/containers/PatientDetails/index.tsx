@@ -1,5 +1,4 @@
 import { CarePlan, Encounter, Patient } from 'fhir/r4b';
-import { ReactNode } from 'react';
 import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -30,7 +29,7 @@ import { PatientDetailsEmbeddedPageDefinition, PatientDetailsProps } from './typ
 
 export type { PatientDetailsEmbeddedPageDefinition, PatientDetailsProps } from './types';
 
-function EncounterRouteContext({ children }: { children: ReactNode }) {
+function EncounterRouteContext({ children }: { children: JSX.Element }) {
     return (
         <RenderBundleResourceContext<Encounter>
             resourceType="Encounter"
@@ -39,6 +38,8 @@ function EncounterRouteContext({ children }: { children: ReactNode }) {
                 const encounter = extractBundleResources(bundle).Encounter?.[0];
                 return encounter?.id ? encounterToClinicalContext(encounter as WithId<Encounter>) : [];
             }}
+            getTitle={() => ''}
+            tabs={[]}
         >
             {() => children}
         </RenderBundleResourceContext>
@@ -222,6 +223,8 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         <RenderBundleResourceContext<Patient>
             resourceType="Patient"
             getSearchParams={({ id }) => ({ _id: id!, _revinclude: 'CarePlan:subject' })}
+            getTitle={() => ''}
+            tabs={[]}
         >
             {(context) => {
                 const carePlans = (extractBundleResources(context.bundle).CarePlan ?? []) as CarePlan[];

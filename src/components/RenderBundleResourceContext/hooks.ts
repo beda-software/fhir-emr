@@ -3,12 +3,11 @@ import { useParams } from 'react-router-dom';
 
 import { useService, WithId } from '@beda.software/fhir-react';
 
+import { RenderBundleResourceContextProps } from 'src/components/RenderBundleResourceContext';
 import { getFHIRResources } from 'src/services/fhir';
 import { compileAsFirst } from 'src/utils';
 
-import { BundleResourceContextProps } from './types';
-
-export function useRenderBundleResourceContext<R extends Resource>(props: BundleResourceContextProps<R>) {
+export function useRenderBundleResourceContext<R extends Resource>(props: RenderBundleResourceContextProps<R>) {
     const { resourceType, getSearchParams } = props;
 
     const params = useParams();

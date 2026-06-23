@@ -2,15 +2,12 @@ import { Resource } from 'fhir/r4b';
 import React from 'react';
 import { Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
 
-import { WithId } from '@beda.software/fhir-react';
-
 import { PageContainer } from 'src/components';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
-import { RenderBundleResourceContext, BundleRecordContext } from 'src/components/RenderBundleResourceContext';
+import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Tabs } from 'src/components/Tabs';
 
 import { DetailPageProps, PageTabsProps } from './types';
-
 export type { Tab } from './types';
 
 export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabsProps<R, Extra>) {
@@ -54,44 +51,30 @@ export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabs
     );
 }
 
-type ResourceDetailPageContentProps<R extends Resource> = DetailPageProps<R> & {
-    context: BundleRecordContext<WithId<R>>;
-};
-
-function ResourceDetailPageContent<R extends Resource>({
-    context,
-    getTitle,
-    getTitleLeftElement,
-    getTitleRightElement,
-    tabs,
-    maxWidth,
-    renderHeaderContent,
-}: ResourceDetailPageContentProps<R>) {
-    return (
-        <PageContainer
-            title={getTitle(context)}
-            titleLeftElement={getTitleLeftElement ? getTitleLeftElement(context) : undefined}
-            titleRightElement={getTitleRightElement ? getTitleRightElement(context) : undefined}
-            layoutVariant="with-tabs"
-            headerContent={renderHeaderContent ? renderHeaderContent(context) : <PageTabs tabs={tabs} />}
-            maxWidth={maxWidth}
-        >
-            <Routes>
-                {tabs.map(({ path, component }) => (
-                    <React.Fragment key={path}>
-                        <Route path={'/' + path} element={component(context)} />
-                        <Route path={'/' + path + '/*'} element={component(context)} />
-                    </React.Fragment>
-                ))}
-            </Routes>
-        </PageContainer>
-    );
-}
-
 export function ResourceDetailPage<R extends Resource>(props: DetailPageProps<R>) {
+    const { getTitle, getTitleLeftElement, getTitleRightElement, tabs, maxWidth } = props;
+
     return (
         <RenderBundleResourceContext<R> {...props}>
-            {(context) => <ResourceDetailPageContent context={context} {...props} />}
+            {(context) => (
+                <PageContainer
+                    title={getTitle(context)}
+                    titleLeftElement={getTitleLeftElement ? getTitleLeftElement(context) : undefined}
+                    titleRightElement={getTitleRightElement ? getTitleRightElement(context) : undefined}
+                    layoutVariant="with-tabs"
+                    headerContent={<PageTabs tabs={tabs} />}
+                    maxWidth={maxWidth}
+                >
+                    <Routes>
+                        {tabs.map(({ path, component }) => (
+                            <React.Fragment key={path}>
+                                <Route path={'/' + path} element={component(context)} />
+                                <Route path={'/' + path + '/*'} element={component(context)} />
+                            </React.Fragment>
+                        ))}
+                    </Routes>
+                </PageContainer>
+            )}
         </RenderBundleResourceContext>
     );
 }

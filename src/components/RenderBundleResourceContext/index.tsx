@@ -1,23 +1,21 @@
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
+import { DetailPageProps } from 'src/uberComponents/ResourceDetailPage/types';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { defaultToClinicalContext } from 'src/utils/clinicalContext';
 
 import { useRenderBundleResourceContext } from './hooks';
-import { BundleResourceContextProps } from './types';
-
-export type { BundleResourceContextProps } from './types';
 
 export type BundleRecordContext<R extends Resource> = RecordType<WithId<R>> & {
     reload: () => void;
 };
 
-interface RenderBundleResourceContextProps<R extends Resource> extends BundleResourceContextProps<R> {
-    children: (context: BundleRecordContext<R>) => ReactNode;
+export interface RenderBundleResourceContextProps<R extends Resource> extends DetailPageProps<R> {
+    children: (context: BundleRecordContext<R>) => JSX.Element;
 }
 
 export function RenderBundleResourceContext<R extends Resource>(props: RenderBundleResourceContextProps<R>) {
@@ -69,7 +67,7 @@ function RenderBundleResourceContextContent<R extends Resource>({
     context: BundleRecordContext<R>;
     resourceType: R['resourceType'];
     toClinicalContext?: (bundle: Bundle) => ParametersParameter[];
-    children: (context: BundleRecordContext<R>) => ReactNode;
+    children: (context: BundleRecordContext<R>) => JSX.Element;
 }) {
     const clinicalContextParams = useMemo(
         () =>

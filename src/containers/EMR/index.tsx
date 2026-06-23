@@ -116,6 +116,8 @@ function AuthenticatedUserEMR({ defaultRoute, extra, toUserClinicalContext }: Ro
                         <RenderBundleResourceContext<Patient>
                             resourceType="Patient"
                             getSearchParams={({ id }) => ({ _id: id as string })}
+                            getTitle={() => ''}
+                            tabs={[]}
                         >
                             {() => <DocumentPrint />}
                         </RenderBundleResourceContext>
