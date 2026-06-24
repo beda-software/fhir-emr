@@ -3,13 +3,12 @@ import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
+import { CustomYupTestsMap, FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
 import { inMemorySaveService } from 'src/hooks';
-import { CustomYupTestsMap } from 'src/utils';
 
 import { S } from './SetPassword.styles';
 
