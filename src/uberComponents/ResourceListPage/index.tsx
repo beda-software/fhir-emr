@@ -71,7 +71,7 @@ export function ResourceListPage<R extends Resource>({
     getSorters,
     getTableColumns,
     defaultLaunchContext,
-    lineToClinicalContext,
+    getClinicalContext,
     getReportColumns,
     tableProps,
     uniqueOrderSortSearchParam,
@@ -225,7 +225,7 @@ export function ResourceListPage<R extends Resource>({
                                   getRecordActions,
                                   reload,
                                   defaultLaunchContext: defaultLaunchContext ?? [],
-                                  lineToClinicalContext,
+                                  getClinicalContext,
                               }),
                           ]
                         : []),
@@ -262,7 +262,7 @@ export function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R
 export function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
     defaultLaunchContext,
-    lineToClinicalContext,
+    getClinicalContext,
     reload,
 }: {
     getRecordActions: (
@@ -270,7 +270,7 @@ export function getRecordActionsColumn<R extends Resource>({
         manager: TableManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
     defaultLaunchContext?: ParametersParameter[];
-    lineToClinicalContext?: (record: RecordType<R>) => ParametersParameter[];
+    getClinicalContext?: (record: RecordType<R>) => ParametersParameter[];
     reload: () => void;
 }) {
     return {
@@ -289,7 +289,7 @@ export function getRecordActionsColumn<R extends Resource>({
                                     resource={record.resource}
                                     defaultLaunchContext={mergeLaunchContextParameters(
                                         defaultLaunchContext ?? [],
-                                        lineToClinicalContext?.(record) ?? [],
+                                        getClinicalContext?.(record) ?? [],
                                     )}
                                 />
                             ) : isNavigationAction(action) ? (

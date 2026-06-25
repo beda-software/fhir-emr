@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import type { ColumnsType } from 'antd/es/table/interface';
 import { Bundle, Consent, HumanName, Patient } from 'fhir/r4b';
-import type { Resource } from 'fhir/r4b';
+import type { FhirResource, Resource } from 'fhir/r4b';
 
 import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 
@@ -109,8 +109,12 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
-            lineToClinicalContext={(record) => {
-                const patient = getPatientFromConsent(record.resource, record.bundle);
+            getClinicalContext={(record) => {
+                if (!record) {
+                    return resourceToClinicalContext('Patient', {} as FhirResource);
+                }
+                const { resource, bundle } = record;
+                const patient = getPatientFromConsent(resource, bundle);
                 return patient ? resourceToClinicalContext('Patient', patient) : [];
             }}
         />
@@ -141,7 +145,13 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
-            lineToClinicalContext={(record) => resourceToClinicalContext('Patient', record.resource)}
+            getClinicalContext={(record) => {
+                if (!record) {
+                    return resourceToClinicalContext('Patient', {} as FhirResource);
+                }
+                const { resource } = record;
+                return resourceToClinicalContext('Patient', resource);
+            }}
         />
     );
 }

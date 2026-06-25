@@ -93,7 +93,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * Per-line clinical context for record questionnaire actions.
      * When omitted, defaults to the row's primary resource (PascalCase + lowercase names).
      */
-    lineToClinicalContext?: (record: RecordType<R>) => ParametersParameter[];
+    getClinicalContext?: (record: RecordType<R> | undefined) => ParametersParameter[];
 
     /**
      * EXPERIMENTAL FEATURE. The interface might be changed
