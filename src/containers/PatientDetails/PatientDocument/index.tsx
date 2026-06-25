@@ -70,42 +70,40 @@ export function PatientDocument(props: PatientDocumentProps) {
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {(draftQuestionnaireResponse) => (
-                <ProvenanceClinicalContext questionnaireResponse={draftQuestionnaireResponse}>
-                    <PatientDocumentContent
-                        {...props}
-                        key="patient-document-content"
-                        questionnaireResponse={draftQuestionnaireResponse}
-                        onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
-                            if (qrDraftServiceType === 'local') {
-                                await deleteDraft();
-                            }
-                            props.onSuccess && props.onSuccess(resource);
-                        }}
-                        onEdit={handleEdit}
-                        onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
-                        alertComponent={
-                            <AlertMessage
-                                style={{ marginBottom: '20px' }}
-                                actionComponent={
-                                    <Space>
-                                        {qrDraftServiceType === 'local' && (
-                                            <Tooltip title={t`Clear draft from local storage and reset form`}>
-                                                <Button
-                                                    onClick={async () => {
-                                                        await deleteDraft();
-                                                    }}
-                                                    danger
-                                                    icon={<DeleteOutlined />}
-                                                />
-                                            </Tooltip>
-                                        )}
-                                    </Space>
-                                }
-                                message={draftInfoMessage}
-                            />
+                <PatientDocumentContent
+                    {...props}
+                    key="patient-document-content"
+                    questionnaireResponse={draftQuestionnaireResponse}
+                    onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
+                        if (qrDraftServiceType === 'local') {
+                            await deleteDraft();
                         }
-                    />
-                </ProvenanceClinicalContext>
+                        props.onSuccess && props.onSuccess(resource);
+                    }}
+                    onEdit={handleEdit}
+                    onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
+                    alertComponent={
+                        <AlertMessage
+                            style={{ marginBottom: '20px' }}
+                            actionComponent={
+                                <Space>
+                                    {qrDraftServiceType === 'local' && (
+                                        <Tooltip title={t`Clear draft from local storage and reset form`}>
+                                            <Button
+                                                onClick={async () => {
+                                                    await deleteDraft();
+                                                }}
+                                                danger
+                                                icon={<DeleteOutlined />}
+                                            />
+                                        </Tooltip>
+                                    )}
+                                </Space>
+                            }
+                            message={draftInfoMessage}
+                        />
+                    }
+                />
             )}
         </RenderRemoteData>
     );
@@ -153,63 +151,65 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     return (
         <div className={classNames(s.container, 'app-patient-document')}>
             <S.Content $maxWidth={maxWidth}>
-                <RenderRemoteData
-                    remoteData={response}
-                    renderLoading={Spinner}
-                    renderFailure={(error) => <AlertMessage message={formatError(error)} type="error" />}
-                >
-                    {({ document: { formData, onSubmit }, source }) => {
-                        if (typeof source === 'undefined') {
-                            return (
-                                <>
-                                    <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
-                                    {alertComponent}
-                                    <BaseQuestionnaireResponseForm
-                                        formData={formData}
-                                        onSubmit={onSubmit}
-                                        onEdit={onEdit}
-                                        questionItemComponents={itemComponents}
-                                        itemControlQuestionItemComponents={mergedItemControlComponents}
-                                        itemControlGroupItemComponents={mergedGroupControlComponents}
-                                        fhirService={service}
-                                        groupItemComponent={GroupItemComponent}
-                                        FormWrapper={PatientDocumentFormWrapper}
-                                    />
-                                </>
-                            );
-                        } else {
-                            return (
-                                <>
-                                    <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
-                                    {alertComponent}
-                                    <Splitter>
-                                        <Splitter.Panel min="10%" defaultSize="30%">
-                                            <Text>
-                                                Scribe result:
-                                                <br />
-                                                <br />
-                                                {source.payload?.[0]?.contentString}
-                                            </Text>
-                                        </Splitter.Panel>
-                                        <Splitter.Panel min="40%" style={{ marginLeft: 25 }}>
-                                            <BaseQuestionnaireResponseForm
-                                                formData={formData}
-                                                onSubmit={onSubmit}
-                                                onEdit={onEdit}
-                                                questionItemComponents={itemComponents}
-                                                itemControlQuestionItemComponents={mergedItemControlComponents}
-                                                itemControlGroupItemComponents={mergedGroupControlComponents}
-                                                groupItemComponent={GroupItemComponent}
-                                                FormWrapper={PatientDocumentFormWrapper}
-                                                fhirService={service}
-                                            />
-                                        </Splitter.Panel>
-                                    </Splitter>
-                                </>
-                            );
-                        }
-                    }}
-                </RenderRemoteData>
+                <ProvenanceClinicalContext questionnaireResponse={props.questionnaireResponse}>
+                    <RenderRemoteData
+                        remoteData={response}
+                        renderLoading={Spinner}
+                        renderFailure={(error) => <AlertMessage message={formatError(error)} type="error" />}
+                    >
+                        {({ document: { formData, onSubmit }, source }) => {
+                            if (typeof source === 'undefined') {
+                                return (
+                                    <>
+                                        <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                        {alertComponent}
+                                        <BaseQuestionnaireResponseForm
+                                            formData={formData}
+                                            onSubmit={onSubmit}
+                                            onEdit={onEdit}
+                                            questionItemComponents={itemComponents}
+                                            itemControlQuestionItemComponents={mergedItemControlComponents}
+                                            itemControlGroupItemComponents={mergedGroupControlComponents}
+                                            fhirService={service}
+                                            groupItemComponent={GroupItemComponent}
+                                            FormWrapper={PatientDocumentFormWrapper}
+                                        />
+                                    </>
+                                );
+                            } else {
+                                return (
+                                    <>
+                                        <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                        {alertComponent}
+                                        <Splitter>
+                                            <Splitter.Panel min="10%" defaultSize="30%">
+                                                <Text>
+                                                    Scribe result:
+                                                    <br />
+                                                    <br />
+                                                    {source.payload?.[0]?.contentString}
+                                                </Text>
+                                            </Splitter.Panel>
+                                            <Splitter.Panel min="40%" style={{ marginLeft: 25 }}>
+                                                <BaseQuestionnaireResponseForm
+                                                    formData={formData}
+                                                    onSubmit={onSubmit}
+                                                    onEdit={onEdit}
+                                                    questionItemComponents={itemComponents}
+                                                    itemControlQuestionItemComponents={mergedItemControlComponents}
+                                                    itemControlGroupItemComponents={mergedGroupControlComponents}
+                                                    groupItemComponent={GroupItemComponent}
+                                                    FormWrapper={PatientDocumentFormWrapper}
+                                                    fhirService={service}
+                                                />
+                                            </Splitter.Panel>
+                                        </Splitter>
+                                    </>
+                                );
+                            }
+                        }}
+                    </RenderRemoteData>
+                </ProvenanceClinicalContext>
             </S.Content>
         </div>
     );
