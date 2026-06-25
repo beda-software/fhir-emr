@@ -18,7 +18,7 @@ import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
-import { useDefaultUserClinicalContext } from 'src/containers/EMR/defaultUserClinicalContext';
+import { toUserClinicalContextDefault } from 'src/containers/EMR/defaultUserClinicalContext';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
@@ -147,8 +147,7 @@ function UserClinicalContext({
     children: ReactElement;
     toUserClinicalContext?: () => ParametersParameter[];
 }) {
-    const defaultContext = useDefaultUserClinicalContext();
-    const context = toUserClinicalContext ? toUserClinicalContext() : defaultContext;
+    const context = toUserClinicalContext ? toUserClinicalContext() : toUserClinicalContextDefault();
 
     return <ClinicalContext context={context}>{children}</ClinicalContext>;
 }
