@@ -99,7 +99,7 @@ export function HeaderQuestionnaireAction<R extends Resource>({
     bundle,
 }: HeaderQuestionnaireActionProps<R>) {
     const context = mergeLaunchContextParameters(defaultLaunchContext ?? [], [
-        { name: 'Bundle', resource: bundle as Bundle },
+        { name: 'Bundle', resource: bundle ? (bundle as Bundle) : ({} as Bundle) },
     ]);
 
     return (
