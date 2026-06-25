@@ -6,7 +6,7 @@ import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { DetailPageProps } from 'src/uberComponents/ResourceDetailPage/types';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
-import { defaultToClinicalContext } from 'src/utils/clinicalContext';
+import { toClinicalContextDefault } from 'src/utils/clinicalContext';
 
 import { useRenderBundleResourceContext } from './hooks';
 
@@ -45,11 +45,7 @@ export function RenderBundleResourceContext<R extends Resource>(props: RenderBun
                 };
 
                 return (
-                    <RenderBundleResourceContextContent
-                        context={context}
-                        resourceType={resourceType}
-                        toClinicalContext={toClinicalContext}
-                    >
+                    <RenderBundleResourceContextContent context={context} toClinicalContext={toClinicalContext}>
                         {children}
                     </RenderBundleResourceContextContent>
                 );
@@ -60,18 +56,16 @@ export function RenderBundleResourceContext<R extends Resource>(props: RenderBun
 
 function RenderBundleResourceContextContent<R extends Resource>({
     context,
-    resourceType,
     toClinicalContext,
     children,
 }: {
     context: BundleRecordContext<R>;
-    resourceType: R['resourceType'];
     toClinicalContext?: (context: RecordType<R>) => ParametersParameter[];
     children: (context: BundleRecordContext<R>) => JSX.Element;
 }) {
     const clinicalContextParams = useMemo(
-        () => (toClinicalContext ? toClinicalContext(context) : defaultToClinicalContext(resourceType, context)),
-        [context, toClinicalContext, resourceType],
+        () => (toClinicalContext ? toClinicalContext(context) : toClinicalContextDefault(context)),
+        [context, toClinicalContext],
     );
 
     return <ClinicalContext context={clinicalContextParams}>{children(context)}</ClinicalContext>;

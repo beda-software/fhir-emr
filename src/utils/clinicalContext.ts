@@ -14,15 +14,12 @@ export function resourceToClinicalContext(
     return names.map((n) => ({ name: n, resource }));
 }
 
-export function defaultToClinicalContext<R extends Resource>(
-    resourceType: string,
-    context: RecordType<R>,
-): ParametersParameter[] {
+export function toClinicalContextDefault<R extends Resource>(context: RecordType<R>): ParametersParameter[] {
     const { resource } = context;
     if (!isFhirResource(resource)) {
         return [];
     }
-    return resourceToClinicalContext(resourceType, resource);
+    return resourceToClinicalContext(resource.resourceType, resource);
 }
 
 export function encounterToClinicalContext(encounter: WithId<Encounter>): ParametersParameter[] {
