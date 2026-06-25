@@ -447,10 +447,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-questionnaire@^0.1.0-alpha.8":
-  version "0.1.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.8.tgz#9bc71a03604c74cb474b9150e968e472603b3664"
-  integrity sha512-3dQc4NmWBsPw3sAMw78fYjqqJYAgVt3+SkyC9Ls/ZkLAynw85LF8uMHv0lPiVpxw+J09EuLMIURNaet8WOyhGA==
+"@beda.software/fhir-questionnaire@^0.1.0-alpha.10":
+  version "0.1.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.10.tgz#1b37c6aea17e0f5de3f86a41c1cdfc0d89d1c8cc"
+  integrity sha512-6b4oHxLmWEzhPk+JGvpF3twwCirdi7WhFeXSa6HdYjmoyObkB+rCUA9/cMTGgnDuymF7tUXi6pYeyIg3sDMedw==
   dependencies:
     "@beda.software/fhir-react" "^1.11.1"
     "@beda.software/remote-data" "^1.1.4"
@@ -464,7 +464,7 @@
     moment "^2.30.1"
     query-string "^7.1.1"
     react-hook-form "^7.49.3"
-    sdc-qrf "1.1.0-alpha.9"
+    sdc-qrf "^1.1.0-alpha.11"
     tslib "^2.8.1"
     yup "^1.2.0"
 
@@ -502,10 +502,10 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@^0.1.19":
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.19.tgz#361423989102bc3a5b2d28d93487337d25e257ba"
-  integrity sha512-loG+yjOb4i62rr5D/I8kIuvPwCW41e5pvF574nuhfGNWgal72jmq/iS4GFbyruGzzKCOgfXTaZWBLJw7vnr4hQ==
+"@beda.software/web-item-controls@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.21.tgz#5b97a2d16287b73aa9ab6a80304fbbc69df438a7"
+  integrity sha512-bUMkba4YEh6er2OsOoLsCOOmJEhc8Ez/hy/PVKkUSE+fK+Hx/f901Jr/jlF6P9o1dGOhMMd7BYw8qDYxCBxz2g==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
@@ -12298,17 +12298,6 @@ scroll-into-view-if-needed@^3.1.0:
   integrity sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==
   dependencies:
     compute-scroll-into-view "^3.0.2"
-
-sdc-qrf@1.1.0-alpha.9:
-  version "1.1.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.1.0-alpha.9.tgz#5c666512c15cb406b830c67deb8ab60b7776d04b"
-  integrity sha512-wQFzglUDw9wgtut6MDpTKjIMC7M7unEpjPKSDkqNLQr+tmsHfUHRRimbMn5aRQ9BM9+LHOW1RIqIxb/cicoIsQ==
-  dependencies:
-    classnames "^2.5.1"
-    fhirpath "^3.18.0"
-    lodash "^4.17.21"
-    query-string "^7.1.1"
-    uuid "^11.1.0"
 
 sdc-qrf@^1.1.0-alpha.11:
   version "1.1.0-alpha.11"

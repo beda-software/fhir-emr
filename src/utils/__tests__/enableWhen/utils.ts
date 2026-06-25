@@ -7,7 +7,9 @@ import {
 } from 'fhir/r4b';
 import { toAnswerValue } from 'sdc-qrf';
 
-import { evaluate, questionnaireItemsToValidationSchema } from 'src/utils';
+import { questionnaireItemsToValidationSchema } from '@beda.software/fhir-questionnaire/components';
+
+import { evaluate } from 'src/utils';
 
 export type QuestionnaireData = {
     questionnaire: Questionnaire;

@@ -1,7 +1,7 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
 
-import { Props } from '@beda.software/fhir-questionnaire/components';
+import { CustomYupTestsMap, Props } from '@beda.software/fhir-questionnaire/components';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
@@ -9,7 +9,6 @@ import {
     QuestionnaireResponseFormProps as FhirQuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
-import { CustomYupTestsMap } from 'src/utils/questionnaire';
 
 export interface QRFProps extends Omit<FhirQuestionnaireResponseFormProps, 'serviceProvider'> {
     serviceProvider?: FhirQuestionnaireResponseFormProps['serviceProvider'];
