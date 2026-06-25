@@ -108,7 +108,7 @@ export function MedicationManagementDetail() {
             resourceType="MedicationKnowledge"
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getMedicationName(resource, { bundle }) ?? ''}
-            toClinicalContext={(bundle) => {
+            toClinicalContext={({ bundle }) => {
                 const resource = bundle.entry?.[0]?.resource as MedicationKnowledge | undefined;
                 if (!resource) {
                     return [];

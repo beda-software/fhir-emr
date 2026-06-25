@@ -1,4 +1,4 @@
-import { HumanName } from 'fhir/r4b';
+import { FhirResource, HumanName, Resource } from 'fhir/r4b';
 
 export function renderHumanName(name?: HumanName) {
     if (!name) {
@@ -12,4 +12,8 @@ export function renderHumanName(name?: HumanName) {
         name.text ||
         'Unnamed'
     );
+}
+
+export function isFhirResource(resource: Resource): resource is FhirResource {
+    return typeof resource.resourceType === 'string' && resource.resourceType.length > 0;
 }

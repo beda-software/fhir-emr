@@ -34,7 +34,7 @@ function EncounterRouteContext({ children }: { children: JSX.Element }) {
         <RenderBundleResourceContext<Encounter>
             resourceType="Encounter"
             getSearchParams={({ encounterId }) => ({ _id: encounterId! })}
-            toClinicalContext={(bundle) => {
+            toClinicalContext={({ bundle }) => {
                 const encounter = extractBundleResources(bundle).Encounter?.[0];
                 return encounter?.id ? encounterToClinicalContext(encounter as WithId<Encounter>) : [];
             }}

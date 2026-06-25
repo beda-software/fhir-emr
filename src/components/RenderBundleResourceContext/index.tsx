@@ -66,15 +66,12 @@ function RenderBundleResourceContextContent<R extends Resource>({
 }: {
     context: BundleRecordContext<R>;
     resourceType: R['resourceType'];
-    toClinicalContext?: (bundle: Bundle) => ParametersParameter[];
+    toClinicalContext?: (context: RecordType<R>) => ParametersParameter[];
     children: (context: BundleRecordContext<R>) => JSX.Element;
 }) {
     const clinicalContextParams = useMemo(
-        () =>
-            toClinicalContext
-                ? toClinicalContext(context.bundle)
-                : defaultToClinicalContext(resourceType, context.bundle),
-        [context.bundle, toClinicalContext, resourceType],
+        () => (toClinicalContext ? toClinicalContext(context) : defaultToClinicalContext(resourceType, context)),
+        [context, toClinicalContext, resourceType],
     );
 
     return <ClinicalContext context={clinicalContextParams}>{children(context)}</ClinicalContext>;

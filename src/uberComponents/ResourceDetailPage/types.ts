@@ -19,7 +19,7 @@ export interface DetailPageProps<R extends Resource> {
     getTitleRightElement?: (context: RecordType<WithId<R>>) => string | ReactElement;
     tabs: Array<Tab<WithId<R>>>;
     extractPrimaryResource?: (bundle: Bundle<R>) => WithId<R>;
-    toClinicalContext?: (bundle: Bundle) => ParametersParameter[];
+    toClinicalContext?: (context: RecordType<R>) => ParametersParameter[];
 
     /* Page content max width */
     maxWidth?: number | string;

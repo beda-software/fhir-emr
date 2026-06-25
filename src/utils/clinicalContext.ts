@@ -1,12 +1,9 @@
-import { Bundle, Encounter, FhirResource, ParametersParameter } from 'fhir/r4b';
+import { Encounter, FhirResource, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { compileAsFirst } from './fhirpath';
-
-const getPrimaryResource = compileAsFirst<Bundle, FhirResource>(
-    'Bundle.entry.resource.where(resourceType=%resourceType).first()',
-);
+import { RecordType } from 'src/uberComponents/ResourceListPage/types';
+import { isFhirResource } from 'src/utils';
 
 export function resourceToClinicalContext(
     name: string,
@@ -17,16 +14,15 @@ export function resourceToClinicalContext(
     return names.map((n) => ({ name: n, resource }));
 }
 
-export function defaultToClinicalContext(resourceType: string, bundle: Bundle): ParametersParameter[] {
-    const first = getPrimaryResource(bundle, { resourceType });
-    if (!first) {
-        console.warn(
-            `[RenderBundleResourceContext] defaultToClinicalContext: no "${resourceType}" resource found in bundle. ` +
-                `Clinical context will be empty. Pass a custom toClinicalContext prop if the resource type differs.`,
-        );
+export function defaultToClinicalContext<R extends Resource>(
+    resourceType: string,
+    context: RecordType<R>,
+): ParametersParameter[] {
+    const { resource } = context;
+    if (!isFhirResource(resource)) {
         return [];
     }
-    return resourceToClinicalContext(resourceType, first);
+    return resourceToClinicalContext(resourceType, resource);
 }
 
 export function encounterToClinicalContext(encounter: WithId<Encounter>): ParametersParameter[] {
