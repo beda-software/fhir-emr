@@ -147,6 +147,7 @@ export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Pr
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
             getSorters={getSorters}
+            defaultLaunchContext={[{ name: 'Patient', resource: patient }]}
         />
     );
 };
