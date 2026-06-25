@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Bundle, Medication, MedicationKnowledge } from 'fhir/r4b';
+import { Bundle, FhirResource, Medication, MedicationKnowledge } from 'fhir/r4b';
 
 import { Text } from 'src/components/Typography';
 import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
@@ -88,6 +88,10 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
                 },
             ]}
             getReportColumns={getReportColumns}
+            getClinicalContext={(record) => [
+                ...resourceToClinicalContext('Medication', record?.resource ?? ({} as FhirResource)),
+                { name: 'CurrentMedicationKnowledge', resource: resource },
+            ]}
         />
     );
 }
@@ -108,11 +112,8 @@ export function MedicationManagementDetail() {
             resourceType="MedicationKnowledge"
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getMedicationName(resource, { bundle }) ?? ''}
-            toClinicalContext={({ bundle }) => {
-                const resource = bundle.entry?.[0]?.resource as MedicationKnowledge | undefined;
-                if (!resource) {
-                    return [];
-                }
+            toClinicalContext={(record) => {
+                const { resource } = record;
                 return [
                     ...resourceToClinicalContext('MedicationKnowledge', resource),
                     { name: 'CurrentMedicationKnowledge', resource },
