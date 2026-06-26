@@ -69,8 +69,9 @@ export function MedicationManagement() {
             getHeaderActions={getHeaderActions}
             getClinicalContext={(record) => {
                 return [
-                    ...getResourceClinicalContext('MedicationKnowledge', record?.resource ?? ({} as FhirResource)),
-                    { name: 'CurrentMedicationKnowledge', resource: record?.resource ?? ({} as FhirResource) },
+                    ...getResourceClinicalContext('MedicationKnowledge', record?.resource ?? ({} as FhirResource), [
+                        'CurrentMedicationKnowledge',
+                    ]),
                 ];
             }}
         />

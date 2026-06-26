@@ -13,7 +13,7 @@ import { PatientDocumentDetailsReadonlyContext } from 'src/containers/PatientDet
 import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
 import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
-import { getEncounterClinicalContext } from 'src/utils/clinicalContext';
+import { getResourceClinicalContext } from 'src/utils/clinicalContext';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
 import { HMBDiagnosticDashboard } from './HMBDiagnostic';
@@ -36,10 +36,8 @@ function EncounterRouteContext({ children }: { children: JSX.Element }) {
             getSearchParams={({ encounterId }) => ({ _id: encounterId! })}
             getClinicalContext={({ bundle }) => {
                 const encounter = extractBundleResources(bundle).Encounter?.[0];
-                return encounter?.id ? getEncounterClinicalContext(encounter as WithId<Encounter>) : [];
+                return encounter ? getResourceClinicalContext('Encounter', encounter, ['CurrentEncounter']) : [];
             }}
-            getTitle={() => ''}
-            tabs={[]}
         >
             {() => children}
         </RenderBundleResourceContext>
@@ -223,8 +221,6 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         <RenderBundleResourceContext<Patient>
             resourceType="Patient"
             getSearchParams={({ id }) => ({ _id: id!, _revinclude: 'CarePlan:subject' })}
-            getTitle={() => ''}
-            tabs={[]}
         >
             {(context) => {
                 const carePlans = (extractBundleResources(context.bundle).CarePlan ?? []) as CarePlan[];

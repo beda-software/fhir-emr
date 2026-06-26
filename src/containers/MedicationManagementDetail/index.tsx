@@ -90,7 +90,7 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
             getReportColumns={getReportColumns}
             getClinicalContext={(record) => [
                 ...getResourceClinicalContext('Medication', record?.resource ?? ({} as FhirResource)),
-                { name: 'CurrentMedicationKnowledge', resource: resource },
+                ...getResourceClinicalContext('MedicationKnowledge', resource, ['CurrentMedicationKnowledge']),
             ]}
         />
     );
@@ -113,10 +113,10 @@ export function MedicationManagementDetail() {
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getMedicationName(resource, { bundle }) ?? ''}
             getClinicalContext={(record) => {
-                const { resource } = record;
                 return [
-                    ...getResourceClinicalContext('MedicationKnowledge', resource),
-                    { name: 'CurrentMedicationKnowledge', resource },
+                    ...getResourceClinicalContext('MedicationKnowledge', record.resource, [
+                        'CurrentMedicationKnowledge',
+                    ]),
                 ];
             }}
             tabs={tabs}

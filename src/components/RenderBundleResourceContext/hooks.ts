@@ -14,9 +14,9 @@ export function useRenderBundleResourceContext<R extends Resource>(props: Render
 
     const [response, manager] = useService(() => getFHIRResources(resourceType, getSearchParams(params)));
 
-    const defaultExtractPrimaryResource = compileAsFirst<Bundle<WithId<R>>, WithId<R>>(
+    const extractPrimaryResourceDefault = compileAsFirst<Bundle<WithId<R>>, WithId<R>>(
         'Bundle.entry.resource.where(resourceType=%resourceType).first()',
     );
 
-    return { response, manager, defaultExtractPrimaryResource };
+    return { response, manager, extractPrimaryResourceDefault };
 }

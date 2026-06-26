@@ -18,9 +18,10 @@ import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
-import { getAuthenticatedClinicalContextDefault } from 'src/containers/EMR/defaultUserClinicalContext';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+
+import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -29,7 +30,7 @@ interface EMRProps {
     UserWithNoRolesComponent?: () => ReactElement;
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
-    getUserClinicalContext?: () => ParametersParameter[];
+    getAuthenticatedClinicalContext?: () => ParametersParameter[];
 }
 
 export function EMR(props: EMRProps) {
@@ -40,7 +41,7 @@ export function EMR(props: EMRProps) {
         UserWithNoRolesComponent,
         menuLayout,
         footer,
-        getUserClinicalContext,
+        getAuthenticatedClinicalContext,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -62,7 +63,7 @@ export function EMR(props: EMRProps) {
                 <AuthenticatedUserEMR
                     defaultRoute={defaultRoute}
                     extra={authenticatedRoutes}
-                    getAuthenticatedClinicalContext={getUserClinicalContext}
+                    getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}
                 />
             );
         }
@@ -116,8 +117,6 @@ function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalCon
                         <RenderBundleResourceContext<Patient>
                             resourceType="Patient"
                             getSearchParams={({ id }) => ({ _id: id as string })}
-                            getTitle={() => ''}
-                            tabs={[]}
                         >
                             {() => <DocumentPrint />}
                         </RenderBundleResourceContext>
@@ -142,7 +141,7 @@ function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalCon
 
 function AuthenticatedClinicalContext({
     children,
-    getAuthenticatedClinicalContext: getAuthenticatedClinicalContext,
+    getAuthenticatedClinicalContext,
 }: {
     children: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
