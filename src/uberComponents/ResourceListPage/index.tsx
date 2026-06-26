@@ -37,6 +37,7 @@ import { BatchActions } from './BatchActions';
 import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
 import { ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
+import { getRecordClinicalContextDefault } from './utils';
 
 export { customAction, navigationAction, questionnaireAction } from './actions';
 
@@ -157,7 +158,11 @@ export function ResourceListPage<R extends Resource>({
                                     <HeaderQuestionnaireAction
                                         action={action}
                                         reload={reload}
-                                        defaultLaunchContext={defaultLaunchContext ?? []}
+                                        defaultLaunchContext={mergeLaunchContextParameters(
+                                            defaultLaunchContext ?? [],
+                                            getClinicalContext?.(undefined) ??
+                                                getRecordClinicalContextDefault(resourceType, undefined),
+                                        )}
                                     />
                                 </React.Fragment>
                             );
@@ -193,7 +198,16 @@ export function ResourceListPage<R extends Resource>({
                     setSelectedRowKeys={setSelectedRowKeys}
                     reload={reload}
                     selectedResourcesBundle={selectedResourcesBundle}
-                    defaultLaunchContext={defaultLaunchContext}
+                    defaultLaunchContext={[
+                        ...(defaultLaunchContext ?? []),
+                        ...(isSuccess(recordResponse)
+                            ? getClinicalContext
+                                ? recordResponse.data
+                                      .filter(({ resource }) => selectedRowKeys.includes(resource.id!))
+                                      .flatMap((d) => getClinicalContext(d))
+                                : getRecordClinicalContextDefault(resourceType, undefined)
+                            : []),
+                    ]}
                 />
             ) : null}
 
@@ -289,7 +303,8 @@ export function getRecordActionsColumn<R extends Resource>({
                                     resource={record.resource}
                                     defaultLaunchContext={mergeLaunchContextParameters(
                                         defaultLaunchContext ?? [],
-                                        getClinicalContext?.(record) ?? [],
+                                        getClinicalContext?.(record) ??
+                                            getRecordClinicalContextDefault(record.resource.resourceType, record),
                                     )}
                                 />
                             ) : isNavigationAction(action) ? (

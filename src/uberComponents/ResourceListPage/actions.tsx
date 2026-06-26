@@ -1,18 +1,13 @@
 import { t } from '@lingui/macro';
 import { Button, ModalProps, notification } from 'antd';
-import { Bundle, FhirResource, ParametersParameter, Resource } from 'fhir/r4b';
+import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    ClinicalContext,
-    mergeLaunchContextParameters,
-    questionnaireIdLoader,
-} from '@beda.software/fhir-questionnaire';
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
-import { getResourceClinicalContext } from 'src/utils/clinicalContext';
 
 import { S } from './styles';
 import {
@@ -43,13 +38,8 @@ export function RecordQuestionnaireAction<R extends Resource>({
     action: QuestionnaireActionType;
     resource: R;
     reload: () => void;
-    defaultLaunchContext?: ParametersParameter[];
+    defaultLaunchContext: ParametersParameter[];
 }) {
-    const context = mergeLaunchContextParameters(
-        defaultLaunchContext ?? [],
-        getResourceClinicalContext(resource.resourceType, resource as FhirResource),
-    );
-
     return (
         <ModalTrigger
             title={action.title}
@@ -61,47 +51,35 @@ export function RecordQuestionnaireAction<R extends Resource>({
             modalProps={action.extra?.modalProps}
         >
             {({ closeModal }) => (
-                <ClinicalContext context={context}>
-                    <QuestionnaireResponseForm
-                        questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                        launchContextParameters={[
-                            ...(defaultLaunchContext ?? []),
-                            { name: resource.resourceType, resource: resource as FhirResource },
-                        ]}
-                        onSuccess={() => {
-                            notification.success({
-                                message: t`Successfully submitted`,
-                            });
-                            reload();
-                            closeModal();
-                        }}
-                        onCancel={closeModal}
-                        saveButtonTitle={t`Submit`}
-                        {...(action.extra?.qrfProps ?? {})}
-                    />
-                </ClinicalContext>
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+                    launchContextParameters={[
+                        ...defaultLaunchContext,
+                        { name: resource.resourceType, resource: resource as any },
+                    ]}
+                    onSuccess={() => {
+                        notification.success({
+                            message: t`Successfully submitted`,
+                        });
+                        reload();
+                        closeModal();
+                    }}
+                    onCancel={closeModal}
+                    saveButtonTitle={t`Submit`}
+                    {...(action.extra?.qrfProps ?? {})}
+                />
             )}
         </ModalTrigger>
     );
 }
 
-interface HeaderQuestionnaireActionProps<R extends Resource> {
+interface HeaderQuestionnaireActionProps {
     action: QuestionnaireActionType;
     reload: () => void;
-    defaultLaunchContext?: ParametersParameter[];
-    bundle?: Bundle<R>;
+    defaultLaunchContext: ParametersParameter[];
 }
 
-export function HeaderQuestionnaireAction<R extends Resource>({
-    action,
-    reload,
-    defaultLaunchContext,
-    bundle,
-}: HeaderQuestionnaireActionProps<R>) {
-    const context = mergeLaunchContextParameters(defaultLaunchContext ?? [], [
-        { name: 'Bundle', resource: bundle ? (bundle as Bundle) : ({} as Bundle) },
-    ]);
-
+export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext }: HeaderQuestionnaireActionProps) {
     return (
         <ModalTrigger
             title={action.title}
@@ -113,20 +91,18 @@ export function HeaderQuestionnaireAction<R extends Resource>({
             modalProps={action.extra?.modalProps}
         >
             {({ closeModal }) => (
-                <ClinicalContext context={context}>
-                    <QuestionnaireResponseForm
-                        questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                        launchContextParameters={defaultLaunchContext ?? []}
-                        onSuccess={() => {
-                            closeModal();
-                            notification.success({ message: t`Successfully submitted` });
-                            reload();
-                        }}
-                        onCancel={closeModal}
-                        saveButtonTitle={t`Submit`}
-                        {...(action.extra?.qrfProps ?? {})}
-                    />
-                </ClinicalContext>
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+                    onSuccess={() => {
+                        closeModal();
+                        notification.success({ message: t`Successfully submitted` });
+                        reload();
+                    }}
+                    launchContextParameters={defaultLaunchContext}
+                    onCancel={closeModal}
+                    saveButtonTitle={t`Submit`}
+                    {...(action.extra?.qrfProps ?? {})}
+                />
             )}
         </ModalTrigger>
     );
@@ -143,7 +119,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
     bundle: Bundle<R>;
     reload: () => void;
     disabled?: boolean;
-    defaultLaunchContext?: ParametersParameter[];
+    defaultLaunchContext: ParametersParameter[];
 }) {
     if (action.type === 'questionnaire') {
         return (
@@ -157,23 +133,25 @@ export function BatchQuestionnaireAction<R extends Resource>({
                 modalProps={action.extra?.modalProps}
             >
                 {({ closeModal }) => (
-                    <ClinicalContext context={[{ name: 'Bundle', resource: bundle as Bundle }]}>
-                        <QuestionnaireResponseForm
-                            questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                            launchContextParameters={[
-                                ...(defaultLaunchContext ?? []),
-                                ...(action.extra?.qrfProps?.launchContextParameters ?? []),
-                            ]}
-                            onSuccess={() => {
-                                closeModal();
-                                notification.success({ message: t`Successfully submitted` });
-                                reload();
-                            }}
-                            onCancel={closeModal}
-                            saveButtonTitle={t`Submit`}
-                            {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
-                        />
-                    </ClinicalContext>
+                    <QuestionnaireResponseForm
+                        questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+                        launchContextParameters={[
+                            ...defaultLaunchContext,
+                            ...(action.extra?.qrfProps?.launchContextParameters ?? []),
+                            {
+                                name: 'Bundle',
+                                resource: bundle as Bundle,
+                            },
+                        ]}
+                        onSuccess={() => {
+                            closeModal();
+                            notification.success({ message: t`Successfully submitted` });
+                            reload();
+                        }}
+                        onCancel={closeModal}
+                        saveButtonTitle={t`Submit`}
+                        {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
+                    />
                 )}
             </ModalTrigger>
         );

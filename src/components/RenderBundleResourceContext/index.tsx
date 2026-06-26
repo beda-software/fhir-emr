@@ -8,9 +8,9 @@ import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { DetailPageProps } from 'src/uberComponents/ResourceDetailPage/types';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
+import { getRecordClinicalContextDefault } from 'src/uberComponents/ResourceListPage/utils';
 
 import { useRenderBundleResourceContext } from './hooks';
-import { getRecordClinicalContextDefault } from './utils';
 
 export type BundleRecordContext<R extends Resource> = RecordType<WithId<R>> & {
     reload: () => void;
