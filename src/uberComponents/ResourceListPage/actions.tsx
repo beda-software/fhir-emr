@@ -12,7 +12,7 @@ import {
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
-import { resourceToClinicalContext as defaultResourceToClinicalContext } from 'src/utils/clinicalContext';
+import { getResourceClinicalContext } from 'src/utils/clinicalContext';
 
 import { S } from './styles';
 import {
@@ -47,7 +47,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
 }) {
     const context = mergeLaunchContextParameters(
         defaultLaunchContext ?? [],
-        defaultResourceToClinicalContext(resource.resourceType, resource as FhirResource),
+        getResourceClinicalContext(resource.resourceType, resource as FhirResource),
     );
 
     return (

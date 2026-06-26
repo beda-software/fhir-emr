@@ -5,7 +5,7 @@ import { WithId } from '@beda.software/fhir-react';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { isFhirResource } from 'src/utils';
 
-export function resourceToClinicalContext(
+export function getResourceClinicalContext(
     name: string,
     resource: FhirResource,
     extraNames: string[] = [],
@@ -14,14 +14,14 @@ export function resourceToClinicalContext(
     return names.map((n) => ({ name: n, resource }));
 }
 
-export function toClinicalContextDefault<R extends Resource>(context: RecordType<R>): ParametersParameter[] {
+export function getResourceClinicalContextDefault<R extends Resource>(context: RecordType<R>): ParametersParameter[] {
     const { resource } = context;
     if (!isFhirResource(resource)) {
         return [];
     }
-    return resourceToClinicalContext(resource.resourceType, resource);
+    return getResourceClinicalContext(resource.resourceType, resource);
 }
 
-export function encounterToClinicalContext(encounter: WithId<Encounter>): ParametersParameter[] {
-    return resourceToClinicalContext('Encounter', encounter, ['CurrentEncounter']);
+export function getEncounterClinicalContext(encounter: WithId<Encounter>): ParametersParameter[] {
+    return getResourceClinicalContext('Encounter', encounter, ['CurrentEncounter']);
 }

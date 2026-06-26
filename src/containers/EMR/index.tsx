@@ -18,7 +18,7 @@ import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
-import { toUserClinicalContextDefault } from 'src/containers/EMR/defaultUserClinicalContext';
+import { getAuthenticatedClinicalContextDefault } from 'src/containers/EMR/defaultUserClinicalContext';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
@@ -29,7 +29,7 @@ interface EMRProps {
     UserWithNoRolesComponent?: () => ReactElement;
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
-    toUserClinicalContext?: () => ParametersParameter[];
+    getUserClinicalContext?: () => ParametersParameter[];
 }
 
 export function EMR(props: EMRProps) {
@@ -40,7 +40,7 @@ export function EMR(props: EMRProps) {
         UserWithNoRolesComponent,
         menuLayout,
         footer,
-        toUserClinicalContext,
+        getUserClinicalContext,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -62,7 +62,7 @@ export function EMR(props: EMRProps) {
                 <AuthenticatedUserEMR
                     defaultRoute={defaultRoute}
                     extra={authenticatedRoutes}
-                    toUserClinicalContext={toUserClinicalContext}
+                    getAuthenticatedClinicalContext={getUserClinicalContext}
                 />
             );
         }
@@ -103,12 +103,12 @@ function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
 interface RouteProps {
     defaultRoute: string;
     extra?: ReactElement;
-    toUserClinicalContext?: () => ParametersParameter[];
+    getAuthenticatedClinicalContext?: () => ParametersParameter[];
 }
 
-function AuthenticatedUserEMR({ defaultRoute, extra, toUserClinicalContext }: RouteProps) {
+function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
     return (
-        <UserClinicalContext toUserClinicalContext={toUserClinicalContext}>
+        <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
             <Routes>
                 <Route
                     path={`/print-patient-document/:id/:qrId`}
@@ -136,18 +136,20 @@ function AuthenticatedUserEMR({ defaultRoute, extra, toUserClinicalContext }: Ro
                     }
                 />
             </Routes>
-        </UserClinicalContext>
+        </AuthenticatedClinicalContext>
     );
 }
 
-function UserClinicalContext({
+function AuthenticatedClinicalContext({
     children,
-    toUserClinicalContext,
+    getAuthenticatedClinicalContext: getAuthenticatedClinicalContext,
 }: {
     children: ReactElement;
-    toUserClinicalContext?: () => ParametersParameter[];
+    getAuthenticatedClinicalContext?: () => ParametersParameter[];
 }) {
-    const context = toUserClinicalContext ? toUserClinicalContext() : toUserClinicalContextDefault();
+    const context = getAuthenticatedClinicalContext
+        ? getAuthenticatedClinicalContext()
+        : getAuthenticatedClinicalContextDefault();
 
     return <ClinicalContext context={context}>{children}</ClinicalContext>;
 }

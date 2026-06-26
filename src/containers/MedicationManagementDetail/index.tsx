@@ -6,7 +6,7 @@ import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType, ReportColumn } from 'src/uberComponents/ResourceListPage/types';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
-import { compileAsArray, compileAsFirst, resourceToClinicalContext } from 'src/utils';
+import { compileAsArray, compileAsFirst, getResourceClinicalContext } from 'src/utils';
 
 // FHIRPath helpers
 const getMedicationName = compileAsFirst<MedicationKnowledge, string>(
@@ -89,7 +89,7 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
             ]}
             getReportColumns={getReportColumns}
             getClinicalContext={(record) => [
-                ...resourceToClinicalContext('Medication', record?.resource ?? ({} as FhirResource)),
+                ...getResourceClinicalContext('Medication', record?.resource ?? ({} as FhirResource)),
                 { name: 'CurrentMedicationKnowledge', resource: resource },
             ]}
         />
@@ -112,10 +112,10 @@ export function MedicationManagementDetail() {
             resourceType="MedicationKnowledge"
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getMedicationName(resource, { bundle }) ?? ''}
-            toClinicalContext={(record) => {
+            getClinicalContext={(record) => {
                 const { resource } = record;
                 return [
-                    ...resourceToClinicalContext('MedicationKnowledge', resource),
+                    ...getResourceClinicalContext('MedicationKnowledge', resource),
                     { name: 'CurrentMedicationKnowledge', resource },
                 ];
             }}

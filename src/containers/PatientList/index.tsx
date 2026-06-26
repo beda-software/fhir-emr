@@ -9,7 +9,7 @@ import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 import { SearchBarColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
-import { compileAsFirst, resourceToClinicalContext } from 'src/utils';
+import { compileAsFirst, getResourceClinicalContext } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -111,11 +111,11 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             getHeaderActions={getHeaderActions}
             getClinicalContext={(record) => {
                 if (!record) {
-                    return resourceToClinicalContext('Patient', {} as FhirResource);
+                    return getResourceClinicalContext('Patient', {} as FhirResource);
                 }
                 const { resource, bundle } = record;
                 const patient = getPatientFromConsent(resource, bundle);
-                return patient ? resourceToClinicalContext('Patient', patient) : [];
+                return patient ? getResourceClinicalContext('Patient', patient) : [];
             }}
         />
     );
@@ -147,10 +147,10 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
             getHeaderActions={getHeaderActions}
             getClinicalContext={(record) => {
                 if (!record) {
-                    return resourceToClinicalContext('Patient', {} as FhirResource);
+                    return getResourceClinicalContext('Patient', {} as FhirResource);
                 }
                 const { resource } = record;
-                return resourceToClinicalContext('Patient', resource);
+                return getResourceClinicalContext('Patient', resource);
             }}
         />
     );

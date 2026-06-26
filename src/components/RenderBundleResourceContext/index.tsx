@@ -6,7 +6,7 @@ import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { DetailPageProps } from 'src/uberComponents/ResourceDetailPage/types';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
-import { toClinicalContextDefault } from 'src/utils/clinicalContext';
+import { getResourceClinicalContextDefault } from 'src/utils/clinicalContext';
 
 import { useRenderBundleResourceContext } from './hooks';
 
@@ -19,7 +19,7 @@ export interface RenderBundleResourceContextProps<R extends Resource> extends De
 }
 
 export function RenderBundleResourceContext<R extends Resource>(props: RenderBundleResourceContextProps<R>) {
-    const { resourceType, extractPrimaryResource, toClinicalContext, children } = props;
+    const { resourceType, extractPrimaryResource, getClinicalContext, children } = props;
 
     const { response, manager, defaultExtractPrimaryResource } = useRenderBundleResourceContext<R>(props);
 
@@ -45,7 +45,7 @@ export function RenderBundleResourceContext<R extends Resource>(props: RenderBun
                 };
 
                 return (
-                    <RenderBundleResourceContextContent context={context} toClinicalContext={toClinicalContext}>
+                    <RenderBundleResourceContextContent context={context} getClinicalContext={getClinicalContext}>
                         {children}
                     </RenderBundleResourceContextContent>
                 );
@@ -56,16 +56,16 @@ export function RenderBundleResourceContext<R extends Resource>(props: RenderBun
 
 function RenderBundleResourceContextContent<R extends Resource>({
     context,
-    toClinicalContext,
+    getClinicalContext,
     children,
 }: {
     context: BundleRecordContext<R>;
-    toClinicalContext?: (context: RecordType<R>) => ParametersParameter[];
+    getClinicalContext?: (context: RecordType<R>) => ParametersParameter[];
     children: (context: BundleRecordContext<R>) => JSX.Element;
 }) {
     const clinicalContextParams = useMemo(
-        () => (toClinicalContext ? toClinicalContext(context) : toClinicalContextDefault(context)),
-        [context, toClinicalContext],
+        () => (getClinicalContext ? getClinicalContext(context) : getResourceClinicalContextDefault(context)),
+        [context, getClinicalContext],
     );
 
     return <ClinicalContext context={clinicalContextParams}>{children(context)}</ClinicalContext>;

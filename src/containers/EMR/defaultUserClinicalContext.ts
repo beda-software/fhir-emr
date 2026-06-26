@@ -1,14 +1,14 @@
 import { ParametersParameter } from 'fhir/r4b';
 
-import { resourceToClinicalContext } from 'src/utils/clinicalContext';
+import { getResourceClinicalContext } from 'src/utils/clinicalContext';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
-export function toUserClinicalContextDefault(): ParametersParameter[] {
+export function getAuthenticatedClinicalContextDefault(): ParametersParameter[] {
     const userRoleResource = selectCurrentUserRoleResource();
 
     return [
-        ...resourceToClinicalContext('User', userRoleResource),
-        ...resourceToClinicalContext(userRoleResource.resourceType, userRoleResource),
-        ...resourceToClinicalContext('Author', userRoleResource),
+        ...getResourceClinicalContext('User', userRoleResource),
+        ...getResourceClinicalContext(userRoleResource.resourceType, userRoleResource),
+        ...getResourceClinicalContext('Author', userRoleResource),
     ];
 }

@@ -7,7 +7,7 @@ import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/t
 import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { navigationAction } from 'src/uberComponents/ResourceListPage/actions';
 import type { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
-import { compileAsFirst, resourceToClinicalContext } from 'src/utils';
+import { compileAsFirst, getResourceClinicalContext } from 'src/utils';
 
 // FHIRPath helpers
 const getMedicationName = compileAsFirst<MedicationKnowledge, string>(
@@ -69,7 +69,7 @@ export function MedicationManagement() {
             getHeaderActions={getHeaderActions}
             getClinicalContext={(record) => {
                 return [
-                    ...resourceToClinicalContext('MedicationKnowledge', record?.resource ?? ({} as FhirResource)),
+                    ...getResourceClinicalContext('MedicationKnowledge', record?.resource ?? ({} as FhirResource)),
                     { name: 'CurrentMedicationKnowledge', resource: record?.resource ?? ({} as FhirResource) },
                 ];
             }}

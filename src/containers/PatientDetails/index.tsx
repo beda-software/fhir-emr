@@ -13,7 +13,7 @@ import { PatientDocumentDetailsReadonlyContext } from 'src/containers/PatientDet
 import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
 import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
-import { encounterToClinicalContext } from 'src/utils/clinicalContext';
+import { getEncounterClinicalContext } from 'src/utils/clinicalContext';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
 import { HMBDiagnosticDashboard } from './HMBDiagnostic';
@@ -34,9 +34,9 @@ function EncounterRouteContext({ children }: { children: JSX.Element }) {
         <RenderBundleResourceContext<Encounter>
             resourceType="Encounter"
             getSearchParams={({ encounterId }) => ({ _id: encounterId! })}
-            toClinicalContext={({ bundle }) => {
+            getClinicalContext={({ bundle }) => {
                 const encounter = extractBundleResources(bundle).Encounter?.[0];
-                return encounter?.id ? encounterToClinicalContext(encounter as WithId<Encounter>) : [];
+                return encounter?.id ? getEncounterClinicalContext(encounter as WithId<Encounter>) : [];
             }}
             getTitle={() => ''}
             tabs={[]}
