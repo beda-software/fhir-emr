@@ -30,8 +30,8 @@ export function ProvenanceClinicalContext({
         }
 
         const provenances = provenanceResponse.data;
-        const descSortedProvenances = [...provenances].sort((a, b) => b.recorded.localeCompare(a.recorded));
-        const lastProvenance = descSortedProvenances[0];
+        const latestSortedProvenances = [...provenances].sort((a, b) => b.recorded.localeCompare(a.recorded));
+        const latestProvenance = latestSortedProvenances[0];
 
         const provenanceBundle: Bundle<WithId<Provenance>> = {
             resourceType: 'Bundle',
@@ -40,7 +40,7 @@ export function ProvenanceClinicalContext({
         };
 
         const context: ParametersParameter[] = [
-            ...(lastProvenance ? [{ name: 'Provenance', resource: lastProvenance }] : []),
+            ...(latestProvenance ? [{ name: 'Provenance', resource: latestProvenance }] : []),
             ...(provenances.length ? [{ name: 'ProvenanceBundle', resource: provenanceBundle }] : []),
         ];
 

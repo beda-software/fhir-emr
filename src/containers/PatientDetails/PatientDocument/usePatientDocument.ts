@@ -15,7 +15,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getFirstParameter, mergeLaunchContextParameters, useClinicalContext } from '@beda.software/fhir-questionnaire';
+import { getParameters, mergeLaunchContextParameters, useClinicalContext } from '@beda.software/fhir-questionnaire';
 import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
@@ -133,9 +133,8 @@ export function usePatientDocument(props: Props): {
     const { parameters: clinicalParams } = useClinicalContext();
 
     const [response, manager] = useService<PatientDocumentData>(async () => {
-        const lastProvenance = getFirstParameter(clinicalParams, 'Provenance')?.resource as
-            | WithId<Provenance>
-            | undefined;
+        const provenances = getParameters(clinicalParams, 'Provenance')?.map((p) => p.resource as WithId<Provenance>);
+        const lastProvenance = provenances.sort((a, b) => b.recorded.localeCompare(a.recorded))[0];
 
         const formInitialParams = prepareFormInitialParams({
             ...props,
