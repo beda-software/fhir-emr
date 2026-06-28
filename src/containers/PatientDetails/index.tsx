@@ -2,6 +2,7 @@ import { CarePlan, Encounter, Patient } from 'fhir/r4b';
 import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { extractBundleResources, WithId } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components';
@@ -218,34 +219,36 @@ function PatientDetailsContent({
 
 export const PatientDetails = (props: PatientDetailsProps) => {
     return (
-        <RenderBundleResourceContext<Patient>
-            resourceType="Patient"
-            getSearchParams={({ id }) => ({ _id: id!, _revinclude: 'CarePlan:subject' })}
-        >
-            {(context) => {
-                const carePlans = (extractBundleResources(context.bundle).CarePlan ?? []) as CarePlan[];
-                const embeddedPages = props.embeddedPages?.(context.resource, carePlans);
+        <ClinicalContext context={[{ name: 'Encounter', resource: { resourceType: 'Encounter' } as Encounter }]}>
+            <RenderBundleResourceContext<Patient>
+                resourceType="Patient"
+                getSearchParams={({ id }) => ({ _id: id!, _revinclude: 'CarePlan:subject' })}
+            >
+                {(context) => {
+                    const carePlans = (extractBundleResources(context.bundle).CarePlan ?? []) as CarePlan[];
+                    const embeddedPages = props.embeddedPages?.(context.resource, carePlans);
 
-                return (
-                    <PageContainer
-                        title={renderHumanName(context.resource.name?.[0])}
-                        layoutVariant="with-tabs"
-                        headerContent={
-                            <PatientDetailsTabs
-                                extraMenuItems={embeddedPages}
-                                isDefaultRoutesDisabled={props.isDefaultRoutesDisabled}
+                    return (
+                        <PageContainer
+                            title={renderHumanName(context.resource.name?.[0])}
+                            layoutVariant="with-tabs"
+                            headerContent={
+                                <PatientDetailsTabs
+                                    extraMenuItems={embeddedPages}
+                                    isDefaultRoutesDisabled={props.isDefaultRoutesDisabled}
+                                />
+                            }
+                        >
+                            <PatientDetailsContent
+                                patientDetailsProps={props}
+                                patient={context.resource}
+                                bundle={context.bundle}
+                                reload={context.reload}
                             />
-                        }
-                    >
-                        <PatientDetailsContent
-                            patientDetailsProps={props}
-                            patient={context.resource}
-                            bundle={context.bundle}
-                            reload={context.reload}
-                        />
-                    </PageContainer>
-                );
-            }}
-        </RenderBundleResourceContext>
+                        </PageContainer>
+                    );
+                }}
+            </RenderBundleResourceContext>
+        </ClinicalContext>
     );
 };
