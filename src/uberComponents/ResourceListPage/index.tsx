@@ -200,13 +200,17 @@ export function ResourceListPage<R extends Resource>({
                     selectedResourcesBundle={selectedResourcesBundle}
                     defaultLaunchContext={[
                         ...(defaultLaunchContext ?? []),
-                        ...(isSuccess(recordResponse)
-                            ? getClinicalContext
-                                ? recordResponse.data
-                                      .filter(({ resource }) => selectedRowKeys.includes(resource.id!))
-                                      .flatMap((d) => getClinicalContext(d))
-                                : getRecordClinicalContextDefault(resourceType, undefined)
-                            : []),
+                        ...(selectedResourcesBundle.entry ?? []).flatMap((entry) =>
+                            getClinicalContext
+                                ? getClinicalContext({
+                                      resource: entry.resource as R,
+                                      bundle: selectedResourcesBundle as Bundle,
+                                  })
+                                : getRecordClinicalContextDefault(entry.resource!.resourceType, {
+                                      resource: entry.resource as R,
+                                      bundle: selectedResourcesBundle as Bundle,
+                                  }),
+                        ),
                     ]}
                 />
             ) : null}
