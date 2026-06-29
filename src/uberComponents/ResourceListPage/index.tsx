@@ -206,7 +206,7 @@ export function ResourceListPage<R extends Resource>({
                                       resource: entry.resource as R,
                                       bundle: selectedResourcesBundle as Bundle,
                                   })
-                                : getRecordClinicalContextDefault(entry.resource!.resourceType, {
+                                : getRecordClinicalContextDefault(resourceType, {
                                       resource: entry.resource as R,
                                       bundle: selectedResourcesBundle as Bundle,
                                   }),
