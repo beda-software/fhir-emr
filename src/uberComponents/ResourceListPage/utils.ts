@@ -8,7 +8,7 @@ export function getRecordClinicalContextDefault<R extends Resource>(
     record: RecordType<R> | undefined,
 ): ParametersParameter[] {
     if (!record) {
-        return getResourceClinicalContext(resourceType, {} as Resource);
+        return [];
     }
 
     const { resource } = record;
