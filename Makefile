@@ -38,6 +38,3 @@ test:
 	docker compose -f docker-compose.tests.yaml pull --quiet
 	docker compose -f docker-compose.tests.yaml up -d
 	yarn test
-
-down-test:
-	docker compose -f docker-compose.tests.yaml down
