@@ -4,7 +4,6 @@ import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { getResourceClinicalContext } from 'src/utils';
 
 export function getRecordClinicalContextDefault<R extends Resource>(
-    resourceType: R['resourceType'],
     record: RecordType<R> | undefined,
 ): ParametersParameter[] {
     if (!record) {

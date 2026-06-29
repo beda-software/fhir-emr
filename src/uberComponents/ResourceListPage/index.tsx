@@ -161,7 +161,7 @@ export function ResourceListPage<R extends Resource>({
                                         defaultLaunchContext={mergeLaunchContextParameters(
                                             defaultLaunchContext ?? [],
                                             getClinicalContext?.(undefined) ??
-                                                getRecordClinicalContextDefault(resourceType, undefined),
+                                                getRecordClinicalContextDefault(undefined),
                                         )}
                                     />
                                 </React.Fragment>
@@ -206,7 +206,7 @@ export function ResourceListPage<R extends Resource>({
                                       resource: entry.resource as R,
                                       bundle: selectedResourcesBundle as Bundle,
                                   })
-                                : getRecordClinicalContextDefault(resourceType, {
+                                : getRecordClinicalContextDefault({
                                       resource: entry.resource as R,
                                       bundle: selectedResourcesBundle as Bundle,
                                   }),
@@ -307,8 +307,7 @@ export function getRecordActionsColumn<R extends Resource>({
                                     resource={record.resource}
                                     defaultLaunchContext={mergeLaunchContextParameters(
                                         defaultLaunchContext ?? [],
-                                        getClinicalContext?.(record) ??
-                                            getRecordClinicalContextDefault(record.resource.resourceType, record),
+                                        getClinicalContext?.(record) ?? getRecordClinicalContextDefault(record),
                                     )}
                                 />
                             ) : isNavigationAction(action) ? (
