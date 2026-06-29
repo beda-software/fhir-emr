@@ -111,14 +111,7 @@ function PatientDetailsRoutes({
                                 <Route index element={<EncounterDetails patient={patient} />} />
                                 <Route
                                     path="new/:questionnaireId"
-                                    element={
-                                        <PatientDocument
-                                            patient={patient}
-                                            author={author}
-                                            autoSave={true}
-                                            onSuccess={() => navigate(-1)}
-                                        />
-                                    }
+                                    element={<PatientDocument autoSave={true} onSuccess={() => navigate(-1)} />}
                                 />
                                 <Route path=":qrId/*" element={<PatientDocumentDetails patient={patient} />} />
                             </Route>
@@ -139,25 +132,12 @@ function PatientDetailsRoutes({
                             />
                             <Route
                                 path="/documents/new/:questionnaireId"
-                                element={
-                                    <PatientDocument
-                                        patient={patient}
-                                        author={author}
-                                        autoSave={true}
-                                        onSuccess={() => navigate(-1)}
-                                    />
-                                }
+                                element={<PatientDocument autoSave={true} onSuccess={() => navigate(-1)} />}
                             />
                             <Route
                                 path="/forms/new/:questionnaireId"
                                 element={
-                                    <PatientDocument
-                                        patient={patient}
-                                        author={author}
-                                        autoSave={true}
-                                        onSuccess={() => navigate(-1)}
-                                        maxWidth={'100%'}
-                                    />
+                                    <PatientDocument autoSave={true} onSuccess={() => navigate(-1)} maxWidth={'100%'} />
                                 }
                             />
                             <Route

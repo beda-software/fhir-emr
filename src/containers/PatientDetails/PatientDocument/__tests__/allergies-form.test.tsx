@@ -39,13 +39,7 @@ describe('Test allergies patient form filling and extraction', () => {
                             { name: 'Patient', resource: patient },
                         ]}
                     >
-                        <PatientDocument
-                            patient={patient}
-                            author={patient}
-                            questionnaireId="allergies"
-                            onSuccess={onSuccess}
-                            autoSave={false}
-                        />
+                        <PatientDocument questionnaireId="allergies" onSuccess={onSuccess} autoSave={false} />
                     </ClinicalContext>
                 </I18nProvider>
             </ThemeProvider>,

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RenderRemoteData, WithId, useService } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
@@ -12,6 +13,7 @@ import { Spinner } from 'src/components/Spinner';
 import { Paragraph } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
 import { axiosInstance, getFHIRResource, service } from 'src/services/fhir';
+import { getResourceClinicalContext } from 'src/utils/clinicalContext';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { PatientDocument } from '../PatientDetails/PatientDocument';
@@ -109,15 +111,24 @@ function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
             }}
         >
             {(patient) => (
-                <PatientDocument
-                    patient={patient}
-                    author={isAnonymousUser ? patient : selectCurrentUserRoleResource()}
-                    questionnaireId={questionnaireId!}
-                    encounterId={encounterId}
-                    onSuccess={onSuccess}
-                    autoSave={autosave}
-                    launchContextParameters={launchContextParameters}
-                />
+                <ClinicalContext
+                    context={[
+                        ...getResourceClinicalContext('Patient', patient, ['patient']),
+                        ...getResourceClinicalContext(
+                            'Author',
+                            isAnonymousUser ? patient : selectCurrentUserRoleResource(),
+                            ['author'],
+                        ),
+                    ]}
+                >
+                    <PatientDocument
+                        questionnaireId={questionnaireId!}
+                        encounterId={encounterId}
+                        onSuccess={onSuccess}
+                        autoSave={autosave}
+                        launchContextParameters={launchContextParameters}
+                    />
+                </ClinicalContext>
             )}
         </RenderRemoteData>
     );

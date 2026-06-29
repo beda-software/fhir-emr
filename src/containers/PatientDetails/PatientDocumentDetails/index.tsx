@@ -2,15 +2,7 @@ import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import classNames from 'classnames';
-import {
-    Encounter,
-    Organization,
-    ParametersParameter,
-    Patient,
-    Practitioner,
-    Provenance,
-    QuestionnaireResponse,
-} from 'fhir/r4b';
+import { Encounter, ParametersParameter, Patient, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement, useContext } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
@@ -30,7 +22,6 @@ import {
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
 import { PatientDocumentDetailsReadonlyContext, PatientDocumentDetailsWrapperContext } from './context';
@@ -270,19 +261,14 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
 
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
-    patient: WithId<Patient>;
-    author: WithId<Practitioner | Patient | Organization>;
+    launchContextParameters?: ParametersParameter[];
     children: (props: PatientDocumentData) => ReactElement;
 }) {
-    const { questionnaireResponse, children, patient } = props;
+    const { questionnaireResponse, children } = props;
 
     return (
         <ProvenanceClinicalContext questionnaireResponse={questionnaireResponse}>
-            <PatientDocumentDetailsFormDataContent
-                {...props}
-                patient={patient}
-                questionnaireResponse={questionnaireResponse}
-            >
+            <PatientDocumentDetailsFormDataContent {...props} questionnaireResponse={questionnaireResponse}>
                 {children}
             </PatientDocumentDetailsFormDataContent>
         </ProvenanceClinicalContext>
@@ -291,15 +277,14 @@ function PatientDocumentDetailsFormData(props: {
 
 function PatientDocumentDetailsFormDataContent(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
-    patient: WithId<Patient>;
-    author: WithId<Practitioner | Patient | Organization>;
+    launchContextParameters?: ParametersParameter[];
     children: (props: PatientDocumentData) => ReactElement;
 }) {
-    const { questionnaireResponse, children, patient } = props;
+    const { questionnaireResponse, children, launchContextParameters } = props;
     const { response } = usePatientDocument({
-        ...props,
-        patient: patient,
+        questionnaireResponse,
         questionnaireId: questionnaireResponse.questionnaire!,
+        launchContextParameters,
     });
 
     return (
@@ -313,7 +298,6 @@ export function PatientDocumentDetails(props: Props) {
     const { patient, hideControls, launchContextParameters, maxWidth } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
-    const author = selectCurrentUserRoleResource();
 
     return (
         <RenderRemoteData
@@ -328,8 +312,7 @@ export function PatientDocumentDetails(props: Props) {
                     return (
                         <PatientDocumentDetailsFormData
                             questionnaireResponse={questionnaireResponse}
-                            author={author}
-                            {...props}
+                            launchContextParameters={launchContextParameters}
                         >
                             {({ formData, provenance }) => (
                                 <Routes>
@@ -357,11 +340,9 @@ export function PatientDocumentDetails(props: Props) {
                                             path="/edit"
                                             element={
                                                 <PatientDocument
-                                                    patient={patient}
                                                     questionnaireResponse={questionnaireResponse}
                                                     questionnaireId={questionnaireResponse.questionnaire}
                                                     onSuccess={() => navigate(-2)}
-                                                    author={author}
                                                     autoSave={true}
                                                     launchContextParameters={launchContextParameters}
                                                     maxWidth={maxWidth}

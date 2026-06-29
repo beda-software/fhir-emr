@@ -1,21 +1,15 @@
-import {
-    Bundle,
-    Communication,
-    Organization,
-    ParametersParameter,
-    Patient,
-    Person,
-    Practitioner,
-    Provenance,
-    QuestionnaireResponse,
-    Reference,
-} from 'fhir/r4b';
+import { Bundle, Communication, ParametersParameter, Provenance, QuestionnaireResponse, Reference } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getParameters, mergeLaunchContextParameters, useClinicalContext } from '@beda.software/fhir-questionnaire';
+import {
+    getFirstParameter,
+    getParameters,
+    mergeLaunchContextParameters,
+    useClinicalContext,
+} from '@beda.software/fhir-questionnaire';
 import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
@@ -39,8 +33,6 @@ import { getFHIRResource, getFHIRResources, service } from 'src/services/fhir';
 import { compileAsFirst } from 'src/utils';
 
 export interface Props {
-    patient: Patient;
-    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: Partial<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
@@ -82,14 +74,13 @@ function prepareFormInitialParams(
         clinicalParams: ParametersParameter[];
     },
 ): QuestionnaireResponseFormProps {
-    const {
-        patient,
-        questionnaireResponse,
-        questionnaireId,
-        encounterId,
-        clinicalParams,
-        launchContextParameters = [],
-    } = props;
+    const { questionnaireResponse, questionnaireId, encounterId, clinicalParams, launchContextParameters = [] } = props;
+
+    const mergedParams = mergeLaunchContextParameters(clinicalParams, launchContextParameters);
+    const patient = getFirstParameter(mergedParams, 'Patient')?.resource;
+    if (!patient || patient?.resourceType !== 'Patient') {
+        throw new Error('Patient context is required');
+    }
 
     const initialQuestionnaireResponse = _.merge(
         {

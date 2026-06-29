@@ -2,13 +2,14 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Space, Splitter, Tooltip } from 'antd';
 import classNames from 'classnames';
-import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { ParametersParameter, Patient, QuestionnaireResponse } from 'fhir/r4b';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
+import { getFirstParameter, mergeLaunchContextParameters, useClinicalContext } from '@beda.software/fhir-questionnaire';
 import { BaseQuestionnaireResponseForm, FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
-import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { formatError, getReference, RenderRemoteData } from '@beda.software/fhir-react';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { Text } from 'src/components';
@@ -35,8 +36,6 @@ import { ProvenanceClinicalContext } from './ProvenanceClinicalContext';
 import { usePatientDocument } from './usePatientDocument';
 
 export interface PatientDocumentProps {
-    patient: Patient;
-    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: Partial<QuestionnaireResponse>;
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
@@ -47,6 +46,10 @@ export interface PatientDocumentProps {
     maxWidth?: number | string;
 }
 
+type PatientDocumentWithPatientProps = PatientDocumentProps & {
+    patient: Patient;
+};
+
 interface PatientDocumentContentProps extends PatientDocumentProps {
     onCancel?: () => void;
     onEdit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
@@ -55,12 +58,24 @@ interface PatientDocumentContentProps extends PatientDocumentProps {
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
-    const { autoSave = false, qrDraftServiceType = 'local' } = props;
+    const { parameters: clinicalParams } = useClinicalContext();
+    const mergedParams = mergeLaunchContextParameters(clinicalParams, props.launchContextParameters ?? []);
+    const patient = getFirstParameter(mergedParams, 'Patient')?.resource;
+
+    if (!patient || patient?.resourceType !== 'Patient') {
+        return <AlertMessage type="error" message={t`Patient context is required`} />;
+    }
+
+    return <PatientDocumentWithPatient {...props} patient={patient} />;
+}
+
+function PatientDocumentWithPatient(props: PatientDocumentWithPatientProps) {
+    const { autoSave = false, qrDraftServiceType = 'local', patient } = props;
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
 
     const { response, draftInfoMessage, handleEdit, deleteDraft, saveDraft } = useQuestionnaireResponseDraft({
-        subject: `${props.patient.resourceType}/${props.patient.id}`,
+        subject: getReference(patient),
         questionnaireId: props.questionnaireId ?? params.questionnaireId!,
         qrDraftServiceType,
         autoSave,
