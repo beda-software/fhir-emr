@@ -147,7 +147,7 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
             getClinicalContext={(record) => {
-                return record ? getRecordClinicalContextDefault(record.resource.resourceType, record) : [];
+                return getRecordClinicalContextDefault('Patient', record);
             }}
         />
     );
