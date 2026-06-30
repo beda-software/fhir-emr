@@ -2,14 +2,15 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import type { ColumnsType } from 'antd/es/table/interface';
 import { Bundle, Consent, HumanName, Patient } from 'fhir/r4b';
-import type { Resource } from 'fhir/r4b';
+import type { FhirResource, Resource } from 'fhir/r4b';
 
 import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 
 import { SearchBarColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
-import { compileAsFirst } from 'src/utils';
+import { getRecordClinicalContextDefault } from 'src/uberComponents/ResourceListPage/utils';
+import { compileAsFirst, getResourceClinicalContext } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -109,6 +110,14 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
+            getClinicalContext={(record) => {
+                if (!record) {
+                    return getResourceClinicalContext('Patient', {} as FhirResource);
+                }
+                const { resource, bundle } = record;
+                const patient = getPatientFromConsent(resource, bundle);
+                return patient ? getResourceClinicalContext('Patient', patient) : [];
+            }}
         />
     );
 }
@@ -137,6 +146,9 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
             getHeaderActions={getHeaderActions}
+            getClinicalContext={(record) => {
+                return getRecordClinicalContextDefault(record);
+            }}
         />
     );
 }

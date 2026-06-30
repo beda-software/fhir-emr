@@ -45,6 +45,7 @@ export function ResourceListPageContent<R extends Resource>({
     getSorters,
     getTableColumns,
     defaultLaunchContext,
+    getClinicalContext,
     getReportColumns,
     maxWidth,
     tableProps,
@@ -204,6 +205,7 @@ export function ResourceListPageContent<R extends Resource>({
                                   getRecordActions,
                                   reload,
                                   defaultLaunchContext: defaultLaunchContext ?? [],
+                                  getClinicalContext,
                               }),
                           ]
                         : []),

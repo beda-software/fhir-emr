@@ -22,7 +22,6 @@ export function HMBDiagnosticDashboard({ patient }: { patient: Patient }) {
                     reference: 'Questionanire/heavy-menstrual-bleeding-screening',
                     display: 'Heavy Menstrual Bleeding Screening',
                 }}
-                launchContextParameters={[{ name: 'Patient', resource: patient }]}
                 subject={{ reference: `Patient/${patient.id}` }}
                 onSuccess={() => manager.reload()}
             />

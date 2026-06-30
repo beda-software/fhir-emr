@@ -1,8 +1,8 @@
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
 import { Previewer } from 'pagedjs';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ReactBarcode } from 'react-jsbarcode';
-import { FCEPrintableElement, QuestionnaireResponseFormData } from 'sdc-qrf';
+import { calcInitialContext, FCEPrintableElement, ItemContext, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { Group, MarkdownRender } from '@beda.software/web-item-controls/readonly-controls';
@@ -22,16 +22,13 @@ import {
     qItemIsHidden,
 } from './utils';
 
-function renderPrintableElement(
-    element: FCEPrintableElement,
-    qr: QuestionnaireResponse,
-    questionnaire: Questionnaire,
-): React.ReactNode {
+function renderPrintableElement(element: FCEPrintableElement, itemContext: ItemContext): React.ReactNode {
     if ('valueExpression' in element) {
-        const result = evaluate(qr, element.valueExpression.expression ?? '', {
-            questionnaire,
-            QuestionnaireResponse: qr,
-        });
+        const result = evaluate(
+            itemContext.context ?? itemContext.resource,
+            element.valueExpression.expression ?? '',
+            itemContext,
+        );
         const text = result?.[0] != null ? String(result[0]) : '';
         return <MarkdownRender text={text} />;
     }
@@ -51,15 +48,12 @@ function renderPrintableElement(
 
 function renderPrintableElements(
     elements: FCEPrintableElement[] | undefined,
-    qr: QuestionnaireResponse,
-    questionnaire: Questionnaire,
+    itemContext: ItemContext,
 ): React.ReactNode {
     if (!elements?.length) {
         return null;
     }
-    return elements.map((el, i) => (
-        <React.Fragment key={i}>{renderPrintableElement(el, qr, questionnaire)}</React.Fragment>
-    ));
+    return elements.map((el, i) => <React.Fragment key={i}>{renderPrintableElement(el, itemContext)}</React.Fragment>);
 }
 
 const isHidden = compileAsFirst(
@@ -135,7 +129,11 @@ function DocumentPrintContent({ formData }: { formData: QuestionnaireResponseFor
     const renderRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
 
-    const { fceQuestionnaire, questionnaire, questionnaireResponse: qr } = formData.context;
+    const { fceQuestionnaire } = formData.context;
+    const itemContext = useMemo(
+        () => calcInitialContext(formData.context, formData.formValues),
+        [formData.context, formData.formValues],
+    );
     const hasFooter = !!fceQuestionnaire.printableFooter?.length;
     const hasCover = !!fceQuestionnaire.printableCover?.length;
 
@@ -190,23 +188,18 @@ function DocumentPrintContent({ formData }: { formData: QuestionnaireResponseFor
                     <S.PrintWrapper>
                         {hasFooter && (
                             <div className="paged-footer-running">
-                                {renderPrintableElements(fceQuestionnaire.printableFooter, qr, questionnaire)}
+                                {renderPrintableElements(fceQuestionnaire.printableFooter, itemContext)}
                             </div>
                         )}
                         <PrintablePages
-                            cover={
-                                renderPrintableElements(fceQuestionnaire.printableCover, qr, questionnaire) ?? undefined
-                            }
-                            header={
-                                renderPrintableElements(fceQuestionnaire.printableHeader, qr, questionnaire) ??
-                                undefined
-                            }
+                            cover={renderPrintableElements(fceQuestionnaire.printableCover, itemContext) ?? undefined}
+                            header={renderPrintableElements(fceQuestionnaire.printableHeader, itemContext) ?? undefined}
                             headerFirstPage={
-                                renderPrintableElements(fceQuestionnaire.printableHeaderFirstPage, qr, questionnaire) ??
+                                renderPrintableElements(fceQuestionnaire.printableHeaderFirstPage, itemContext) ??
                                 undefined
                             }
                             footerLastPage={
-                                renderPrintableElements(fceQuestionnaire.printableFooterLastPage, qr, questionnaire) ??
+                                renderPrintableElements(fceQuestionnaire.printableFooterLastPage, itemContext) ??
                                 undefined
                             }
                         >

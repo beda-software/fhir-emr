@@ -1,5 +1,5 @@
-import { readdirSync } from 'fs';
-import { parse as parsePath } from 'path';
+import { readdirSync } from 'node:fs';
+import { parse as parsePath } from 'node:path';
 
 import { OperationOutcome, Questionnaire } from 'fhir/r4b';
 

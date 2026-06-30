@@ -47,17 +47,6 @@ export function PatientDocumentWizard(props: PatientDocumentProps) {
                             subject: getReference(patient),
                         }}
                         initialQuestionnaireId={questionnaires[0]?.id}
-                        launchContextParameters={[
-                            ...(props.launchContextParameters ?? []),
-                            {
-                                name: 'Patient',
-                                resource: patient,
-                            },
-                            {
-                                name: 'Author',
-                                resource: props.author,
-                            },
-                        ]}
                         onSuccess={onSuccess}
                         disableWaitStepsNavigation={true}
                         fhirService={service}

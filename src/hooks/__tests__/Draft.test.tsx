@@ -4,6 +4,7 @@ import { screen, render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Bundle, Patient, Practitioner, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { ensure, extractBundleResources, getReference, WithId, withRootAccess } from '@beda.software/fhir-react';
 import { mapSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
@@ -64,14 +65,19 @@ async function renderForm(
     render(
         <ThemeProvider>
             <I18nProvider i18n={i18n}>
-                <PatientDocument
-                    patient={patient}
-                    author={practitioner}
-                    questionnaireId={questionnaireId}
-                    onSuccess={onSuccess}
-                    autoSave={autoSave}
-                    qrDraftServiceType={qrDraftServiceType}
-                />
+                <ClinicalContext
+                    context={[
+                        { name: 'Patient', resource: patient },
+                        { name: 'Author', resource: practitioner },
+                    ]}
+                >
+                    <PatientDocument
+                        questionnaireId={questionnaireId}
+                        onSuccess={onSuccess}
+                        autoSave={autoSave}
+                        qrDraftServiceType={qrDraftServiceType}
+                    />
+                </ClinicalContext>
             </I18nProvider>
         </ThemeProvider>,
     );
