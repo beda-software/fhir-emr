@@ -36,6 +36,13 @@ export interface ChartMargin {
     left?: number;
 }
 
+export interface ChartReferenceArea {
+    y1?: number;
+    y2?: number;
+    fill: string;
+    fillOpacity?: number;
+}
+
 export type ChartXAxisProps = Partial<Pick<XAxisProps, 'tickMargin' | 'minTickGap' | 'interval' | 'tickFormatter'>>;
 
 export type ChartYAxisProps = Partial<Pick<YAxisProps, 'width' | 'tickMargin' | 'interval' | 'tick' | 'axisLine'>>;
@@ -95,6 +102,7 @@ interface ChartBaseProps<TDatum extends ChartDatumBase = ChartDatumBase> {
     gridProps?: ChartGridProps;
     /** Tooltip overrides. Use formatter/labelFormatter for value labels. */
     tooltipProps?: ChartTooltipProps;
+    referenceAreas?: ChartReferenceArea[];
 }
 
 interface ChartPrimaryYAxisProps {
