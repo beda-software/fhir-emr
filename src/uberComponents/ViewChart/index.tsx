@@ -34,7 +34,7 @@ export function ViewChart<TRow extends ReferenceChartRow>(props: ViewChartProps<
                     />
                 );
 
-                return <>{renderChart ? renderChart(element, config) : element}</>;
+                return <>{renderChart ? renderChart(element, config, data) : element}</>;
             }}
         </RenderRemoteData>
     );

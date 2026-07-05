@@ -36,5 +36,5 @@ export type ViewChartProps<TRow extends ReferenceChartRow> = ViewChartDataSource
     sort?: (a: TRow, b: TRow) => number;
     chart?: ViewChartConfig<TRow> | ((rows: TRow[]) => ViewChartConfig<TRow>);
     onPointClick?: (datum: ChartDatumBase) => void;
-    renderChart?: (chart: ReactNode, config: ViewChartConfig<TRow>) => ReactNode;
+    renderChart?: (chart: ReactNode, config: ViewChartConfig<TRow>, data: TRow[]) => ReactNode;
 };
