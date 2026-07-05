@@ -10,6 +10,7 @@ import type { ReferenceChartRow, ViewChartProps } from './types';
 
 export type { ViewChartConfig, ViewChartProps, ReferenceChartRow } from './types';
 export type { ViewChartDataSource } from './hooks';
+export { buildReferenceChart, sortByAxisLabel } from './referenceChart';
 
 export function ViewChart<TRow extends ReferenceChartRow>(props: ViewChartProps<TRow>) {
     const { parameters, sort = sortByAxisLabel, chart = buildReferenceChart, onPointClick, renderChart } = props;
