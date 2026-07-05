@@ -90,49 +90,37 @@ export function sortByAxisLabel(a: ReferenceChartRow, b: ReferenceChartRow): num
     return a.axis_label.localeCompare(b.axis_label);
 }
 
-function makeTransformFunction<TRow extends ReferenceChartRow>(key: string) {
-    return (all: TRow[]): ChartDatumBase[] =>
-        all
-            .filter((r) => r.series === key)
-            .map((r) => ({
-                x: makeUniqueX(formatAuthored(r.axis_label), r.id),
-                xTooltipLabel: formatChartDateTime(r.axis_label),
-                y: resultValue(r),
-            }));
+function transformRows<TRow extends ReferenceChartRow>(rows: TRow[]): ChartDatumBase[] {
+    return rows.map((row) => ({
+        x: makeUniqueX(formatAuthored(row.axis_label), row.id),
+        xTooltipLabel: formatChartDateTime(row.axis_label),
+        y: resultValue(row),
+    }));
 }
 
-export function buildReferenceCharts<TRow extends ReferenceChartRow>(
+export function buildReferenceChart<TRow extends ReferenceChartRow>(
     rows: TRow[],
     options: ReferenceChartOptions = {},
-): ViewChartConfig<TRow, ChartDatumBase>[] {
+): ViewChartConfig<TRow, ChartDatumBase> {
     const {
         severityFills = DEFAULT_REFERENCE_RANGE_COLORS,
         fillOpacity = 0.14,
         formatValue = defaultFormatValue,
     } = options;
 
-    const series = new Map<string, TRow>();
+    const [first] = rows;
+    const title = first?.title ?? '';
+    const bands = parseReferenceRanges(first?.reference_range ?? null);
+    const max = bands.length ? Math.max(...bands.map((band) => band.high)) : undefined;
 
-    for (const row of rows) {
-        if (row.series && !series.has(row.series)) {
-            series.set(row.series, row);
-        }
-    }
-
-    return [...series].map(([key, row]) => {
-        const title = row.title ?? key;
-        const bands = parseReferenceRanges(row.reference_range);
-        const max = bands.length ? Math.max(...bands.map((band) => band.high)) : undefined;
-
-        return {
-            title,
-            variant: 'area',
-            transform: makeTransformFunction(key),
-            yDomain: max != undefined ? [0, max] : undefined,
-            yTicks: buildChartGrid(bands),
-            referenceAreas: bands.length ? buildChartReferenceAreas(bands, severityFills, fillOpacity) : undefined,
-            areaProps: { name: title, fillOpacity: 0 },
-            tooltipProps: { formatter: formatValue },
-        };
-    });
+    return {
+        title,
+        variant: 'area',
+        transform: transformRows,
+        yDomain: max != undefined ? [0, max] : undefined,
+        yTicks: buildChartGrid(bands),
+        referenceAreas: bands.length ? buildChartReferenceAreas(bands, severityFills, fillOpacity) : undefined,
+        areaProps: { name: title, fillOpacity: 0 },
+        tooltipProps: { formatter: formatValue },
+    };
 }

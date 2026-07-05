@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 
 import type { ChartConfigProps, ChartDatumBase } from 'src/components/Chart';
 
+import type { ViewChartDataSource } from './hooks';
+
 export type ViewDefinitionRunParameter = NonNullable<Parameters['parameter']>[number];
 
 export type ViewChartConfig<TRow, TDatum extends ChartDatumBase = ChartDatumBase> = Omit<
@@ -15,7 +17,6 @@ export type ViewChartConfig<TRow, TDatum extends ChartDatumBase = ChartDatumBase
 
 export interface ReferenceChartRow {
     id: string;
-    series: string;
     axis_label: string;
     title: string | null;
     reference_range: (ObservationReferenceRange | string)[] | null;
@@ -30,13 +31,10 @@ export interface ReferenceChartOptions {
     formatValue?: (value: unknown) => string;
 }
 
-export interface ViewChartDashboardProps<TRow extends ReferenceChartRow> {
-    viewDefinitionId: string;
+export type ViewChartProps<TRow extends ReferenceChartRow> = ViewChartDataSource & {
     parameters?: ViewDefinitionRunParameter[];
     sort?: (a: TRow, b: TRow) => number;
-    charts?: ViewChartConfig<TRow>[] | ((rows: TRow[]) => ViewChartConfig<TRow>[]);
+    chart?: ViewChartConfig<TRow> | ((rows: TRow[]) => ViewChartConfig<TRow>);
     onPointClick?: (datum: ChartDatumBase) => void;
-    renderChart?: (chart: ReactNode, config: ViewChartConfig<TRow>, index: number) => ReactNode;
-    columns?: number;
-    gap?: number | string;
-}
+    renderChart?: (chart: ReactNode, config: ViewChartConfig<TRow>) => ReactNode;
+};

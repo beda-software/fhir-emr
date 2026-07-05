@@ -1,2 +1,2 @@
 export * from './ResourceListPage';
-export * from './ViewChartDashboard';
+export * from './ViewChart';
