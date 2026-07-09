@@ -18,12 +18,12 @@ describe('useViewChartRows', () => {
         vi.mocked(aidboxService).mockReset();
     });
 
-    it('view kind posts to $run with a Parameters body and returns rows', async () => {
+    it('ViewDefinition source posts to $run with a Parameters body and returns rows', async () => {
         vi.mocked(service).mockResolvedValue(success([{ id: 'a' }, { id: 'b' }]));
 
         const { result } = renderHook(() =>
             useViewChartRows<{ id: string }>(
-                { kind: 'view', view: 'test-view' },
+                { type: 'ViewDefinition', reference: 'ViewDefinition/test-view' },
                 { parameters: [{ name: 'patient', valueReference: { reference: 'Patient/p-1' } }] },
             ),
         );
@@ -45,12 +45,12 @@ describe('useViewChartRows', () => {
         expect(result.current[0]).toEqual(success([{ id: 'a' }, { id: 'b' }]));
     });
 
-    it('query kind gets /$query with flattened params and unwraps the data envelope', async () => {
+    it('AidboxQuery source gets /$query with flattened params and unwraps the data envelope', async () => {
         vi.mocked(aidboxService).mockResolvedValue(success({ data: [{ id: 'a' }] }));
 
         const { result } = renderHook(() =>
             useViewChartRows<{ id: string }>(
-                { kind: 'query', query: 'test-query' },
+                { type: 'AidboxQuery', reference: 'AidboxQuery/test-query' },
                 {
                     parameters: [
                         { name: 'patient', valueString: 'p-1' },
@@ -76,7 +76,10 @@ describe('useViewChartRows', () => {
         vi.mocked(service).mockResolvedValue(success([{ n: 3 }, { n: 1 }, { n: 2 }]));
 
         const { result } = renderHook(() =>
-            useViewChartRows<{ n: number }>({ kind: 'view', view: 'test-view' }, { sort: (a, b) => a.n - b.n }),
+            useViewChartRows<{ n: number }>(
+                { type: 'ViewDefinition', reference: 'ViewDefinition/test-view' },
+                { sort: (a, b) => a.n - b.n },
+            ),
         );
 
         await waitFor(() => expect(result.current[0].status).toBe('Success'));

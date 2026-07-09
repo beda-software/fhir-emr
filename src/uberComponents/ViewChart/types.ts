@@ -31,7 +31,8 @@ export interface ReferenceChartOptions {
     formatValue?: (value: unknown) => string;
 }
 
-export type ViewChartProps<TRow extends ReferenceChartRow> = ViewChartDataSource & {
+export type ViewChartProps<TRow extends ReferenceChartRow> = {
+    source: ViewChartDataSource;
     parameters?: ViewDefinitionRunParameter[];
     sort?: (a: TRow, b: TRow) => number;
     chart?: ViewChartConfig<TRow> | ((rows: TRow[]) => ViewChartConfig<TRow>);

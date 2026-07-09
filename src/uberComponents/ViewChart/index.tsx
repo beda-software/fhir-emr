@@ -13,9 +13,16 @@ export type { ViewChartDataSource } from './hooks';
 export { buildReferenceChart, sortByAxisLabel } from './referenceChart';
 
 export function ViewChart<TRow extends ReferenceChartRow>(props: ViewChartProps<TRow>) {
-    const { parameters, sort = sortByAxisLabel, chart = buildReferenceChart, onPointClick, renderChart } = props;
+    const {
+        source,
+        parameters,
+        sort = sortByAxisLabel,
+        chart = buildReferenceChart,
+        onPointClick,
+        renderChart,
+    } = props;
 
-    const [rows] = useViewChartRows<TRow>(props, { parameters, sort });
+    const [rows] = useViewChartRows<TRow>(source, { parameters, sort });
 
     return (
         <RenderRemoteData

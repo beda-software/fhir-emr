@@ -1,14 +1,17 @@
-import { Parameters } from 'fhir/r4b';
+import { Parameters, Reference } from 'fhir/r4b';
 import { useMemo } from 'react';
 
-import { ServiceManager, useService } from '@beda.software/fhir-react';
+import { parseFHIRReference, ServiceManager, useService } from '@beda.software/fhir-react';
 import { mapSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { aidboxService, service } from 'src/services/fhir';
 
 type ViewChartRunParameter = NonNullable<Parameters['parameter']>[number];
 
-export type ViewChartDataSource = { kind: 'view'; view: string } | { kind: 'query'; query: string };
+export type ViewChartDataSource = Reference & {
+    reference: string;
+    type: 'AidboxQuery' | 'ViewDefinition';
+};
 
 export interface UseViewChartRowsOptions<TRow> {
     parameters?: ViewChartRunParameter[];
@@ -39,27 +42,28 @@ export function useViewChartRows<TRow>(
     const parametersKey = JSON.stringify(parameters);
 
     const [remoteData, manager] = useService<TRow[]>(async () => {
-        switch (source.kind) {
-            case 'query': {
+        const { id } = parseFHIRReference(source);
+        switch (source.type) {
+            case 'AidboxQuery': {
                 const response = await aidboxService<{ data: TRow[] }>({
                     method: 'GET',
-                    url: `/$query/${source.query}`,
+                    url: `/$query/${id}`,
                     params: toQueryParams(parameters),
                 });
 
                 return mapSuccess(response, (result) => result.data ?? []);
             }
-            case 'view':
+            case 'ViewDefinition':
                 return service<TRow[]>({
                     method: 'POST',
-                    url: `/ViewDefinition/${source.view}/$run`,
+                    url: `/ViewDefinition/${id}/$run`,
                     data: {
                         resourceType: 'Parameters',
                         parameter: [...parameters, { name: '_format', valueCode: 'json' }],
                     },
                 });
         }
-    }, [source.kind, source.kind === 'view' ? source.view : source.query, parametersKey]);
+    }, [source.type, source.reference, parametersKey]);
 
     const sortedRemoteData = useMemo(
         () => (sort ? mapSuccess(remoteData, (rows) => [...rows].sort(sort)) : remoteData),
