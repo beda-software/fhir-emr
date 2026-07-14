@@ -502,10 +502,10 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.21.tgz#5b97a2d16287b73aa9ab6a80304fbbc69df438a7"
-  integrity sha512-bUMkba4YEh6er2OsOoLsCOOmJEhc8Ez/hy/PVKkUSE+fK+Hx/f901Jr/jlF6P9o1dGOhMMd7BYw8qDYxCBxz2g==
+"@beda.software/web-item-controls@^0.1.22":
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.22.tgz#d546280d0d4f7066755008d6c05bcba638259d4f"
+  integrity sha512-tSb1jY4ZYEawqXmemLppM4b5w4YUVRbsIkI1eJSo5vH7Ritwwjrax2z+HOhaaKx9O3yL1EJSZ3CPwJb2rXkdCA==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
