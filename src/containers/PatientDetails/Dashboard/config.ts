@@ -12,6 +12,8 @@ import { AppointmentCardContainer } from 'src/containers/PatientDetails/PatientO
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
+import { CreatinineDashboardContainer } from '../PatientOverviewDynamic/containers/CreatinineDashboardContainer';
+
 export const patientDashboardConfig: DashboardInstance = {
     top: [
         {
@@ -90,5 +92,9 @@ export const patientDashboardConfig: DashboardInstance = {
     ],
     left: [],
     right: [],
-    bottom: [],
+    bottom: [
+        {
+            widget: CreatinineDashboardContainer,
+        },
+    ],
 };
