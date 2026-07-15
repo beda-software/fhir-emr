@@ -1,0 +1,27 @@
+resourceType: ViewDefinition
+id: hmb-pain-severity
+name: hmb_pain_severity
+status: active
+resource: QuestionnaireResponse
+description: >-
+  One row per Heavy Menstrual Bleeding screening QuestionnaireResponse,
+  extracting the reported period pain severity for the HMB diagnostic chart.
+where:
+  - path: questionnaire = 'heavy-menstrual-bleeding-screening'
+select:
+  - column:
+      - name: id
+        path: getResourceKey()
+        type: string
+      - name: patient_id
+        path: subject.getReferenceKey(Patient)
+        type: string
+      - name: axis_label
+        path: authored
+        type: dateTime
+      - name: title
+        path: "'Period Pain Severity'"
+        type: string
+      - name: value_code
+        path: item.item.where(linkId = 'menstrual-pain-severity').answer.value.ofType(Coding).code.first()
+        type: code

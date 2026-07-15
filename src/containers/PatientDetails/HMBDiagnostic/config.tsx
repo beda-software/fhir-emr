@@ -1,49 +1,67 @@
 import { AreaChartOutlined, BarChartOutlined, CalendarOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
+import type { Parameters } from 'fhir/r4b';
+import type { ReactNode } from 'react';
 
 import { createCategoricalAxis, formatAuthored, formatChartDateTime, makeUniqueX } from 'src/components/Chart';
-import type { CategoricalAxis, ChartCardProps } from 'src/components/Chart';
+import type { CategoricalAxis } from 'src/components/Chart';
+import type { ReferenceChartRow, ViewChartConfig, ViewChartDataSource } from 'src/uberComponents/ViewChart';
 
-import { HMBChartDatum, HMBResponseRow } from './types';
+import { HMBChartDatum } from './types';
 
+type HMBQueryParameter = NonNullable<Parameters['parameter']>[number];
 type HMBChartMeta = Pick<HMBChartDatum, 'x' | 'xLabel' | 'xDate' | 'xTooltipLabel' | 'qrId'>;
-type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows' | 'onPointClick'>;
-type AreaScoreField = 'impact_score' | 'intensity';
-type FlowAxis = CategoricalAxis<NonNullable<HMBResponseRow['flow']>>;
-type SeverityAxis = CategoricalAxis<NonNullable<HMBResponseRow['pain_severity']>>;
+type FlowCode = 'very-heavy' | 'heavy' | 'moderate' | 'light' | 'very-light';
+type SeverityCode = 'very-severe' | 'severe' | 'moderate' | 'mild' | 'no-pain';
+type FlowAxis = CategoricalAxis<FlowCode>;
+type SeverityAxis = CategoricalAxis<SeverityCode>;
+
+export interface HMBChartEntry {
+    id: string;
+    source: ViewChartDataSource;
+    icon: ReactNode;
+    parameters: (patientId: string) => HMBQueryParameter[];
+    config:
+        | ViewChartConfig<ReferenceChartRow, HMBChartDatum>
+        | ((rows: ReferenceChartRow[]) => ViewChartConfig<ReferenceChartRow, HMBChartDatum>);
+}
 
 const SCORE_DOMAIN: [number, number] = [0, 10];
 const PAIN_SCORE_DOMAIN: [number, number] = [1, 10];
 const SCORE_TICKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const X_AXIS_PROPS = { interval: 0 as const };
 
-function toChartMetaRow(row: HMBResponseRow): HMBChartMeta {
-    const xLabel = formatAuthored(row.authored);
+// The four single-metric charts run against ViewDefinitions, filtered server-side by patient reference.
+const viewDefinitionPatientParameters = (patientId: string): HMBQueryParameter[] => [
+    { name: 'patient', valueReference: { reference: `Patient/${patientId}` } },
+];
+
+// The combined severity/score chart runs against an AidboxQuery, which reads the bare patient id.
+const aidboxQueryPatientParameters = (patientId: string): HMBQueryParameter[] => [
+    { name: 'patient', valueString: patientId },
+];
+
+function toChartMetaRow(row: ReferenceChartRow): HMBChartMeta {
+    const xLabel = formatAuthored(row.axis_label);
 
     return {
         x: makeUniqueX(xLabel, row.id),
         xLabel,
-        xDate: row.authored,
-        xTooltipLabel: formatChartDateTime(row.authored),
+        xDate: row.axis_label,
+        xTooltipLabel: formatChartDateTime(row.axis_label),
         qrId: row.id,
     };
 }
 
-// Reuse the same x-axis metadata across all HMB charts so a clicked point can open the source document.
-export function toChartMeta(rows: HMBResponseRow[]): HMBChartMeta[] {
-    return rows.map(toChartMetaRow);
+// Each single-metric HMB view definition carries its numeric answer in value_integer.
+function toNumericValue(rows: ReferenceChartRow[]): HMBChartDatum[] {
+    return rows.map((row) => ({
+        ...toChartMetaRow(row),
+        y: row.value_integer ?? undefined,
+    }));
 }
 
-// Numeric questionnaire answers can be absent; undefined lets Recharts skip the point instead of rendering NaN.
-export function toNumericField(field: AreaScoreField) {
-    return (rows: HMBResponseRow[]): HMBChartDatum[] =>
-        rows.map((row) => ({
-            ...toChartMetaRow(row),
-            y: row[field] ?? undefined,
-        }));
-}
-
-export const flowAxis = () =>
+export const flowAxis = (): FlowAxis =>
     createCategoricalAxis([
         { key: 'very-light', label: t`Very Light` },
         { key: 'light', label: t`Light` },
@@ -52,18 +70,16 @@ export const flowAxis = () =>
         { key: 'very-heavy', label: t`Very Heavy` },
     ] as const);
 
-// Flow is stored as an ordered code, while the chart expects a numeric y value.
+// Flow is stored as an ordered code in value_code, while the chart expects a numeric y value.
 const toFlowVolumeWithAxis =
     (axis: FlowAxis) =>
-    (rows: HMBResponseRow[]): HMBChartDatum[] =>
+    (rows: ReferenceChartRow[]): HMBChartDatum[] =>
         rows.map((row) => ({
             ...toChartMetaRow(row),
-            y: axis.encode(row.flow),
+            y: axis.encode(row.value_code as FlowCode | null),
         }));
 
-export const toFlowVolume = (rows: HMBResponseRow[]): HMBChartDatum[] => toFlowVolumeWithAxis(flowAxis())(rows);
-
-export const severityAxis = () =>
+export const severityAxis = (): SeverityAxis =>
     createCategoricalAxis([
         { key: 'no-pain', label: t`No Pain` },
         { key: 'mild', label: t`Mild` },
@@ -72,82 +88,109 @@ export const severityAxis = () =>
         { key: 'very-severe', label: t`Very Severe` },
     ] as const);
 
-// The bar shows ordered pain severity; the right-axis line keeps the numeric pain score.
-const toPainScoreWithAxis =
+// The combined AidboxQuery carries severity as an ordered code in value_code (bar) and the raw
+// pain score in value_integer (line).
+const toPainSeverityAndScoreWithAxis =
     (axis: SeverityAxis) =>
-    (rows: HMBResponseRow[]): HMBChartDatum[] =>
+    (rows: ReferenceChartRow[]): HMBChartDatum[] =>
         rows.map((row) => ({
             ...toChartMetaRow(row),
-            y: axis.encode(row.pain_severity),
-            yLine: row.pain_score ?? undefined,
+            y: axis.encode(row.value_code as SeverityCode | null),
+            yLine: row.value_integer ?? undefined,
         }));
-
-export const toPainScore = (rows: HMBResponseRow[]): HMBChartDatum[] => toPainScoreWithAxis(severityAxis())(rows);
 
 // Recharts tooltip formatters receive mixed values, so only numbers get fixed precision.
 const numericFormatter = (value: unknown) => (typeof value === 'number' ? value.toFixed(1) : String(value ?? ''));
 
-export const getHMBCharts = (): HMBChartConfig[] => {
-    const flow = flowAxis();
+// chart is a function here so the right-axis (pain score) domain can stretch to fit any
+// out-of-range scores instead of clipping them, while the left axis stays the fixed severity scale.
+function buildPainSeverityAndScoreChart(rows: ReferenceChartRow[]): ViewChartConfig<ReferenceChartRow, HMBChartDatum> {
     const severity = severityAxis();
+    const scores = rows.map((row) => row.value_integer).filter((score): score is number => score != null);
+    const yLineMax = scores.length ? Math.max(PAIN_SCORE_DOMAIN[1], ...scores) : PAIN_SCORE_DOMAIN[1];
+
+    return {
+        xAxisProps: X_AXIS_PROPS,
+        title: t`Period Pain Severity & Score`,
+        variant: 'bar+line',
+
+        ...severity.chartProps,
+        transform: toPainSeverityAndScoreWithAxis(severity),
+
+        yLineDomain: [PAIN_SCORE_DOMAIN[0], yLineMax],
+        yLineTicks: SCORE_TICKS,
+        barProps: { name: t`Pain Severity` },
+        // No stroke override: bar+line charts default their line to theme.success (green).
+        lineProps: { name: t`Pain Score` },
+        tooltipProps: {
+            formatter: severity.tooltipFormatterForDataKey('y'),
+        },
+        yAxisProps: { width: 100 },
+    };
+}
+
+export const getHMBCharts = (): HMBChartEntry[] => {
+    const flow = flowAxis();
 
     return [
         {
-            xAxisProps: X_AXIS_PROPS,
-            title: t`Flow Volume`,
+            id: 'flow-volume',
+            source: { type: 'ViewDefinition', reference: 'ViewDefinition/hmb-flow-volume' },
             icon: <BarChartOutlined />,
-            variant: 'bar',
+            parameters: viewDefinitionPatientParameters,
+            config: {
+                xAxisProps: X_AXIS_PROPS,
+                title: t`Flow Volume`,
+                variant: 'bar',
 
-            ...flow.chartProps,
-            transform: toFlowVolumeWithAxis(flow),
+                ...flow.chartProps,
+                transform: toFlowVolumeWithAxis(flow),
 
-            barProps: { name: t`Flow Volume` },
-            tooltipProps: {
-                formatter: flow.tooltipFormatter,
+                barProps: { name: t`Flow Volume` },
+                tooltipProps: {
+                    formatter: flow.tooltipFormatter,
+                },
+                yAxisProps: { width: 90 },
             },
-            yAxisProps: { width: 90 },
         },
         {
-            xAxisProps: X_AXIS_PROPS,
-            title: t`Period Pain Score`,
+            id: 'pain-severity-score',
+            source: { type: 'AidboxQuery', reference: 'AidboxQuery/hmb-pain-severity-score' },
             icon: <HeartOutlined />,
-            variant: 'bar+line',
-
-            ...severity.chartProps,
-            transform: toPainScoreWithAxis(severity),
-
-            yLineDomain: PAIN_SCORE_DOMAIN,
-            yLineTicks: SCORE_TICKS,
-            barProps: { name: t`Pain Severity` },
-            lineProps: {
-                name: t`Pain Score`,
-            },
-            tooltipProps: {
-                formatter: severity.tooltipFormatterForDataKey('y'),
-            },
-            yAxisProps: { width: 100 },
+            parameters: aidboxQueryPatientParameters,
+            config: buildPainSeverityAndScoreChart,
         },
         {
-            xAxisProps: X_AXIS_PROPS,
-            title: t`Impact of Period on Daily Activities`,
+            id: 'impact-score',
+            source: { type: 'ViewDefinition', reference: 'ViewDefinition/hmb-impact-score' },
             icon: <CalendarOutlined />,
-            variant: 'area',
-            transform: toNumericField('impact_score'),
-            yDomain: SCORE_DOMAIN,
-            yTicks: SCORE_TICKS,
-            areaProps: { name: t`Impact Score` },
-            tooltipProps: { formatter: numericFormatter },
+            parameters: viewDefinitionPatientParameters,
+            config: {
+                xAxisProps: X_AXIS_PROPS,
+                title: t`Impact of Period on Daily Activities`,
+                variant: 'area',
+                transform: toNumericValue,
+                yDomain: SCORE_DOMAIN,
+                yTicks: SCORE_TICKS,
+                areaProps: { name: t`Impact Score` },
+                tooltipProps: { formatter: numericFormatter },
+            },
         },
         {
-            xAxisProps: X_AXIS_PROPS,
-            title: t`Intensity of Menstrual Bleeding`,
+            id: 'intensity',
+            source: { type: 'ViewDefinition', reference: 'ViewDefinition/hmb-intensity' },
             icon: <AreaChartOutlined />,
-            variant: 'area',
-            transform: toNumericField('intensity'),
-            yDomain: SCORE_DOMAIN,
-            yTicks: SCORE_TICKS,
-            areaProps: { name: t`Intensity` },
-            tooltipProps: { formatter: numericFormatter },
+            parameters: viewDefinitionPatientParameters,
+            config: {
+                xAxisProps: X_AXIS_PROPS,
+                title: t`Intensity of Menstrual Bleeding`,
+                variant: 'area',
+                transform: toNumericValue,
+                yDomain: SCORE_DOMAIN,
+                yTicks: SCORE_TICKS,
+                areaProps: { name: t`Intensity` },
+                tooltipProps: { formatter: numericFormatter },
+            },
         },
     ];
 };

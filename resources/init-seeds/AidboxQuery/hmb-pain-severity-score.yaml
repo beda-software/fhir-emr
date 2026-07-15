@@ -1,0 +1,18 @@
+id: hmb-pain-severity-score
+resourceType: AidboxQuery
+query: >-
+  SELECT
+    COALESCE(severity.id, score.id) AS id,
+    COALESCE(severity.axis_label, score.axis_label) AS axis_label,
+    'Period Pain Severity & Score' AS title,
+    NULL AS reference_range,
+    severity.value_code AS value_code,
+    score.value_integer AS value_integer,
+    NULL AS value_quantity
+  FROM sof.hmb_pain_severity AS severity
+  FULL JOIN sof.hmb_pain_score AS score ON severity.id = score.id
+  WHERE COALESCE(severity.patient_id, score.patient_id) = {{params.patient}}
+params:
+  patient:
+    type: "string"
+    isRequired: true
