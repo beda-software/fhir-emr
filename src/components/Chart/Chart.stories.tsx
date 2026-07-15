@@ -7,8 +7,9 @@ import { failure, loading, success } from '@beda.software/remote-data';
 
 import { getHMBCharts } from 'src/containers/PatientDetails/HMBDiagnostic/config';
 import { S as HMBStyles } from 'src/containers/PatientDetails/HMBDiagnostic/styles';
-import type { HMBChartDatum, HMBResponseRow } from 'src/containers/PatientDetails/HMBDiagnostic/types';
+import type { HMBChartDatum } from 'src/containers/PatientDetails/HMBDiagnostic/types';
 import { withColorSchemeDecorator } from 'src/storybook/decorators';
+import type { ReferenceChartRow } from 'src/uberComponents/ViewChart';
 
 import { Chart } from './Chart';
 import { ChartCard } from './ChartCard';
@@ -61,68 +62,85 @@ const rows = [
 ];
 type StoryRow = (typeof rows)[number];
 
-const hmbRows: HMBResponseRow[] = [
+const hmbStoryPoints = [
     {
         id: 'hmb-1',
-        patient_id: 'patient-hmb-story',
         authored: '2025-11-21T09:00:00Z',
         flow: 'light',
-        pain_severity: 'no-pain',
-        pain_score: 1,
-        impact_score: 6.1,
+        painSeverity: 'no-pain',
+        painScore: 1,
+        impactScore: 6.1,
         intensity: 6.1,
     },
     {
         id: 'hmb-2',
-        patient_id: 'patient-hmb-story',
         authored: '2025-12-19T09:00:00Z',
         flow: 'heavy',
-        pain_severity: 'severe',
-        pain_score: 10,
-        impact_score: 6.8,
+        painSeverity: 'severe',
+        painScore: 10,
+        impactScore: 6.8,
         intensity: 6.8,
     },
     {
         id: 'hmb-3',
-        patient_id: 'patient-hmb-story',
         authored: '2026-01-16T09:00:00Z',
         flow: 'very-heavy',
-        pain_severity: 'severe',
-        pain_score: 6.3,
-        impact_score: 7.9,
+        painSeverity: 'severe',
+        painScore: 6.3,
+        impactScore: 7.9,
         intensity: 7.9,
     },
     {
         id: 'hmb-4',
-        patient_id: 'patient-hmb-story',
         authored: '2026-02-13T09:00:00Z',
         flow: 'light',
-        pain_severity: 'moderate',
-        pain_score: 5.5,
-        impact_score: 8.1,
+        painSeverity: 'moderate',
+        painScore: 5.5,
+        impactScore: 8.1,
         intensity: 8.1,
     },
     {
         id: 'hmb-5',
-        patient_id: 'patient-hmb-story',
         authored: '2026-03-13T09:00:00Z',
         flow: 'moderate',
-        pain_severity: 'moderate',
-        pain_score: 5.5,
-        impact_score: 7.3,
+        painSeverity: 'moderate',
+        painScore: 5.5,
+        impactScore: 7.3,
         intensity: 7.3,
     },
     {
         id: 'hmb-6',
-        patient_id: 'patient-hmb-story',
         authored: '2026-04-10T09:00:00Z',
         flow: 'light',
-        pain_severity: 'no-pain',
-        pain_score: 1,
-        impact_score: 4.4,
+        painSeverity: 'no-pain',
+        painScore: 1,
+        impactScore: 4.4,
         intensity: 4.4,
     },
-];
+] as const;
+
+// Each HMB chart is backed by its own narrow ViewDefinition, so the story fakes one
+// ReferenceChartRow projection per metric out of the same underlying story points.
+function toHMBStoryRows(
+    pick: (point: (typeof hmbStoryPoints)[number]) => Pick<ReferenceChartRow, 'value_code' | 'value_integer'>,
+): ReferenceChartRow[] {
+    return hmbStoryPoints.map((point) => ({
+        id: point.id,
+        axis_label: point.authored,
+        title: null,
+        reference_range: null,
+        value_quantity: null,
+        ...pick(point),
+    }));
+}
+
+const hmbRowsByChartId: Record<string, ReferenceChartRow[]> = {
+    'flow-volume': toHMBStoryRows((point) => ({ value_code: point.flow, value_integer: null })),
+    'pain-severity': toHMBStoryRows((point) => ({ value_code: point.painSeverity, value_integer: null })),
+    'pain-score': toHMBStoryRows((point) => ({ value_code: null, value_integer: point.painScore })),
+    'impact-score': toHMBStoryRows((point) => ({ value_code: null, value_integer: point.impactScore })),
+    intensity: toHMBStoryRows((point) => ({ value_code: null, value_integer: point.intensity })),
+};
 
 const meta = {
     title: 'components / Chart',
@@ -254,8 +272,14 @@ function HMBDashboardPreview() {
             </S.Actions>
 
             <HMBStyles.Grid>
-                {getHMBCharts().map((cfg, index) => (
-                    <ChartCard<HMBResponseRow, HMBChartDatum> key={index} rows={success(hmbRows)} {...cfg} />
+                {getHMBCharts().map((entry) => (
+                    <ChartCard<ReferenceChartRow, HMBChartDatum>
+                        key={entry.id}
+                        title={entry.config.title}
+                        icon={entry.icon}
+                        rows={success(hmbRowsByChartId[entry.id] ?? [])}
+                        {...entry.config}
+                    />
                 ))}
             </HMBStyles.Grid>
         </S.HMBDashboard>

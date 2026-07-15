@@ -1,0 +1,28 @@
+resourceType: ViewDefinition
+id: hmb-intensity
+name: hmb_intensity
+status: active
+resource: QuestionnaireResponse
+description: >-
+  One row per Heavy Menstrual Bleeding screening QuestionnaireResponse,
+  extracting the reported intensity of menstrual bleeding for the HMB
+  diagnostic chart.
+where:
+  - path: questionnaire = 'heavy-menstrual-bleeding-screening'
+select:
+  - column:
+      - name: id
+        path: getResourceKey()
+        type: string
+      - name: patient_id
+        path: subject.getReferenceKey(Patient)
+        type: string
+      - name: axis_label
+        path: authored
+        type: dateTime
+      - name: title
+        path: "'Intensity of Menstrual Bleeding'"
+        type: string
+      - name: value_integer
+        path: item.item.where(linkId = 'intensity-menstrual-bleeding').answer.value.ofType(integer).first()
+        type: integer

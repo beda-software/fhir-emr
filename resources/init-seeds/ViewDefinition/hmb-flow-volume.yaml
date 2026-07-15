@@ -1,0 +1,27 @@
+resourceType: ViewDefinition
+id: hmb-flow-volume
+name: hmb_flow_volume
+status: active
+resource: QuestionnaireResponse
+description: >-
+  One row per Heavy Menstrual Bleeding screening QuestionnaireResponse,
+  extracting the reported menstrual flow volume for the HMB diagnostic chart.
+where:
+  - path: questionnaire = 'heavy-menstrual-bleeding-screening'
+select:
+  - column:
+      - name: id
+        path: getResourceKey()
+        type: string
+      - name: patient_id
+        path: subject.getReferenceKey(Patient)
+        type: string
+      - name: axis_label
+        path: authored
+        type: dateTime
+      - name: title
+        path: "'Flow Volume'"
+        type: string
+      - name: value_code
+        path: item.item.where(linkId = 'menstrual-bleeding-flow').answer.value.ofType(Coding).code.first()
+        type: code
