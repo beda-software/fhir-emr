@@ -136,8 +136,10 @@ function toHMBStoryRows(
 
 const hmbRowsByChartId: Record<string, ReferenceChartRow[]> = {
     'flow-volume': toHMBStoryRows((point) => ({ value_code: point.flow, value_integer: null })),
-    'pain-severity': toHMBStoryRows((point) => ({ value_code: point.painSeverity, value_integer: null })),
-    'pain-score': toHMBStoryRows((point) => ({ value_code: null, value_integer: point.painScore })),
+    'pain-severity-score': toHMBStoryRows((point) => ({
+        value_code: point.painSeverity,
+        value_integer: point.painScore,
+    })),
     'impact-score': toHMBStoryRows((point) => ({ value_code: null, value_integer: point.impactScore })),
     intensity: toHMBStoryRows((point) => ({ value_code: null, value_integer: point.intensity })),
 };
@@ -272,15 +274,20 @@ function HMBDashboardPreview() {
             </S.Actions>
 
             <HMBStyles.Grid>
-                {getHMBCharts().map((entry) => (
-                    <ChartCard<ReferenceChartRow, HMBChartDatum>
-                        key={entry.id}
-                        title={entry.config.title}
-                        icon={entry.icon}
-                        rows={success(hmbRowsByChartId[entry.id] ?? [])}
-                        {...entry.config}
-                    />
-                ))}
+                {getHMBCharts().map((entry) => {
+                    const storyRows = hmbRowsByChartId[entry.id] ?? [];
+                    const config = typeof entry.config === 'function' ? entry.config(storyRows) : entry.config;
+
+                    return (
+                        <ChartCard<ReferenceChartRow, HMBChartDatum>
+                            key={entry.id}
+                            title={config.title}
+                            icon={entry.icon}
+                            rows={success(storyRows)}
+                            {...config}
+                        />
+                    );
+                })}
             </HMBStyles.Grid>
         </S.HMBDashboard>
     );

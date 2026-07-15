@@ -1,5 +1,5 @@
 import { Patient } from 'fhir/r4b';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { ChartDatumBase } from 'src/components/Chart';
@@ -14,11 +14,6 @@ import { HMBChartDatum } from './types';
 export function HMBDiagnosticDashboard({ patient }: { patient: Patient }) {
     const navigate = useNavigate();
     const [refreshKey, setRefreshKey] = useState(0);
-
-    const parameters = useMemo(
-        () => (patient.id ? [{ name: 'patient', valueReference: { reference: `Patient/${patient.id}` } }] : []),
-        [patient.id],
-    );
 
     const onPointClick = (datum: ChartDatumBase) => {
         const { qrId } = datum as HMBChartDatum;
@@ -40,7 +35,7 @@ export function HMBDiagnosticDashboard({ patient }: { patient: Patient }) {
                     <ViewChart<ReferenceChartRow>
                         key={`${entry.id}-${refreshKey}`}
                         source={entry.source}
-                        parameters={parameters}
+                        parameters={patient.id ? entry.parameters(patient.id) : []}
                         chart={entry.config}
                         onPointClick={onPointClick}
                         renderChart={(chart, config) => (
