@@ -1,48 +1,70 @@
 import { InfoOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Observation, Patient } from 'fhir/r4b';
-import _ from 'lodash';
-import moment from 'moment';
-// eslint-disable-next-line import/named
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipContentProps } from 'recharts';
+import { Patient } from 'fhir/r4b';
+import { useState } from 'react';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
-import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
+import type { ChartDatumBase } from 'src/components/Chart';
+import { formatAuthored, formatChartDateTime, makeUniqueX } from 'src/components/Chart';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import type { ReferenceChartRow, ViewChartConfig } from 'src/uberComponents/ViewChart';
+import { ViewChart } from 'src/uberComponents/ViewChart';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { S } from './DashboardCard.styles';
 
-export type ObservationWithDate = WithId<Observation> & { effective: Date };
-
 interface Props {
     patient: Patient;
-    observationsRemoteData: RemoteData<Array<ObservationWithDate>>;
-    reload: () => void;
 }
 
-const formatTime = (unixTime: number) => moment(unixTime).format('HH:mm Do');
+type CreatinineGender = 'male' | 'female';
 
-function CustomTooltip({ payload, label }: Partial<TooltipContentProps<number, number>>) {
-    if (label === undefined || label === null) {
-        return null;
-    }
-    const labelValue = _.isNumber(label) ? label : Number(label);
+// The creatinine extraction Mapping doesn't populate Observation.referenceRange, so the normal
+// range is looked up client-side by patient gender instead of coming from row.reference_range.
+const CREATININE_REFERENCE_RANGES: Record<CreatinineGender, { min: number; max: number }> = {
+    female: { min: 0.59, max: 1.04 },
+    male: { min: 0.74, max: 1.35 },
+};
 
-    return (
-        <div>
-            <span>{formatTime(labelValue)}</span>
-            <br />
-            <span>{payload?.[0]?.value} mg/dL</span>
-        </div>
-    );
+const creatinineTooltipFormatter = (value: unknown) =>
+    typeof value === 'number' ? `${value} mg/dL` : String(value ?? '');
+
+function toCreatinineDatum(rows: ReferenceChartRow[]): ChartDatumBase[] {
+    return rows.map((row) => {
+        const xLabel = formatAuthored(row.axis_label);
+
+        return {
+            x: makeUniqueX(xLabel, row.id),
+            xTooltipLabel: formatChartDateTime(row.axis_label),
+            y: row.value_quantity ?? undefined,
+        };
+    });
 }
 
-export function CreatinineDashboard({ observationsRemoteData, patient, reload }: Props) {
+// chart is a function of gender (not rows) since the normal-range band depends on patient.gender,
+// which isn't part of the fetched rows.
+function buildCreatinineChart(gender: Patient['gender']) {
+    const range =
+        gender && gender in CREATININE_REFERENCE_RANGES
+            ? CREATININE_REFERENCE_RANGES[gender as CreatinineGender]
+            : undefined;
+
+    return (): ViewChartConfig<ReferenceChartRow, ChartDatumBase> => ({
+        title: t`Creatinine`,
+        variant: 'area',
+        transform: toCreatinineDatum,
+        referenceAreas: range ? [{ y1: range.min, y2: range.max, fill: '#52c41a', fillOpacity: 0.12 }] : undefined,
+        areaProps: { name: t`Creatinine` },
+        tooltipProps: { formatter: creatinineTooltipFormatter },
+    });
+}
+
+export function CreatinineDashboard({ patient }: Props) {
     const author = selectCurrentUserRoleResource();
-    const total = isSuccess(observationsRemoteData) && observationsRemoteData.data.length;
+    const [refreshKey, setRefreshKey] = useState(0);
+    const chart = buildCreatinineChart(patient.gender);
+
     return (
         <S.Wrapper>
             <S.Card>
@@ -51,8 +73,7 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                         <S.Icon>
                             <InfoOutlined />
                         </S.Icon>
-                        <S.Title>Creatinine Dashboard</S.Title>
-                        {total != false && total > 0 ? `Total ${total}` : null}
+                        <S.Title>{t`Creatinine Dashboard`}</S.Title>
                     </div>
                 </S.Header>
                 <S.Content>
@@ -64,43 +85,22 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                             paddingTop: 20,
                         }}
                     >
-                        <RenderRemoteData remoteData={observationsRemoteData}>
-                            {(observations) => {
-                                const data = observations.map(({ effective, valueQuantity }) => ({
-                                    effective: effective.getTime(),
-                                    value: valueQuantity?.value,
-                                }));
-                                data.sort((o1, o2) => o1.effective - o2.effective);
-                                console.log(data);
-                                const references = {
-                                    female: { min: 0.59, max: 1.04 },
-                                    male: { min: 0.74, max: 1.35 },
-                                    default: { min: 0, max: 0 },
-                                };
-                                const referenceValue = references[patient.gender ?? 'default'] ?? references['default'];
-                                const { min, max } = referenceValue;
-
-                                return data.length > 0 ? (
-                                    <LineChart width={800} height={300} data={data}>
-                                        <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                                        <CartesianGrid stroke="#ccc" />
-                                        <XAxis
-                                            dataKey="effective"
-                                            scale="linear"
-                                            type="number"
-                                            domain={['auto', 'auto']}
-                                            tickFormatter={formatTime}
-                                        />
-                                        <YAxis />
-                                        {min > 0 ? <ReferenceLine y={min} label={t`Min`} stroke="red" /> : null}
-                                        {max > 0 ? <ReferenceLine y={max} label={t`Max`} stroke="red" /> : null}
-                                        <Tooltip content={<CustomTooltip />} />
-                                    </LineChart>
-                                ) : (
-                                    <></>
-                                );
-                            }}
-                        </RenderRemoteData>
+                        <ViewChart<ReferenceChartRow>
+                            key={refreshKey}
+                            source={{ type: 'ViewDefinition', reference: 'ViewDefinition/creatinine-observations' }}
+                            parameters={
+                                patient.id
+                                    ? [{ name: 'patient', valueReference: { reference: `Patient/${patient.id}` } }]
+                                    : []
+                            }
+                            chart={chart}
+                            renderChart={(chartElement, _config, data) => (
+                                <div style={{ flex: 1 }}>
+                                    {data.length > 0 ? <div>{t`Total ${data.length}`}</div> : null}
+                                    {chartElement}
+                                </div>
+                            )}
+                        />
                         <QuestionnaireResponseForm
                             initialQuestionnaireResponse={{
                                 resourceType: 'QuestionnaireResponse',
@@ -112,7 +112,7 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                                 { name: 'Patient', resource: patient },
                                 { name: 'Author', resource: author },
                             ]}
-                            onSuccess={reload}
+                            onSuccess={() => setRefreshKey((key) => key + 1)}
                         />
                     </div>
                 </S.Content>

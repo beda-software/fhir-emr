@@ -1,0 +1,27 @@
+resourceType: ViewDefinition
+id: creatinine-observations
+name: creatinine_observations
+status: active
+resource: Observation
+description: >-
+  One row per Creatinine [Mass/volume] in Serum or Plasma (LOINC 2160-0)
+  Observation, for the Creatinine dashboard chart.
+where:
+  - path: code.coding.where(system = 'http://loinc.org' and code = '2160-0').exists()
+select:
+  - column:
+      - name: id
+        path: getResourceKey()
+        type: string
+      - name: patient_id
+        path: subject.getReferenceKey(Patient)
+        type: string
+      - name: axis_label
+        path: effective.ofType(dateTime)
+        type: dateTime
+      - name: title
+        path: "'Creatinine'"
+        type: string
+      - name: value_quantity
+        path: value.ofType(Quantity).value.first()
+        type: decimal
