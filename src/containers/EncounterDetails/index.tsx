@@ -1,5 +1,6 @@
 import { AudioOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Button, notification } from 'antd';
 import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
@@ -191,6 +192,7 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
 
 function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => void; closeModal: () => void }) {
     const { encounter, onSuccess, closeModal } = props;
+    const { i18n } = useLingui();
 
     const completeEncounterFormWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => (
@@ -201,6 +203,7 @@ function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => v
 
     return (
         <QuestionnaireResponseForm
+            language={i18n.locale}
             questionnaireLoader={questionnaireIdLoader('complete-encounter')}
             launchContextParameters={[
                 {

@@ -1,5 +1,6 @@
 import { InfoOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Patient } from 'fhir/r4b';
 import { useState } from 'react';
 
@@ -61,6 +62,7 @@ function buildCreatinineChart(gender: Patient['gender']) {
 }
 
 export function CreatinineDashboard({ patient }: Props) {
+    const { i18n } = useLingui();
     const author = selectCurrentUserRoleResource();
     const [refreshKey, setRefreshKey] = useState(0);
     const chart = buildCreatinineChart(patient.gender);
@@ -102,6 +104,7 @@ export function CreatinineDashboard({ patient }: Props) {
                             )}
                         />
                         <QuestionnaireResponseForm
+                            language={i18n.locale}
                             initialQuestionnaireResponse={{
                                 resourceType: 'QuestionnaireResponse',
                                 questionnaire: 'creatinine',

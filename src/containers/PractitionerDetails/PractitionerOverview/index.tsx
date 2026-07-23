@@ -1,5 +1,6 @@
 import { ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Button, notification } from 'antd';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback } from 'react';
@@ -104,6 +105,7 @@ function EditPractitionerForm(props: {
     closeModal: () => void;
 }) {
     const { practitioner, practitionerRole, reload, closeModal } = props;
+    const { i18n } = useLingui();
 
     const formWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
@@ -112,6 +114,7 @@ function EditPractitionerForm(props: {
 
     return (
         <QuestionnaireResponseForm
+            language={i18n.locale}
             questionnaireLoader={questionnaireIdLoader('practitioner-edit')}
             launchContextParameters={[
                 { name: 'Practitioner', resource: practitioner },

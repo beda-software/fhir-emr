@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Button, notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 import { useCallback } from 'react';
@@ -34,6 +35,7 @@ export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
 
 function NoteCreateForm(props: { onCreate: () => void; closeModal: () => void }) {
     const { onCreate, closeModal } = props;
+    const { i18n } = useLingui();
 
     const formWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
@@ -42,6 +44,7 @@ function NoteCreateForm(props: { onCreate: () => void; closeModal: () => void })
 
     return (
         <QuestionnaireResponseForm
+            language={i18n.locale}
             questionnaireLoader={questionnaireIdLoader('patient-note-create')}
             onSuccess={() => {
                 closeModal();

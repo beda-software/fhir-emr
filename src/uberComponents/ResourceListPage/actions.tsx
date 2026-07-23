@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Button, ModalProps, notification } from 'antd';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
@@ -40,6 +41,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
     reload: () => void;
     defaultLaunchContext: ParametersParameter[];
 }) {
+    const { i18n } = useLingui();
     return (
         <ModalTrigger
             title={action.title}
@@ -52,6 +54,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
+                    language={i18n.locale}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
                         ...defaultLaunchContext,
@@ -80,6 +83,7 @@ interface HeaderQuestionnaireActionProps {
 }
 
 export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext }: HeaderQuestionnaireActionProps) {
+    const { i18n } = useLingui();
     return (
         <ModalTrigger
             title={action.title}
@@ -92,6 +96,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
+                    language={i18n.locale}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     onSuccess={() => {
                         closeModal();
@@ -121,6 +126,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
     disabled?: boolean;
     defaultLaunchContext: ParametersParameter[];
 }) {
+    const { i18n } = useLingui();
     if (action.type === 'questionnaire') {
         return (
             <ModalTrigger
@@ -134,6 +140,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
             >
                 {({ closeModal }) => (
                     <QuestionnaireResponseForm
+                        language={i18n.locale}
                         questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                         launchContextParameters={[
                             ...defaultLaunchContext,

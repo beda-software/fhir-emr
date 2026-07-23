@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { notification } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +18,7 @@ import { history } from 'src/services/history';
 import { S } from './PublicAppointment.styles';
 
 export function PublicAppointment() {
+    const { i18n } = useLingui();
     const practitionerRolePath = ['practitioner-role', 0, 'value', 'Reference'];
     const appToken = getToken();
     const isAnonymousUser = !appToken;
@@ -44,6 +46,7 @@ export function PublicAppointment() {
                     <Spinner />
                 ) : (
                     <QuestionnaireResponseForm
+                        language={i18n.locale}
                         questionnaireLoader={questionnaireIdLoader('public-appointment')}
                         onSuccess={() => {
                             notification.success({

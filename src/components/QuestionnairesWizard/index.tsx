@@ -1,3 +1,5 @@
+import { useLingui } from '@lingui/react';
+
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
@@ -11,6 +13,7 @@ export { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFoo
 
 export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
     const { onSuccess, onStepSuccess, initialQuestionnaireResponse, FormFooterComponent, ...other } = props;
+    const { i18n } = useLingui();
 
     const {
         currentQuestionnaire,
@@ -35,6 +38,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
             {...props.wizard}
         >
             <QuestionnaireResponseFormDraft
+                language={i18n.locale}
                 key={currentQuestionnaire?.id}
                 autoSave
                 qrDraftServiceType="local"

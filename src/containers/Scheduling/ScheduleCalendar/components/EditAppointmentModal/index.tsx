@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { PractitionerRole } from 'fhir/r4b';
 import { useCallback } from 'react';
 
@@ -20,6 +21,7 @@ interface Props {
 
 export function EditAppointmentModal(props: Props) {
     const { showModal, onClose, onSubmit, appointmentId, practitionerRole } = props;
+    const { i18n } = useLingui();
 
     const formWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={onClose} />,
@@ -29,6 +31,7 @@ export function EditAppointmentModal(props: Props) {
     return (
         <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
             <QuestionnaireResponseForm
+                language={i18n.locale}
                 questionnaireLoader={questionnaireIdLoader('edit-appointment')}
                 questionnaireResponseSaveService={inMemorySaveService}
                 launchContextParameters={[

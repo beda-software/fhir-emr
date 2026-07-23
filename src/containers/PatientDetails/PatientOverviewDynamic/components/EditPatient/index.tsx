@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { notification } from 'antd';
 import { useCallback } from 'react';
 
@@ -30,6 +31,7 @@ export function EditPatient() {
 
 function EditPatientForm(props: { reload: () => void; closeModal: () => void }) {
     const { reload, closeModal } = props;
+    const { i18n } = useLingui();
 
     const formWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
@@ -38,6 +40,7 @@ function EditPatientForm(props: { reload: () => void; closeModal: () => void }) 
 
     return (
         <QuestionnaireResponseForm
+            language={i18n.locale}
             questionnaireLoader={questionnaireIdLoader('patient-edit')}
             onSuccess={() => {
                 notification.success({ message: t`Patient saved` });

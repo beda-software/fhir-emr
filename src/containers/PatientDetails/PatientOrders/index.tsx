@@ -2,6 +2,7 @@
 // Safe to delete this folder if it remains unused long-term.
 import { DownOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
@@ -124,6 +125,7 @@ function useOrders() {
 }
 
 export function PatientOrders({ patient }: Props) {
+    const { i18n } = useLingui();
     const { key, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
 
     const orderFormWrapper = useCallback(
@@ -199,6 +201,7 @@ export function PatientOrders({ patient }: Props) {
                 footer={[]}
             >
                 <QuestionnaireResponseForm
+                    language={i18n.locale}
                     initialQuestionnaireResponse={{
                         resourceType: 'QuestionnaireResponse',
                         questionnaire: 'creatinine',

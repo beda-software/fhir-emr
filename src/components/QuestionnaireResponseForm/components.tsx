@@ -57,6 +57,7 @@ export function QuestionnaireResponseForm({
     onFailure,
     readOnly,
     customYupTests,
+    language,
 }: QuestionnaireResponseFormProps) {
     const ItemControlQuestionItemWidgetsFromContext = useContext(ItemControlQuestionItemWidgetsContext);
     const ItemControlGroupItemWidgetsFromContext = useContext(ItemControlGroupItemWidgetsContext);
@@ -112,6 +113,7 @@ export function QuestionnaireResponseForm({
             onFailure={onFailure}
             readOnly={readOnly}
             customYupTests={customYupTests}
+            language={language}
             serviceProvider={serviceProviderProp ?? { service }}
             fhirService={service}
             sdcServiceProvider={sdcServiceProvider}
