@@ -1,5 +1,6 @@
 resourceType: ViewDefinition
 id: creatinine-observations
+url: ViewDefinition/creatinine-observations
 name: creatinine_observations
 status: active
 resource: Observation

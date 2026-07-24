@@ -1,5 +1,6 @@
 resourceType: ViewDefinition
 id: hmb-impact-score
+url: ViewDefinition/hmb-impact-score
 name: hmb_impact_score
 status: active
 resource: QuestionnaireResponse

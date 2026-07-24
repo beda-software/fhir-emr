@@ -1,5 +1,6 @@
 resourceType: ViewDefinition
 id: hmb-pain-score
+url: ViewDefinition/hmb-pain-score
 name: hmb_pain_score
 status: active
 resource: QuestionnaireResponse

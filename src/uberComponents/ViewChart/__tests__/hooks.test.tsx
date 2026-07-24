@@ -72,6 +72,39 @@ describe('useViewChartRows', () => {
         expect(result.current[0]).toEqual(success([{ id: 'a' }]));
     });
 
+    it('Library source posts to $sqlquery-run with nested Parameters and returns rows', async () => {
+        vi.mocked(service).mockResolvedValue(success([{ id: 'a' }, { id: 'b' }]));
+
+        const { result } = renderHook(() =>
+            useViewChartRows<{ id: string }>(
+                { type: 'Library', reference: 'Library/test-sql-query' },
+                { parameters: [{ name: 'patient', valueReference: { reference: 'Patient/p-1' } }] },
+            ),
+        );
+
+        await waitFor(() => expect(result.current[0].status).toBe('Success'));
+
+        expect(service).toHaveBeenCalledWith({
+            method: 'POST',
+            url: '/Library/test-sql-query/$sqlquery-run',
+            data: {
+                resourceType: 'Parameters',
+                parameter: [
+                    { name: '_format', valueCode: 'json' },
+                    {
+                        name: 'parameters',
+                        resource: {
+                            resourceType: 'Parameters',
+                            parameter: [{ name: 'patient', valueReference: { reference: 'Patient/p-1' } }],
+                        },
+                    },
+                ],
+            },
+        });
+        expect(aidboxService).not.toHaveBeenCalled();
+        expect(result.current[0]).toEqual(success([{ id: 'a' }, { id: 'b' }]));
+    });
+
     it('applies the sort comparator to returned rows', async () => {
         vi.mocked(service).mockResolvedValue(success([{ n: 3 }, { n: 1 }, { n: 2 }]));
 

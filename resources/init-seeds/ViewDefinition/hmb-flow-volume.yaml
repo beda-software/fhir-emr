@@ -1,5 +1,6 @@
 resourceType: ViewDefinition
 id: hmb-flow-volume
+url: ViewDefinition/hmb-flow-volume
 name: hmb_flow_volume
 status: active
 resource: QuestionnaireResponse

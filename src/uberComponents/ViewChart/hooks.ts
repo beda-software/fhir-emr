@@ -10,7 +10,7 @@ type ViewChartRunParameter = NonNullable<Parameters['parameter']>[number];
 
 export type ViewChartDataSource = Reference & {
     reference: string;
-    type: 'AidboxQuery' | 'ViewDefinition';
+    type: 'AidboxQuery' | 'ViewDefinition' | 'Library';
 };
 
 export interface UseViewChartRowsOptions<TRow> {
@@ -60,6 +60,26 @@ export function useViewChartRows<TRow>(
                     data: {
                         resourceType: 'Parameters',
                         parameter: [...parameters, { name: '_format', valueCode: 'json' }],
+                    },
+                });
+            case 'Library':
+                // https://build.fhir.org/ig/HL7/sql-on-fhir/OperationDefinition-SQLQueryRun.html
+                // the query's own parameters must be nested inside the `parameters` input parameter.
+                return service<TRow[]>({
+                    method: 'POST',
+                    url: `/Library/${id}/$sqlquery-run`,
+                    data: {
+                        resourceType: 'Parameters',
+                        parameter: [
+                            { name: '_format', valueCode: 'json' },
+                            {
+                                name: 'parameters',
+                                resource: {
+                                    resourceType: 'Parameters',
+                                    parameter: parameters,
+                                },
+                            },
+                        ],
                     },
                 });
         }

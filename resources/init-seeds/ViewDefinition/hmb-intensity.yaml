@@ -1,5 +1,6 @@
 resourceType: ViewDefinition
 id: hmb-intensity
+url: ViewDefinition/hmb-intensity
 name: hmb_intensity
 status: active
 resource: QuestionnaireResponse
