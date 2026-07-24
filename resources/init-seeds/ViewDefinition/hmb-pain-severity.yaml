@@ -1,5 +1,6 @@
 resourceType: ViewDefinition
 id: hmb-pain-severity
+url: ViewDefinition/hmb-pain-severity
 name: hmb_pain_severity
 status: active
 resource: QuestionnaireResponse

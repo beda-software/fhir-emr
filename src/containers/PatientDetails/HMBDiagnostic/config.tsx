@@ -36,8 +36,8 @@ const viewDefinitionPatientParameters = (patientId: string): HMBQueryParameter[]
     { name: 'patient', valueReference: { reference: `Patient/${patientId}` } },
 ];
 
-// The combined severity/score chart runs against an AidboxQuery, which reads the bare patient id.
-const aidboxQueryPatientParameters = (patientId: string): HMBQueryParameter[] => [
+// The combined severity/score chart runs against a Library SQLQuery, which reads the bare patient id.
+const sqlQueryPatientParameters = (patientId: string): HMBQueryParameter[] => [
     { name: 'patient', valueString: patientId },
 ];
 
@@ -88,7 +88,7 @@ export const severityAxis = (): SeverityAxis =>
         { key: 'very-severe', label: t`Very Severe` },
     ] as const);
 
-// The combined AidboxQuery carries severity as an ordered code in value_code (bar) and the raw
+// The combined SQLQuery carries severity as an ordered code in value_code (bar) and the raw
 // pain score in value_integer (line).
 const toPainSeverityAndScoreWithAxis =
     (axis: SeverityAxis) =>
@@ -155,9 +155,9 @@ export const getHMBCharts = (): HMBChartEntry[] => {
         },
         {
             id: 'pain-severity-score',
-            source: { type: 'AidboxQuery', reference: 'AidboxQuery/hmb-pain-severity-score' },
+            source: { type: 'Library', reference: 'Library/hmb-pain-severity-score' },
             icon: <HeartOutlined />,
-            parameters: aidboxQueryPatientParameters,
+            parameters: sqlQueryPatientParameters,
             config: buildPainSeverityAndScoreChart,
         },
         {
