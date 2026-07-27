@@ -64,12 +64,12 @@ export function RecordQuestionnaireAction<R extends Resource>({
                             message: t`Successfully submitted`,
                         });
                         reload();
-                        closeModal();
                         action.extra?.qrfProps?.onSuccess?.(response);
+                        closeModal();
                     }}
                     onCancel={() => {
-                        closeModal();
                         action.extra?.qrfProps?.onCancel?.();
+                        closeModal();
                     }}
                 />
             )}
@@ -101,14 +101,14 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
                     onSuccess={(response) => {
-                        closeModal();
                         notification.success({ message: t`Successfully submitted` });
                         reload();
                         action.extra?.qrfProps?.onSuccess?.(response);
+                        closeModal();
                     }}
                     onCancel={() => {
-                        closeModal();
                         action.extra?.qrfProps?.onCancel?.();
+                        closeModal();
                     }}
                 />
             )}
@@ -154,14 +154,14 @@ export function BatchQuestionnaireAction<R extends Resource>({
                         saveButtonTitle={t`Submit`}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
                         onSuccess={(response) => {
-                            closeModal();
                             notification.success({ message: t`Successfully submitted` });
                             reload();
                             action.extra?.qrfProps?.onSuccess?.(response);
+                            closeModal();
                         }}
                         onCancel={() => {
-                            closeModal();
                             action.extra?.qrfProps?.onCancel?.();
+                            closeModal();
                         }}
                     />
                 )}
