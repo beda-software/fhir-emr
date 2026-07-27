@@ -7,10 +7,12 @@ import { PageContainer } from 'src/components';
 import { DashboardCard } from 'src/components/DashboardCard';
 import { DatePicker } from 'src/components/DatePicker';
 import { Tabs } from 'src/components/Tabs';
+import { ViewChart } from 'src/uberComponents/ViewChart';
 
+import { buildQIMChart, noSort } from './chart';
 import { DATE_FORMAT, DEFAULT_PERIOD_START, getQIMTabs } from './config';
-import { QIMChart } from './QIMChart';
 import { S } from './styles';
+import { QIMRow } from './types';
 
 const { RangePicker } = DatePicker;
 
@@ -27,6 +29,7 @@ export function GPQI() {
     return (
         <PageContainer
             title={t`GP QI`}
+            maxWidth="100%"
             titleRightElement={
                 <RangePicker
                     value={period}
@@ -54,7 +57,12 @@ export function GPQI() {
                                     title={entry.title}
                                     icon={<BarChartOutlined />}
                                 >
-                                    <QIMChart source={entry.source} parameters={parameters} />
+                                    <ViewChart<QIMRow>
+                                        source={entry.source}
+                                        parameters={parameters}
+                                        sort={noSort}
+                                        chart={buildQIMChart}
+                                    />
                                 </DashboardCard>
                             ))}
                         </S.Grid>
