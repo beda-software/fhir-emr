@@ -50,13 +50,7 @@ export function GPQI() {
                     children: (
                         <S.Grid>
                             {tab.entries.map((entry) => (
-                                <DashboardCard
-                                    key={`${entry.id}-${periodStart.format(DATE_FORMAT)}-${periodEnd.format(
-                                        DATE_FORMAT,
-                                    )}`}
-                                    title={entry.title}
-                                    icon={<BarChartOutlined />}
-                                >
+                                <DashboardCard key={entry.id} title={entry.title} icon={<BarChartOutlined />}>
                                     <ViewChart<QIMRow>
                                         source={entry.source}
                                         parameters={parameters}
