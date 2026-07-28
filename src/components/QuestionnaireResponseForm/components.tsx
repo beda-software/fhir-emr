@@ -32,6 +32,7 @@ import { FormWrapper, GroupItemComponent, ReadonlyFormWrapper } from 'src/compon
 import { service } from 'src/services';
 
 import { QuestionnaireResponseFormProps } from './types';
+import { withFormResponseHandlers } from './utils';
 
 export function QuestionnaireResponseForm({
     onCancel,
@@ -103,13 +104,15 @@ export function QuestionnaireResponseForm({
               }
             : undefined);
 
+    const formResponseHandlers = withFormResponseHandlers({ onSuccess, onFailure });
+
     return (
         <FHIRQuestionnaireResponseForm
             questionnaireLoader={questionnaireLoader}
             initialQuestionnaireResponse={initialQuestionnaireResponse}
             launchContextParameters={launchContextParameters}
-            onSuccess={onSuccess as Props['onSuccess']}
-            onFailure={onFailure}
+            onSuccess={formResponseHandlers.onSuccess}
+            onFailure={formResponseHandlers.onFailure}
             readOnly={readOnly}
             customYupTests={customYupTests}
             serviceProvider={serviceProviderProp ?? { service }}

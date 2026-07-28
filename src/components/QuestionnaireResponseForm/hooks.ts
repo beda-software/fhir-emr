@@ -9,10 +9,18 @@ import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { service } from 'src/services';
 
 import { QuestionnaireResponseFormProps } from './types';
+import { withFormResponseHandlers } from './utils';
 
 export function useQuestionnaireResponseForm(props: QuestionnaireResponseFormProps) {
+    const { onSuccess, onFailure } = withFormResponseHandlers({
+        onSuccess: props.onSuccess,
+        onFailure: props.onFailure,
+    });
+
     return useFHIRQuestionnaireResponseForm({
         ...props,
+        onSuccess,
+        onFailure,
         serviceProvider: props.serviceProvider ?? {
             service,
         },
