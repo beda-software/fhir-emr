@@ -27,6 +27,8 @@ export interface ChartDatumBase {
     y: ChartNumericValue;
     /** Secondary line value. Used only by the right axis in bar+line charts. */
     yLine?: ChartNumericValue;
+    /** Renders this point's area dot as a solid circle of this color instead of the default halo dot. */
+    dotColor?: string;
 }
 
 export interface ChartMargin {
@@ -79,7 +81,16 @@ export type ChartLineSeriesProps = Partial<
 export type ChartAreaSeriesProps = Partial<
     Pick<
         RechartsAreaProps<unknown, unknown>,
-        'stroke' | 'strokeWidth' | 'fill' | 'fillOpacity' | 'dot' | 'activeDot' | 'type' | 'connectNulls' | 'name'
+        | 'stroke'
+        | 'strokeWidth'
+        | 'strokeDasharray'
+        | 'fill'
+        | 'fillOpacity'
+        | 'dot'
+        | 'activeDot'
+        | 'type'
+        | 'connectNulls'
+        | 'name'
     >
 >;
 

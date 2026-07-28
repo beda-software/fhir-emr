@@ -19,15 +19,18 @@ import type { ChartDatumBase, ChartProps } from './Chart.types';
 import { ChartTooltip } from './ChartTooltip';
 import { getChartDisplayLabel, getDefaultChartTooltipLabel } from './formatters';
 
-type HaloDotProps = { cx?: number; cy?: number };
+type HaloDotProps = { cx?: number; cy?: number; payload?: ChartDatumBase };
 
 const DEFAULT_CHART_HEIGHT = 340;
 const DEFAULT_CHART_MARGIN = { left: 0, right: 20, top: 20, bottom: 20 };
 
 const renderHaloDot = (stroke: string, fill: string, coreR: number, haloR: number) =>
-    function HaloDot({ cx, cy }: HaloDotProps) {
+    function HaloDot({ cx, cy, payload }: HaloDotProps) {
         if (cx == null || cy == null) {
             return null;
+        }
+        if (payload?.dotColor) {
+            return <circle cx={cx} cy={cy} r={coreR} fill={payload.dotColor} />;
         }
         return (
             <g>
