@@ -59,16 +59,22 @@ export function RecordQuestionnaireAction<R extends Resource>({
                         ...defaultLaunchContext,
                         { name: resource.resourceType, resource: resource as any },
                     ]}
-                    onSuccess={() => {
-                        notification.success({
-                            message: t`Successfully submitted`,
-                        });
-                        reload();
-                        closeModal();
-                    }}
-                    onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
+                    onSuccess={(response) => {
+                        if (!action.extra?.qrfProps?.onSuccess) {
+                            notification.success({
+                                message: t`Successfully submitted`,
+                            });
+                        }
+                        reload();
+                        action.extra?.qrfProps?.onSuccess?.(response);
+                        closeModal();
+                    }}
+                    onCancel={() => {
+                        action.extra?.qrfProps?.onCancel?.();
+                        closeModal();
+                    }}
                 />
             )}
         </ModalTrigger>
@@ -96,15 +102,21 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                 <QuestionnaireResponseForm
                     language={getCurrentLocale()}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Successfully submitted` });
-                        reload();
-                    }}
                     launchContextParameters={defaultLaunchContext}
-                    onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
+                    onSuccess={(response) => {
+                        if (!action.extra?.qrfProps?.onSuccess) {
+                            notification.success({ message: t`Successfully submitted` });
+                        }
+                        reload();
+                        action.extra?.qrfProps?.onSuccess?.(response);
+                        closeModal();
+                    }}
+                    onCancel={() => {
+                        action.extra?.qrfProps?.onCancel?.();
+                        closeModal();
+                    }}
                 />
             )}
         </ModalTrigger>
@@ -147,14 +159,20 @@ export function BatchQuestionnaireAction<R extends Resource>({
                                 resource: bundle as Bundle,
                             },
                         ]}
-                        onSuccess={() => {
-                            closeModal();
-                            notification.success({ message: t`Successfully submitted` });
-                            reload();
-                        }}
-                        onCancel={closeModal}
                         saveButtonTitle={t`Submit`}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
+                        onSuccess={(response) => {
+                            if (!action.extra?.qrfProps?.onSuccess) {
+                                notification.success({ message: t`Successfully submitted` });
+                            }
+                            reload();
+                            action.extra?.qrfProps?.onSuccess?.(response);
+                            closeModal();
+                        }}
+                        onCancel={() => {
+                            action.extra?.qrfProps?.onCancel?.();
+                            closeModal();
+                        }}
                     />
                 )}
             </ModalTrigger>
