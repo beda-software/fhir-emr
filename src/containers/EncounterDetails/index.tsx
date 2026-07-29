@@ -18,6 +18,7 @@ import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
@@ -201,6 +202,7 @@ function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => v
 
     return (
         <QuestionnaireResponseForm
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('complete-encounter')}
             launchContextParameters={[
                 {

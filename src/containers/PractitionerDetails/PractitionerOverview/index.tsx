@@ -12,6 +12,7 @@ import { DashboardCard } from 'src/components/DashboardCard';
 import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import s from './PractitionerOverview.module.scss';
 import { S } from './PractitionerOverview.styles';
@@ -112,6 +113,7 @@ function EditPractitionerForm(props: {
 
     return (
         <QuestionnaireResponseForm
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('practitioner-edit')}
             launchContextParameters={[
                 { name: 'Practitioner', resource: practitioner },

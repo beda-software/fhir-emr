@@ -1,6 +1,7 @@
 id: encounter-create
 resourceType: Questionnaire
 name: encounter-create
+language: en
 title: Encounter create
 status: active
 description: Creates a new clinical encounter.
@@ -19,7 +20,7 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.id"
-  - text: PatientName
+  - text: Patient Name
     type: string
     linkId: patientName
     readOnly: true

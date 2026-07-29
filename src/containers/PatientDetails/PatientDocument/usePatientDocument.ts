@@ -30,6 +30,7 @@ import {
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources, service } from 'src/services/fhir';
+import { getCurrentLocale } from 'src/services/i18n';
 import { compileAsFirst } from 'src/utils';
 
 export interface Props {
@@ -141,7 +142,10 @@ export function usePatientDocument(props: Props): {
 
         return mapSuccess(
             await resolveMap({
-                formData: loadQuestionnaireResponseFormData(formInitialParams),
+                formData: loadQuestionnaireResponseFormData({
+                    ...formInitialParams,
+                    language: getCurrentLocale(),
+                }),
             }),
             ({ formData }) => ({
                 formData,
@@ -149,7 +153,7 @@ export function usePatientDocument(props: Props): {
                 provenance: lastProvenance,
             }),
         );
-    }, [questionnaireResponse, clinicalParams]);
+    }, [questionnaireResponse, clinicalParams, getCurrentLocale()]);
 
     const [sourceResponse] = useService(async () => {
         const result = await getFHIRResources<Provenance>('Provenance', {

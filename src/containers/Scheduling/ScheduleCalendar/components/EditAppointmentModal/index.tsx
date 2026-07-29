@@ -9,6 +9,7 @@ import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { inMemorySaveService } from 'src/hooks';
+import { getCurrentLocale } from 'src/services/i18n';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -29,6 +30,7 @@ export function EditAppointmentModal(props: Props) {
     return (
         <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
             <QuestionnaireResponseForm
+                language={getCurrentLocale()}
                 questionnaireLoader={questionnaireIdLoader('edit-appointment')}
                 questionnaireResponseSaveService={inMemorySaveService}
                 launchContextParameters={[

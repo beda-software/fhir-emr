@@ -8,6 +8,7 @@ import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { S } from './styles';
 import {
@@ -52,6 +53,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
                         ...defaultLaunchContext,
@@ -98,6 +100,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={defaultLaunchContext}
                     saveButtonTitle={t`Submit`}
@@ -146,6 +149,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
             >
                 {({ closeModal }) => (
                     <QuestionnaireResponseForm
+                        language={getCurrentLocale()}
                         questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                         launchContextParameters={[
                             ...defaultLaunchContext,

@@ -28,13 +28,14 @@ function resultValue(row: ReferenceChartRow): number | undefined {
     return undefined;
 }
 
-interface ReferenceRange {
+export interface ReferenceRange {
     low: number;
     high: number;
     severity?: string;
+    text?: string;
 }
 
-function parseReferenceRanges(ranges: (ObservationReferenceRange | string)[] | null): ReferenceRange[] {
+export function parseReferenceRanges(ranges: (ObservationReferenceRange | string)[] | null): ReferenceRange[] {
     return (ranges ?? [])
         .map((range: ObservationReferenceRange | string): ObservationReferenceRange | undefined => {
             if (typeof range !== 'string') {
@@ -51,6 +52,7 @@ function parseReferenceRanges(ranges: (ObservationReferenceRange | string)[] | n
             low: range.low!.value!,
             high: range.high?.value ?? range.low!.value!,
             severity: range.type?.coding?.[0]?.code,
+            text: range.text,
         }));
 }
 
@@ -90,7 +92,7 @@ export function sortByAxisLabel(a: ReferenceChartRow, b: ReferenceChartRow): num
     return a.axis_label.localeCompare(b.axis_label);
 }
 
-function transformRows<TRow extends ReferenceChartRow>(rows: TRow[]): ChartDatumBase[] {
+export function transformRows<TRow extends ReferenceChartRow>(rows: TRow[]): ChartDatumBase[] {
     return rows.map((row) => ({
         x: makeUniqueX(formatAuthored(row.axis_label), row.id),
         xTooltipLabel: formatChartDateTime(row.axis_label),

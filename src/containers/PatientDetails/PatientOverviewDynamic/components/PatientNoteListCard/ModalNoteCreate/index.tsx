@@ -9,6 +9,7 @@ import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 
 interface ModalNoteCreateProps {
     patient: Patient;
@@ -42,6 +43,7 @@ function NoteCreateForm(props: { onCreate: () => void; closeModal: () => void })
 
     return (
         <QuestionnaireResponseForm
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('patient-note-create')}
             onSuccess={() => {
                 closeModal();

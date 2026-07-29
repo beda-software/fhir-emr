@@ -13,6 +13,7 @@ import { Spinner } from 'src/components/Spinner';
 import { axiosInstance } from 'src/services';
 import { getToken } from 'src/services/auth';
 import { history } from 'src/services/history';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { S } from './PublicAppointment.styles';
 
@@ -44,6 +45,7 @@ export function PublicAppointment() {
                     <Spinner />
                 ) : (
                     <QuestionnaireResponseForm
+                        language={getCurrentLocale()}
                         questionnaireLoader={questionnaireIdLoader('public-appointment')}
                         onSuccess={() => {
                             notification.success({
