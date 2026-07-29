@@ -27,7 +27,7 @@
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-questionnaire": "^0.1.0-alpha.13",
+        "@beda.software/fhir-questionnaire": "^0.1.0-alpha.15",
         "@beda.software/fhir-react": "^1.11.0",
         "@beda.software/remote-data": "^1.1.4",
         "@beda.software/web-item-controls": "^0.1.22",
@@ -73,7 +73,7 @@
         "remark-directive": "^4.0.0",
         "remark-gfm": "^4.0.1",
         "sass": "^1.63.6",
-        "sdc-qrf": "^1.1.0-alpha.11",
+        "sdc-qrf": "^1.1.0-alpha.13",
         "styled-components": "^6.1.11",
         "yup": "^1.7.0"
     },
