@@ -8,6 +8,7 @@ import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import type { ChartDatumBase } from 'src/components/Chart';
 import { formatAuthored, formatChartDateTime, makeUniqueX } from 'src/components/Chart';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 import type { ReferenceChartRow, ViewChartConfig } from 'src/uberComponents/ViewChart';
 import { ViewChart } from 'src/uberComponents/ViewChart';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
@@ -102,6 +103,7 @@ export function CreatinineDashboard({ patient }: Props) {
                             )}
                         />
                         <QuestionnaireResponseForm
+                            language={getCurrentLocale()}
                             initialQuestionnaireResponse={{
                                 resourceType: 'QuestionnaireResponse',
                                 questionnaire: 'creatinine',

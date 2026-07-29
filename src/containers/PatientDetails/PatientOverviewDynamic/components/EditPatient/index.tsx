@@ -10,6 +10,7 @@ import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { usePatientReload } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
+import { getCurrentLocale } from 'src/services/i18n';
 
 export function EditPatient() {
     const reload = usePatientReload();
@@ -38,6 +39,7 @@ function EditPatientForm(props: { reload: () => void; closeModal: () => void }) 
 
     return (
         <QuestionnaireResponseForm
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('patient-edit')}
             onSuccess={() => {
                 notification.success({ message: t`Patient saved` });

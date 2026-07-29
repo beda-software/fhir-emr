@@ -17,6 +17,7 @@ import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable } from 'src/components/ResourceTable';
+import { getCurrentLocale } from 'src/services/i18n';
 import { formatHumanDate } from 'src/utils/date';
 const { Search } = Input;
 
@@ -199,6 +200,7 @@ export function PatientOrders({ patient }: Props) {
                 footer={[]}
             >
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     initialQuestionnaireResponse={{
                         resourceType: 'QuestionnaireResponse',
                         questionnaire: 'creatinine',

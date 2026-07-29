@@ -7,6 +7,7 @@ import { formatFHIRDateTime } from '@beda.software/fhir-react';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { inMemorySaveService } from 'src/hooks';
+import { getCurrentLocale } from 'src/services/i18n';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
@@ -26,6 +27,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
     return (
         <Modal title={t`New Appointment`} open={showModal} footer={null} onCancel={onCancel}>
             <QuestionnaireResponseForm
+                language={getCurrentLocale()}
                 onSuccess={onOk}
                 questionnaireResponseSaveService={inMemorySaveService}
                 questionnaireLoader={questionnaireIdLoader('new-appointment-prefilled')}

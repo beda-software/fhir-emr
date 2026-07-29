@@ -9,6 +9,7 @@ import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
 import { inMemorySaveService } from 'src/hooks';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { S } from './SetPassword.styles';
 
@@ -32,6 +33,7 @@ export function SetPassword(props: SetPasswordProps) {
                     <Trans>Set password</Trans>
                 </Title>
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     customYupTests={customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
                     questionnaireResponseSaveService={inMemorySaveService}
