@@ -60,9 +60,11 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
                     onSuccess={(response) => {
-                        notification.success({
-                            message: t`Successfully submitted`,
-                        });
+                        if (!action.extra?.qrfProps?.onSuccess) {
+                            notification.success({
+                                message: t`Successfully submitted`,
+                            });
+                        }
                         reload();
                         action.extra?.qrfProps?.onSuccess?.(response);
                         closeModal();
@@ -101,7 +103,9 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
                     onSuccess={(response) => {
-                        notification.success({ message: t`Successfully submitted` });
+                        if (!action.extra?.qrfProps?.onSuccess) {
+                            notification.success({ message: t`Successfully submitted` });
+                        }
                         reload();
                         action.extra?.qrfProps?.onSuccess?.(response);
                         closeModal();
@@ -154,7 +158,9 @@ export function BatchQuestionnaireAction<R extends Resource>({
                         saveButtonTitle={t`Submit`}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
                         onSuccess={(response) => {
-                            notification.success({ message: t`Successfully submitted` });
+                            if (!action.extra?.qrfProps?.onSuccess) {
+                                notification.success({ message: t`Successfully submitted` });
+                            }
                             reload();
                             action.extra?.qrfProps?.onSuccess?.(response);
                             closeModal();
