@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react';
 import { Bundle, Communication, ParametersParameter, Provenance, QuestionnaireResponse, Reference } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
@@ -31,6 +30,7 @@ import {
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources, service } from 'src/services/fhir';
+import { getCurrentLocale } from 'src/services/i18n';
 import { compileAsFirst } from 'src/utils';
 
 export interface Props {
@@ -122,7 +122,6 @@ export function usePatientDocument(props: Props): {
     const { questionnaireResponse, questionnaireId, onSuccess, onCancel } = props;
 
     const navigate = useNavigate();
-    const { i18n } = useLingui();
     const { parameters: clinicalParams } = useClinicalContext();
 
     const [response, manager] = useService<PatientDocumentData>(async () => {
@@ -145,7 +144,7 @@ export function usePatientDocument(props: Props): {
             await resolveMap({
                 formData: loadQuestionnaireResponseFormData({
                     ...formInitialParams,
-                    language: i18n.locale,
+                    language: getCurrentLocale(),
                 }),
             }),
             ({ formData }) => ({
@@ -154,7 +153,7 @@ export function usePatientDocument(props: Props): {
                 provenance: lastProvenance,
             }),
         );
-    }, [questionnaireResponse, clinicalParams, i18n.locale]);
+    }, [questionnaireResponse, clinicalParams, getCurrentLocale()]);
 
     const [sourceResponse] = useService(async () => {
         const result = await getFHIRResources<Provenance>('Provenance', {

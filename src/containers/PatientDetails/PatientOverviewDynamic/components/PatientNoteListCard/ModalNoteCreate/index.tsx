@@ -1,5 +1,4 @@
 import { t, Trans } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { Button, notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 import { useCallback } from 'react';
@@ -10,6 +9,7 @@ import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 
 interface ModalNoteCreateProps {
     patient: Patient;
@@ -35,7 +35,6 @@ export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
 
 function NoteCreateForm(props: { onCreate: () => void; closeModal: () => void }) {
     const { onCreate, closeModal } = props;
-    const { i18n } = useLingui();
 
     const formWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
@@ -44,7 +43,7 @@ function NoteCreateForm(props: { onCreate: () => void; closeModal: () => void })
 
     return (
         <QuestionnaireResponseForm
-            language={i18n.locale}
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('patient-note-create')}
             onSuccess={() => {
                 closeModal();

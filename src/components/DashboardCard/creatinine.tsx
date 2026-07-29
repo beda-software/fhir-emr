@@ -1,6 +1,5 @@
 import { InfoOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { Patient } from 'fhir/r4b';
 import { useState } from 'react';
 
@@ -9,6 +8,7 @@ import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import type { ChartDatumBase } from 'src/components/Chart';
 import { formatAuthored, formatChartDateTime, makeUniqueX } from 'src/components/Chart';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 import type { ReferenceChartRow, ViewChartConfig } from 'src/uberComponents/ViewChart';
 import { ViewChart } from 'src/uberComponents/ViewChart';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
@@ -62,7 +62,6 @@ function buildCreatinineChart(gender: Patient['gender']) {
 }
 
 export function CreatinineDashboard({ patient }: Props) {
-    const { i18n } = useLingui();
     const author = selectCurrentUserRoleResource();
     const [refreshKey, setRefreshKey] = useState(0);
     const chart = buildCreatinineChart(patient.gender);
@@ -104,7 +103,7 @@ export function CreatinineDashboard({ patient }: Props) {
                             )}
                         />
                         <QuestionnaireResponseForm
-                            language={i18n.locale}
+                            language={getCurrentLocale()}
                             initialQuestionnaireResponse={{
                                 resourceType: 'QuestionnaireResponse',
                                 questionnaire: 'creatinine',

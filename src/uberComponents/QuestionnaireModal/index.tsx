@@ -1,5 +1,4 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { useLingui } from '@lingui/react';
 import { Button, notification } from 'antd';
 import { ParametersParameter, Reference } from 'fhir/r4b';
 import { useState } from 'react';
@@ -13,6 +12,7 @@ import {
     persistSaveService,
     questionnaireIdLoader,
 } from 'src/hooks/questionnaire-response-form-data';
+import { getCurrentLocale } from 'src/services/i18n';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
@@ -27,7 +27,6 @@ export function QuestionanireModal({
     launchContextParameters,
     onSuccess,
 }: QuestionnaireModalProps) {
-    const { i18n } = useLingui();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = questionnaire.display ?? questionnaire.reference ?? 'N/A';
 
@@ -57,7 +56,7 @@ export function QuestionanireModal({
                 maskClosable={false}
             >
                 <QuestionnaireResponseForm
-                    language={i18n.locale}
+                    language={getCurrentLocale()}
                     initialQuestionnaireResponse={{
                         questionnaire: parseFHIRReference(questionnaire).id,
                         subject,

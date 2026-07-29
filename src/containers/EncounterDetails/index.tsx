@@ -1,6 +1,5 @@
 import { AudioOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { Button, notification } from 'antd';
 import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
@@ -19,6 +18,7 @@ import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
@@ -192,7 +192,6 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
 
 function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => void; closeModal: () => void }) {
     const { encounter, onSuccess, closeModal } = props;
-    const { i18n } = useLingui();
 
     const completeEncounterFormWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => (
@@ -203,7 +202,7 @@ function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => v
 
     return (
         <QuestionnaireResponseForm
-            language={i18n.locale}
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('complete-encounter')}
             launchContextParameters={[
                 {

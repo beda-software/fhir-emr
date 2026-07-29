@@ -1,5 +1,4 @@
 import { Trans, t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -10,6 +9,7 @@ import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
 import { inMemorySaveService } from 'src/hooks';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { S } from './SetPassword.styles';
 
@@ -20,7 +20,6 @@ interface SetPasswordProps {
 export function SetPassword(props: SetPasswordProps) {
     const { customYupTests } = props;
     const { code } = useParams<{ code: string }>();
-    const { i18n } = useLingui();
 
     const saveFormWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} saveButtonTitle={t`Save`} />,
@@ -34,7 +33,7 @@ export function SetPassword(props: SetPasswordProps) {
                     <Trans>Set password</Trans>
                 </Title>
                 <QuestionnaireResponseForm
-                    language={i18n.locale}
+                    language={getCurrentLocale()}
                     customYupTests={customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
                     questionnaireResponseSaveService={inMemorySaveService}

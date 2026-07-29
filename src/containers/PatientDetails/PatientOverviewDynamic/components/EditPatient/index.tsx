@@ -1,5 +1,4 @@
 import { t, Trans } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { notification } from 'antd';
 import { useCallback } from 'react';
 
@@ -11,6 +10,7 @@ import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { usePatientReload } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
+import { getCurrentLocale } from 'src/services/i18n';
 
 export function EditPatient() {
     const reload = usePatientReload();
@@ -31,7 +31,6 @@ export function EditPatient() {
 
 function EditPatientForm(props: { reload: () => void; closeModal: () => void }) {
     const { reload, closeModal } = props;
-    const { i18n } = useLingui();
 
     const formWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
@@ -40,7 +39,7 @@ function EditPatientForm(props: { reload: () => void; closeModal: () => void }) 
 
     return (
         <QuestionnaireResponseForm
-            language={i18n.locale}
+            language={getCurrentLocale()}
             questionnaireLoader={questionnaireIdLoader('patient-edit')}
             onSuccess={() => {
                 notification.success({ message: t`Patient saved` });

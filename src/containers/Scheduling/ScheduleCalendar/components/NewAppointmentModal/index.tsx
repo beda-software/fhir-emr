@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { PractitionerRole } from 'fhir/r4b';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
@@ -8,6 +7,7 @@ import { formatFHIRDateTime } from '@beda.software/fhir-react';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { inMemorySaveService } from 'src/hooks';
+import { getCurrentLocale } from 'src/services/i18n';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
@@ -20,13 +20,12 @@ interface NewAppointmentModalProps {
 
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { showModal, start, onOk, onCancel } = props;
-    const { i18n } = useLingui();
     const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
 
     return (
         <Modal title={t`New Appointment`} open={showModal} footer={null} onCancel={onCancel}>
             <QuestionnaireResponseForm
-                language={i18n.locale}
+                language={getCurrentLocale()}
                 onSuccess={onOk}
                 questionnaireResponseSaveService={inMemorySaveService}
                 questionnaireLoader={questionnaireIdLoader('new-appointment')}
