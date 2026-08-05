@@ -1,11 +1,12 @@
 import { Popconfirm } from 'antd';
+import { ReactNode } from 'react';
 
 interface Props {
-    action: (T: any) => void;
+    action: (qrId: string) => void | Promise<void>;
     reload?: () => void;
     qrId?: string;
     title: string;
-    children: any;
+    children: ReactNode;
     okText: string;
     cancelText: string;
 }
