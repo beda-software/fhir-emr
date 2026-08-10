@@ -447,10 +447,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-questionnaire@^0.1.0-alpha.16":
-  version "0.1.0-alpha.16"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.16.tgz#5a3a49d772d7829ef85f3cc59c5fb84fe2cf48f8"
-  integrity sha512-/iO+ePhXGYWmv8Xuz+euO0WzmESHL4FyojTeiBFa84N8ioN3G5GwnZrT/jTGSdSCZ007+1M7N/N0DBRhCyxKIQ==
+"@beda.software/fhir-questionnaire@^0.1.0-alpha.17":
+  version "0.1.0-alpha.17"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.17.tgz#e4b218fb6cfc019abf95c8b35f8c6fa2ce2688b3"
+  integrity sha512-TbYSLcEmPwACew5OTOKooIOQOEBf/2PV4H5M6RjSaEbOD4RJMbq2zCc/JTOf9T/ulXROHPY089VOrNHzmBKggQ==
   dependencies:
     "@beda.software/fhir-react" "^1.11.1"
     "@beda.software/remote-data" "^1.1.4"
@@ -464,7 +464,7 @@
     moment "^2.30.1"
     query-string "^7.1.1"
     react-hook-form "^7.49.3"
-    sdc-qrf "^1.1.0-alpha.14"
+    sdc-qrf "^1.1.0-alpha.15"
     tslib "^2.8.1"
     yup "^1.2.0"
 
@@ -12299,10 +12299,10 @@ scroll-into-view-if-needed@^3.1.0:
   dependencies:
     compute-scroll-into-view "^3.0.2"
 
-sdc-qrf@^1.1.0-alpha.14:
-  version "1.1.0-alpha.14"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.1.0-alpha.14.tgz#fc49247b4ec5bf63d83e6c85f7a398f3f28ff2c6"
-  integrity sha512-VeUdXflSX04DF1OgMUAEdBO6ELze8Q4Yxuv/AMlfzMA/d0V/P4HQyYY5226KQNyyQbooSagpg7TfCIE3WuSCOQ==
+sdc-qrf@^1.1.0-alpha.15:
+  version "1.1.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.1.0-alpha.15.tgz#61cebfea1df4eb1465e7d54771d077ab19120bb7"
+  integrity sha512-TJb1Bctng6aEFqwG2HmduUcOB4j+giXZngECoQI5dvg+BJmv9yQwQ30JgUVVs62ZiTziktzScx1E4aB/wIaVWw==
   dependencies:
     classnames "^2.5.1"
     fhirpath "^3.18.0"
