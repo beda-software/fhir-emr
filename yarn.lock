@@ -447,10 +447,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-questionnaire@^0.1.0-alpha.17":
-  version "0.1.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.17.tgz#e4b218fb6cfc019abf95c8b35f8c6fa2ce2688b3"
-  integrity sha512-TbYSLcEmPwACew5OTOKooIOQOEBf/2PV4H5M6RjSaEbOD4RJMbq2zCc/JTOf9T/ulXROHPY089VOrNHzmBKggQ==
+"@beda.software/fhir-questionnaire@^0.1.0-alpha.18":
+  version "0.1.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.18.tgz#8801878b6e4792eced04d553d8eb33276e11b5e1"
+  integrity sha512-T7y5rPy8zSwrW0durZ6OHM/fEHKO1ikr7Kt+qo9hTumGl1KrrNVm5tsieeCaZJR4VB74uoeUQQiOH0wmsSlfHw==
   dependencies:
     "@beda.software/fhir-react" "^1.11.1"
     "@beda.software/remote-data" "^1.1.4"
