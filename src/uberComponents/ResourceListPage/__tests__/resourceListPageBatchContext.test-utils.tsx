@@ -133,7 +133,7 @@ export function renderResourceListPage(
                                 title: 'Name',
                                 dataIndex: 'name',
                                 key: 'name',
-                                render: (_text, record) => renderHumanName(record.resource.name?.[0]),
+                                getter: 'Patient.name.first()',
                             },
                         ]}
                         getBatchActions={() => [questionnaireAction('Batch action', 'batch-questionnaire')]}

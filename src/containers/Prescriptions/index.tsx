@@ -1,5 +1,4 @@
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
 import { Bundle, Medication, MedicationRequest, Patient, HumanName } from 'fhir/r4b';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
@@ -8,7 +7,7 @@ import { extractCreatedAtFromMeta } from 'sdc-qrf';
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ValueSetOption } from 'src/services';
 import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
-import type { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import type { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
@@ -80,12 +79,12 @@ export function Prescriptions() {
             : baseFilters;
     };
 
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<MedicationRequest>> => [
+    const getTableColumns = (_manager: TableManager): FhirPathTableColumn<MedicationRequest>[] => [
         {
             title: <Trans>Patient</Trans>,
             dataIndex: 'patient',
             key: 'patient',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const patient = findPatient(record.resource, record.bundle);
                 return renderHumanName(patient?.name?.[0]);
             },
@@ -94,28 +93,26 @@ export function Prescriptions() {
             title: <Trans>Requester</Trans>,
             dataIndex: 'requester',
             key: 'requester',
-            render: (_text, record) => {
-                return getRequesterDisplay(record.resource, record.bundle);
-            },
+            format: (_value, record) => getRequesterDisplay(record.resource, record.bundle),
         },
         {
             title: <Trans>Medication</Trans>,
             dataIndex: 'medication',
             key: 'medication',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const medication = findMedication(record.resource, record.bundle);
-                const medicationName =
+                return (
                     medication?.code?.coding?.[0]?.display ??
                     record.resource.medicationCodeableConcept?.coding?.[0]?.display ??
-                    'Unknown';
-                return medicationName;
+                    'Unknown'
+                );
             },
         },
         {
             title: <Trans>Batch Number</Trans>,
             dataIndex: 'batchNumber',
             key: 'batchNumber',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const medication = findMedication(record.resource, record.bundle);
                 return medication?.batch?.lotNumber ?? 'Unknown';
             },
@@ -124,13 +121,13 @@ export function Prescriptions() {
             title: <Trans>Status</Trans>,
             dataIndex: 'status',
             key: 'status',
-            render: (_text, record) => mapPrescriptionStatus(record.resource),
+            format: (_value, record) => mapPrescriptionStatus(record.resource),
         },
         {
             title: <Trans>Date</Trans>,
             dataIndex: 'date',
             key: 'date',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const createdAt = extractCreatedAtFromMeta(record.resource.meta);
                 return createdAt ? formatHumanDate(createdAt) : null;
             },

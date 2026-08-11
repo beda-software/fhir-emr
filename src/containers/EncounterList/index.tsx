@@ -1,12 +1,11 @@
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { extractBundleResources, parseFHIRReference } from '@beda.software/fhir-react';
 
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { ResourceListPage, navigationAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -92,12 +91,12 @@ export function EncounterList() {
         },
     });
 
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Encounter>> => [
+    const getTableColumns = (_manager: TableManager): FhirPathTableColumn<Encounter>[] => [
         {
             title: <Trans>Patient</Trans>,
             dataIndex: 'patient',
             key: 'patient',
-            render: (_text: any, record: RecordType<Encounter>) => {
+            format: (_value, record) => {
                 const { patient } = extractEncounterData(record.resource, record.bundle);
                 return renderHumanName(patient?.name?.[0]);
             },
@@ -106,7 +105,7 @@ export function EncounterList() {
             title: <Trans>Practitioner</Trans>,
             dataIndex: 'practitioner',
             key: 'practitioner',
-            render: (_text: any, record: RecordType<Encounter>) => {
+            format: (_value, record) => {
                 const { practitioner } = extractEncounterData(record.resource, record.bundle);
                 return renderHumanName(practitioner?.name?.[0]);
             },
@@ -115,14 +114,14 @@ export function EncounterList() {
             title: <Trans>Status</Trans>,
             dataIndex: 'status',
             key: 'status',
-            render: (_text: any, record: RecordType<Encounter>) => <StatusBadge status={record.resource.status} />,
+            format: (_value, record) => <StatusBadge status={record.resource.status} />,
         },
         {
             title: <Trans>Date</Trans>,
             dataIndex: 'date',
             key: 'date',
             width: 220,
-            render: (_text: any, record: RecordType<Encounter>) => formatPeriodDateTime(record.resource.period),
+            format: (_value, record) => formatPeriodDateTime(record.resource.period),
         },
     ];
 
