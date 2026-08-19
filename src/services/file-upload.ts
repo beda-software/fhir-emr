@@ -14,7 +14,11 @@ interface DownloadUrlResponse {
     get_presigned_url: string;
 }
 
-export async function generateUploadUrl(filename: string) {
+interface UploadUrlOptions {
+    contentType?: string;
+}
+
+export async function generateUploadUrl(filename: string, options?: UploadUrlOptions) {
     return mapSuccess(
         await aidboxService<UploadUrlResponse>({
             baseURL: config.baseURL,
@@ -22,13 +26,18 @@ export async function generateUploadUrl(filename: string) {
             method: 'POST',
             data: {
                 filename,
+                content_type: options?.contentType,
             },
         }),
         (data) => ({ filename: data.filename, uploadUrl: data.put_presigned_url }),
     );
 }
 
-export async function generateDownloadUrl(key: string) {
+interface DownloadUrlOptions {
+    contentType?: string;
+}
+
+export async function generateDownloadUrl(key: string, options?: DownloadUrlOptions) {
     return mapSuccess(
         await aidboxService<DownloadUrlResponse>({
             baseURL: config.baseURL,
@@ -36,6 +45,7 @@ export async function generateDownloadUrl(key: string) {
             method: 'POST',
             data: {
                 key,
+                content_type: options?.contentType,
             },
         }),
         ({ get_presigned_url }) => ({ downloadUrl: get_presigned_url }),
