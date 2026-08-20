@@ -12,6 +12,7 @@ export * from './BaseQuestionnaireResponseForm/ItemHelpText';
 export * from './Breadcrumbs';
 export * from './Calendar';
 export * from './ChangesDiff';
+export * from './Chart';
 export * from './Charting';
 export * from './Charting/ChartingList';
 export * from './ConfirmActionButton';
