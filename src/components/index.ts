@@ -17,6 +17,7 @@ export * from './Charting/ChartingList';
 export * from './ConfirmActionButton';
 export * from './Dashboard';
 export * from './Dashboard/contexts';
+export * from './Dashboard/types';
 export * from './DashboardCard';
 export * from './DatePicker';
 export * from './Empty';
