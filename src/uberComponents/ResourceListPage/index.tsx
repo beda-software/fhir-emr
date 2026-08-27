@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Empty, Flex } from 'antd';
-import type { ColumnsType, FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
+import type { FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -36,8 +36,12 @@ import {
 import { BatchActions } from './BatchActions';
 import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
-import { ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
+import { buildTableColumnsFromGetters } from './tableColumns';
+import { FhirPathTableColumn, ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
 import { getRecordClinicalContextDefault } from './utils';
+
+export type { FhirPathTableColumn } from './types';
+export { buildTableColumnsFromGetters } from './tableColumns';
 
 export { customAction, navigationAction, questionnaireAction } from './actions';
 
@@ -54,7 +58,7 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
     maxWidth?: number | string;
 
     /* Table columns without action column - action column is generated based on `getRecordActions` */
-    getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
+    getTableColumns: (manager: TableManager) => FhirPathTableColumn<R>[];
 };
 
 export function ResourceListPage<R extends Resource>({
@@ -133,7 +137,7 @@ export function ResourceListPage<R extends Resource>({
     );
 
     // TODO: move to hooks
-    const initialTableColumns = getTableColumns({ reload });
+    const initialTableColumns = buildTableColumnsFromGetters(getTableColumns({ reload }));
     const tableColumns = populateTableColumnsWithFiltersAndSorts({
         tableColumns: initialTableColumns,
         filters: tableFilterValues,

@@ -1,18 +1,15 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
-import { Bundle, Consent, HumanName, Patient } from 'fhir/r4b';
+import { Bundle, Consent, Patient } from 'fhir/r4b';
 import type { FhirResource, Resource } from 'fhir/r4b';
 
 import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 
 import { SearchBarColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType } from 'src/uberComponents/ResourceListPage/types';
+import { FhirPathTableColumn, RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { getRecordClinicalContextDefault } from 'src/uberComponents/ResourceListPage/utils';
 import { compileAsFirst, getResourceClinicalContext } from 'src/utils';
-import { formatHumanDate } from 'src/utils/date';
-import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { getPatientSearchParamsForPractitioner, makePatientListFilters } from './utils';
@@ -20,12 +17,6 @@ import { getPatientSearchParamsForPractitioner, makePatientListFilters } from '.
 const getHeaderActions = () => [
     questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
 ];
-
-const getPatientName = compileAsFirst<Patient, HumanName>('Patient.name.first()');
-const getBirthDate = compileAsFirst<Patient, string>('Patient.birthDate');
-const getSSN = compileAsFirst<Patient, string>(
-    "Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value.first()",
-);
 
 const findPatientInBundleById = compileAsFirst<Bundle, Patient>(
     "Bundle.entry.resource.where(resourceType='Patient' and id=%patientId).first()",
@@ -41,40 +32,62 @@ function getPatientFromConsent(consent: Consent, bundle: Bundle): Patient | unde
 }
 
 function buildColumns<R extends Resource>(
-    resolvePatient: (record: RecordType<R>) => Patient | undefined,
-): ColumnsType<RecordType<R>> {
+    getPatientId: (record: RecordType<R>) => string | undefined,
+): FhirPathTableColumn<R>[] {
     return [
         {
             title: <Trans>Name</Trans>,
             dataIndex: 'name',
             key: 'name',
-            render: (_text, record) => {
-                const patient = resolvePatient(record);
-                const name = patient ? getPatientName(patient) : undefined;
-                return renderHumanName(name);
-            },
             width: 300,
+            getter: "Bundle.entry.resource.where(resourceType='Patient' and id=%patientId).first().name.first()",
+            getterSource: 'bundle',
+            getContext: (record) => ({ patientId: getPatientId(record) }),
         },
         {
             title: <Trans>Birth date</Trans>,
             dataIndex: 'birthDate',
             key: 'birthDate',
-            render: (_text, record) => {
-                const patient = resolvePatient(record);
-                const birthDate = patient ? getBirthDate(patient) : undefined;
-                return birthDate ? formatHumanDate(birthDate) : null;
-            },
             width: 150,
+            getter: "Bundle.entry.resource.where(resourceType='Patient' and id=%patientId).first().birthDate",
+            getterSource: 'bundle',
+            getContext: (record) => ({ patientId: getPatientId(record) }),
         },
         {
             title: <Trans>SSN</Trans>,
             dataIndex: 'identifier',
             key: 'identifier',
-            render: (_text, record) => {
-                const patient = resolvePatient(record);
-                return patient ? getSSN(patient) : undefined;
-            },
             width: 250,
+            getter:
+                "Bundle.entry.resource.where(resourceType='Patient' and id=%patientId).first().identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value.first()",
+            getterSource: 'bundle',
+            getContext: (record) => ({ patientId: getPatientId(record) }),
+        },
+    ];
+}
+
+function buildPatientColumns(): FhirPathTableColumn<Patient>[] {
+    return [
+        {
+            title: <Trans>Name</Trans>,
+            dataIndex: 'name',
+            key: 'name',
+            width: 300,
+            getter: 'Patient.name.first()',
+        },
+        {
+            title: <Trans>Birth date</Trans>,
+            dataIndex: 'birthDate',
+            key: 'birthDate',
+            width: 150,
+            getter: 'Patient.birthDate',
+        },
+        {
+            title: <Trans>SSN</Trans>,
+            dataIndex: 'identifier',
+            key: 'identifier',
+            width: 250,
+            getter: "Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value.first()",
         },
     ];
 }
@@ -85,8 +98,11 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             'patient:Patient.name:contains',
             'patient:Patient._has:QuestionnaireResponse:subject:questionnaire',
         );
-    const getTableColumns = (): ColumnsType<RecordType<Consent>> =>
-        buildColumns<Consent>((record) => getPatientFromConsent(record.resource, record.bundle));
+    const getTableColumns = (): FhirPathTableColumn<Consent>[] =>
+        buildColumns<Consent>((record) => {
+            const patientRef = record.resource.patient;
+            return patientRef ? parseFHIRReference(patientRef).id : undefined;
+        });
 
     const getRecordActions = (record: RecordType<Consent>) => {
         const patient = getPatientFromConsent(record.resource, record.bundle);
@@ -125,7 +141,7 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
 function PatientListDefault(props: { searchParams: SearchParams }) {
     const getFilters = (): SearchBarColumn[] =>
         makePatientListFilters('name:contains', '_has:QuestionnaireResponse:subject:questionnaire');
-    const getTableColumns = (): ColumnsType<RecordType<Patient>> => buildColumns<Patient>((record) => record.resource);
+    const getTableColumns = (): FhirPathTableColumn<Patient>[] => buildPatientColumns();
 
     const getRecordActions = (record: RecordType<Patient>) => [
         navigationAction(<Trans>Chart</Trans>, `/patients/${record.resource.id}`),

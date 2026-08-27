@@ -1,16 +1,13 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
-import { Bundle, HumanName, Practitioner } from 'fhir/r4b';
+import { Bundle, Practitioner } from 'fhir/r4b';
 
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsArray, compileAsFirst } from 'src/utils';
-import { renderHumanName } from 'src/utils/fhir';
 
 // FHIRPath helpers
-const getPractitionerName = compileAsFirst<Practitioner, HumanName>('Practitioner.name.first()');
 const getPractitionerReference = compileAsFirst<Practitioner, string>("'Practitioner/' & id");
 const getSpecialtiesByPractitionerRef = compileAsArray<Bundle, string>(
     'Bundle.entry.resource' +
@@ -29,20 +26,20 @@ export function PractitionerList() {
         },
     ];
 
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Practitioner>> => [
+    const getTableColumns = (_manager: TableManager): FhirPathTableColumn<Practitioner>[] => [
         {
             title: <Trans>Name</Trans>,
             dataIndex: 'name',
             key: 'name',
             width: '20%',
-            render: (_text, record) => renderHumanName(getPractitionerName(record.resource)),
+            getter: 'Practitioner.name.first()',
         },
         {
             title: <Trans>Specialty</Trans>,
             dataIndex: 'specialty',
             key: 'specialty',
             width: '30%',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const practitionerRef = getPractitionerReference(record.resource);
                 const specialties = practitionerRef
                     ? getSpecialtiesByPractitionerRef(record.bundle, { practitionerRef })
