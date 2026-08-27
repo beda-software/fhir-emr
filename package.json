@@ -66,7 +66,7 @@
         "react-jsbarcode": "1.0.1",
         "react-markdown": "^9.0.1",
         "react-phone-input-2": "^2.15.1",
-        "react-router-dom": "^6.14.1",
+        "react-router-dom": "^7.0.0",
         "react-select": "^5.7.3",
         "recharts": "^3.8.0",
         "rehype-raw": "^7.0.0",
@@ -133,10 +133,10 @@
         "storybook": "^8.6.18",
         "style-loader": "^3.3.3",
         "typescript": "5.1.6",
-        "vite": "^4.1.5",
+        "vite": "^6.4.3",
         "vite-plugin-externalize-deps": "^0.8.0",
         "vite-plugin-turbosnap": "^1.0.2",
-        "vitest": "^0.34.6"
+        "vitest": "^3.2.6"
     },
     "peerDependencies": {
         "@beda.software/fhir-questionnaire": "*",
