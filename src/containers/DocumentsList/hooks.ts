@@ -40,9 +40,15 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference, con
             return mapSuccess(qResponse, (bundle) => {
                 const questionnaireNames: { [key: string]: string } = {};
                 const questionnaireNameById: { [key: string]: string } = {};
-                extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (questionnaireNameById[q.id!] = q.title || q.name || t`Unknown`),
-                );
+                extractBundleResources(bundle).Questionnaire.forEach((q) => {
+                    const title = q.title || q.name || t`Unknown`;
+                    if (q.url) {
+                        questionnaireNameById[q.url] = title;
+                    }
+                    if (q.id) {
+                        questionnaireNameById[q.id] = title;
+                    }
+                });
 
                 qrResponseExtracted.data.QuestionnaireResponse.forEach((qr) => {
                     const remoteName = questionnaireNameById[qr.questionnaire!];
