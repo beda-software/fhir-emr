@@ -30,6 +30,7 @@ export * from './PatientEncounter';
 export * from './QuestionnaireResponseForm';
 export * from './QuestionnaireResponseFormDraft';
 export * from './QuestionnairesWizard';
+export * from './RenderBundleResourceContext';
 export * from './Report';
 export * from './ResourceTable';
 export * from './SearchBar';
