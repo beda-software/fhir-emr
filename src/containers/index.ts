@@ -28,5 +28,6 @@ export * from './PatientDetails/PatientOverviewDynamic';
 export * from './PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 export * from './PatientDetails/PatientOverviewDynamic/components/StandardCard';
 export * from './PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
+export * from './PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
 export * from './PractitionerDetails/PractitionerHeader';
 export * from './EMR';
