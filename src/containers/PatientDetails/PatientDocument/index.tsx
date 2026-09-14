@@ -41,6 +41,7 @@ export interface PatientDocumentProps {
     questionnaireId?: string;
     encounterId?: string;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    onCancel?: () => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
     maxWidth?: number | string;
@@ -51,7 +52,6 @@ type PatientDocumentWithPatientProps = PatientDocumentProps & {
 };
 
 interface PatientDocumentContentProps extends PatientDocumentProps {
-    onCancel?: () => void;
     onEdit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     alertComponent?: React.ReactNode | (() => React.ReactNode);
     onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
