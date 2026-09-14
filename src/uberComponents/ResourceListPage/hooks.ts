@@ -8,6 +8,7 @@ import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ColumnFilterValue, SorterColumn } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
+import { useFhirService } from 'src/contexts/fhirService';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
@@ -22,6 +23,7 @@ export function useResourceListPage<R extends Resource>(
     uniqueOrderSortSearchParam: string | null = '-_lastUpdated',
 ) {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const requestService = useFhirService(service);
 
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
@@ -47,7 +49,7 @@ export function useResourceListPage<R extends Resource>(
 
     const [resourceResponse, pagerManager] = usePager<R>({
         resourceType,
-        requestService: service,
+        requestService,
         resourcesOnPage: pageSize,
         initialSearchParams: searchParams,
     });
