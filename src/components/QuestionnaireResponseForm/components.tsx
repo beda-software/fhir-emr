@@ -24,6 +24,7 @@ import {
     groupControlComponents as defaultGroupControlComponents,
 } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import {
+    groupComponent as readonlyGroupComponent,
     itemComponents as readonlyItemComponents,
     itemControlComponents as readonlyItemControlComponents,
     groupControlComponents as readonlyGroupControlComponents,
@@ -167,7 +168,7 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
                 readOnly={true}
                 fhirService={service}
                 FormWrapper={ReadonlyFormWrapper}
-                groupItemComponent={GroupItemComponent}
+                groupItemComponent={readonlyGroupComponent}
                 questionItemComponents={readonlyItemComponents}
                 itemControlQuestionItemComponents={mergedItemControlComponents}
                 itemControlGroupItemComponents={mergedGroupControlComponents}
@@ -182,7 +183,7 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
             fhirService={props.fhirService ?? service}
             sdcServiceProvider={props.sdcServiceProvider}
             FormWrapper={props.FormWrapper ?? ReadonlyFormWrapper}
-            groupItemComponent={props.groupItemComponent ?? GroupItemComponent}
+            groupItemComponent={props.groupItemComponent ?? readonlyGroupComponent}
             questionItemComponents={props.questionItemComponents ?? readonlyItemComponents}
             itemControlQuestionItemComponents={mergedItemControlComponents}
             itemControlGroupItemComponents={mergedGroupControlComponents}
