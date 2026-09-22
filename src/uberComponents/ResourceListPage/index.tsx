@@ -172,6 +172,8 @@ export function ResourceListPage<R extends Resource>({
                                     <HeaderNavigationAction action={action} />
                                 </React.Fragment>
                             );
+                        } else if (isCustomAction(action)) {
+                            return <React.Fragment key={index}>{action.control}</React.Fragment>;
                         }
                     })}
                 </Flex>

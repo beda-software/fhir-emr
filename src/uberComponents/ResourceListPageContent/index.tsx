@@ -21,6 +21,7 @@ import { HeaderNavigationAction, HeaderQuestionnaireAction, WebExtra } from '../
 import { BatchActions } from '../ResourceListPage/BatchActions';
 import { useResourceListPage, useTableSorter } from '../ResourceListPage/hooks';
 import {
+    isCustomAction,
     isNavigationAction,
     isQuestionnaireAction,
     RecordType,
@@ -150,6 +151,8 @@ export function ResourceListPageContent<R extends Resource>({
                                     <HeaderNavigationAction action={action} />
                                 </React.Fragment>
                             );
+                        } else if (isCustomAction(action)) {
+                            return <React.Fragment key={index}>{action.control}</React.Fragment>;
                         }
                     })}
                 </S.HeaderRightColumn>
