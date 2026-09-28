@@ -32,7 +32,6 @@ describe('IdleTimeoutController', () => {
         const controller = new IdleTimeoutController(config, 0);
 
         expect(controller.getState()).toBe('active');
-        expect(controller.getLastProviderActivityAt()).toBe(0);
     });
 
     it('transitions active -> warning -> expired as time passes with no activity, requesting Forced Sign-Out only on the expiry transition', () => {
@@ -71,10 +70,13 @@ describe('IdleTimeoutController', () => {
         controller.evaluate(29 * 60 * 1000);
         expect(controller.getState()).toBe('warning');
 
-        const evaluation = controller.recordProviderActivity(29 * 60 * 1000 + 1);
+        const activityAt = 29 * 60 * 1000 + 1;
+        const evaluation = controller.recordProviderActivity(activityAt);
 
         expect(evaluation).toEqual({ state: 'active', previousState: 'warning', forcedSignOut: false });
-        expect(controller.getLastProviderActivityAt()).toBe(29 * 60 * 1000 + 1);
+        // State is 'warning' at activityAt + Idle Timeout - Warning Window, confirming
+        // the reset activity time was recorded rather than just the returned state.
+        expect(controller.evaluate(activityAt + config.idleTimeoutMs - config.warningWindowMs).state).toBe('warning');
     });
 
     it('recordProviderActivity resets even from expired', () => {
@@ -104,7 +106,6 @@ describe('IdleTimeoutController', () => {
         const evaluation = controller.evaluate(31 * 60 * 1000);
 
         expect(evaluation.state).toBe('expired');
-        expect(controller.getLastProviderActivityAt()).toBe(0);
     });
 });
 

@@ -33,6 +33,6 @@ export interface StorageEventLike {
 
 export interface UseIdleTimeoutResult {
     state: IdleTimeoutState;
-    stayActive: () => void;
+    recordProviderActivity: () => void;
     signOutNow: () => void;
 }

@@ -12,6 +12,7 @@ import {
     STATE_BROADCAST_STORAGE_KEY,
     flushActiveDraftBestEffort,
     interpretStorageEvent,
+    parsePersistedTimestamp,
     resolveIdleTimeoutConfig,
 } from './utils';
 
@@ -23,10 +24,7 @@ const IDLE_TIMEOUT_CONFIG = resolveIdleTimeoutConfig({
 const RECHECK_INTERVAL_MS = 5000;
 
 function readPersistedLastProviderActivityAt(): number {
-    const raw = window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY);
-    const parsed = raw ? Number(raw) : NaN;
-
-    return Number.isFinite(parsed) ? parsed : Date.now();
+    return parsePersistedTimestamp(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)) ?? Date.now();
 }
 
 function persistLastProviderActivityAt(now: number) {
@@ -170,8 +168,7 @@ export function useIdleTimeout(): UseIdleTimeoutResult {
         };
     }, [recheck]);
 
-    const stayActive = useCallback(() => recordProviderActivity(), [recordProviderActivity]);
     const signOutNow = useCallback(() => void doLogout(), []);
 
-    return { state, stayActive, signOutNow };
+    return { state, recordProviderActivity, signOutNow };
 }

@@ -4,7 +4,7 @@ import { Button, Modal } from 'antd';
 import { useIdleTimeout } from './hooks';
 
 export function IdleTimeout() {
-    const { state, stayActive, signOutNow } = useIdleTimeout();
+    const { state, recordProviderActivity, signOutNow } = useIdleTimeout();
 
     return (
         <Modal
@@ -17,7 +17,7 @@ export function IdleTimeout() {
                 <Button key="sign-out-now" onClick={signOutNow}>
                     {t`Sign out now`}
                 </Button>,
-                <Button key="stay-signed-in" type="primary" onClick={stayActive}>
+                <Button key="stay-signed-in" type="primary" onClick={recordProviderActivity}>
                     {t`Stay signed in`}
                 </Button>,
             ]}

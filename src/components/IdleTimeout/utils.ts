@@ -71,10 +71,6 @@ export class IdleTimeoutController {
     getState(): IdleTimeoutState {
         return this.state;
     }
-
-    getLastProviderActivityAt(): number {
-        return this.lastProviderActivityAt;
-    }
 }
 
 // Module-level singleton: the Questionnaire Draft form currently open (if any)
@@ -92,7 +88,7 @@ export function registerActiveDraftFlush(flush: DraftFlushFn): () => void {
     };
 }
 
-export const DEFAULT_DRAFT_FLUSH_TIMEOUT_MS = 3000;
+const DEFAULT_DRAFT_FLUSH_TIMEOUT_MS = 3000;
 
 // Never rejects and never waits longer than timeoutMs, so a failing flush can't
 // delay or prevent the Forced Sign-Out that triggered it.
@@ -117,6 +113,14 @@ export const LAST_PROVIDER_ACTIVITY_STORAGE_KEY = 'idle_timeout_last_provider_ac
 // wait out their own recheck interval) when a state change wasn't itself a storage write.
 export const STATE_BROADCAST_STORAGE_KEY = 'idle_timeout_state_broadcast_at';
 
+// Shared by the read-on-load path and the `storage` event handler, so a persisted or
+// broadcast last-Provider-Activity timestamp is parsed and validated in exactly one place.
+export function parsePersistedTimestamp(raw: string | null): number | undefined {
+    const parsed = raw ? Number(raw) : NaN;
+
+    return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 // `key === null` is how doLogout()'s `localStorage.clear()` — from a Forced or Manual
 // Sign-Out in any tab — is observed here. The sign-out reason lands just after the clear,
 // synchronously, so it's in place before this tab's redirect reaches the sign-in screen.
@@ -126,9 +130,9 @@ export function interpretStorageEvent(event: StorageEventLike): MultiTabSyncSign
     }
 
     if (event.key === LAST_PROVIDER_ACTIVITY_STORAGE_KEY) {
-        const parsed = event.newValue ? Number(event.newValue) : NaN;
+        const parsed = parsePersistedTimestamp(event.newValue);
 
-        return Number.isFinite(parsed) ? { type: 'providerActivity', at: parsed } : { type: 'ignore' };
+        return parsed === undefined ? { type: 'ignore' } : { type: 'providerActivity', at: parsed };
     }
 
     if (event.key === STATE_BROADCAST_STORAGE_KEY) {
