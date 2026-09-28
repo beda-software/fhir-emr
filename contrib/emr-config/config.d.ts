@@ -43,9 +43,9 @@ declare const config: {
      */
     idleTimeoutMs?: number;
     /**
-     * Warning Window duration in milliseconds: how long before the Idle Timeout
-     * the "about to end" warning is shown. Defaults to 2 minutes when omitted.
-     * Clamped to `idleTimeoutMs` if configured larger than it.
+     * Warning Window duration in milliseconds: how long before the Idle Timeout the
+     * warning is shown. Defaults to 2 minutes, which is also used (capped at half of
+     * `idleTimeoutMs`) when the configured value isn't shorter than `idleTimeoutMs`.
      */
     warningWindowMs?: number;
 };

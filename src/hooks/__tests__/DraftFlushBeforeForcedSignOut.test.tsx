@@ -9,7 +9,7 @@ import { ensure, extractBundleResources, getReference, WithId, withRootAccess } 
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { inputText } from 'src/__tests__/sdc-helpers';
-import { flushActiveDraftBestEffort } from 'src/components/IdleSessionTimeout/draftFlushRegistry';
+import { flushActiveDraftBestEffort } from 'src/components/IdleTimeout/utils';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { axiosInstance, getFHIRResources, updateFHIRResource } from 'src/services/fhir';
 import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
@@ -52,7 +52,7 @@ async function setup() {
 
 describe('Draft flush before a Forced Sign-Out', () => {
     // Calls flushActiveDraftBestEffort() directly rather than waiting out a real Idle
-    // Timeout; the timeout/warning/expiry flow itself is covered by IdleSessionController unit tests.
+    // Timeout; the timeout/warning/expiry flow itself is covered by IdleTimeoutController unit tests.
     test('the currently open server-persisted Questionnaire Draft is saved by a best-effort flush', async () => {
         const testFieldValue = 'in-progress visit note';
 
@@ -86,8 +86,7 @@ describe('Draft flush before a Forced Sign-Out', () => {
 
         await inputText(questionnaireLinkId, testFieldValue);
 
-        // autoSave is off, so nothing has been persisted to the server yet — this is
-        // the in-progress documentation that would otherwise be stranded client-side.
+        // autoSave is off, so nothing is on the server before the flush.
         const beforeFlush = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
             questionnaire: questionnaireId,
             status: 'in-progress',

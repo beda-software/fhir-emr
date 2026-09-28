@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { doLogout } from 'src/services/auth';
 
-import { useIdleSessionTimeout } from '../hooks';
-import { LAST_ACTIVITY_STORAGE_KEY, STATE_BROADCAST_STORAGE_KEY } from '../multiTabSync';
+import { useIdleTimeout } from '../hooks';
+import { LAST_PROVIDER_ACTIVITY_STORAGE_KEY, STATE_BROADCAST_STORAGE_KEY } from '../utils';
 
 vi.mock('src/services/auth', () => ({
     doLogout: vi.fn().mockResolvedValue(undefined),
@@ -43,7 +43,7 @@ function installFakeLocalStorage() {
     });
 }
 
-describe('useIdleSessionTimeout multi-tab coordination', () => {
+describe('useIdleTimeout multi-tab coordination', () => {
     beforeEach(() => {
         vi.useFakeTimers();
         installFakeLocalStorage();
@@ -57,26 +57,25 @@ describe('useIdleSessionTimeout multi-tab coordination', () => {
     it('a remote Provider Activity signal resets the countdown displayed in this tab, without re-persisting it', () => {
         const t0 = 1_700_000_000_000;
         vi.setSystemTime(t0);
-        window.localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(t0));
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        const { result } = renderHook(() => useIdleSessionTimeout(), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(), { wrapper });
         expect(result.current.state).toBe('active');
 
         vi.setSystemTime(t0 + WARNING_START_MS + 1000);
         const remoteActivityAt = t0 + WARNING_START_MS + 1000;
-        dispatchStorageEvent(LAST_ACTIVITY_STORAGE_KEY, String(remoteActivityAt));
+        dispatchStorageEvent(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(remoteActivityAt));
 
         expect(result.current.state).toBe('active');
-        // This tab must not re-broadcast what it only learned about remotely.
-        expect(window.localStorage.getItem(LAST_ACTIVITY_STORAGE_KEY)).toBe(String(t0));
+        expect(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBe(String(t0));
     });
 
     it('a remote state-broadcast signal shows the Warning Window in this tab ahead of its own recheck interval', () => {
         const t0 = 1_700_000_000_000;
         vi.setSystemTime(t0);
-        window.localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(t0));
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        const { result } = renderHook(() => useIdleSessionTimeout(), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(), { wrapper });
         expect(result.current.state).toBe('active');
 
         // No local recheck has run yet (fake timers never advanced), so only the
@@ -91,25 +90,23 @@ describe('useIdleSessionTimeout multi-tab coordination', () => {
     it('a remote state-broadcast signal reaching expiry updates the display but does not itself trigger Forced Sign-Out', () => {
         const t0 = 1_700_000_000_000;
         vi.setSystemTime(t0);
-        window.localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(t0));
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        const { result } = renderHook(() => useIdleSessionTimeout(), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(), { wrapper });
 
         vi.setSystemTime(t0 + IDLE_TIMEOUT_MS + 1000);
         dispatchStorageEvent(STATE_BROADCAST_STORAGE_KEY, String(Date.now()));
 
         expect(result.current.state).toBe('expired');
-        // Forced Sign-Out is only ever driven by this tab's own local evaluation
-        // (its recheck interval or a focus/visibility regain), never by a remote signal.
         expect(doLogout).not.toHaveBeenCalled();
     });
 
     it('a sessionEnded signal (another tab clearing localStorage via doLogout) redirects this tab to the sign-in screen', () => {
         const t0 = 1_700_000_000_000;
         vi.setSystemTime(t0);
-        window.localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(t0));
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        renderHook(() => useIdleSessionTimeout(), { wrapper });
+        renderHook(() => useIdleTimeout(), { wrapper });
 
         const hrefSpy = vi.fn();
         // jsdom's Location#href is a non-configurable accessor; replace `window.location`
@@ -133,33 +130,32 @@ describe('useIdleSessionTimeout multi-tab coordination', () => {
         });
 
         expect(hrefSpy).toHaveBeenCalledWith('/');
-        // This tab follows the already-ended Session; it does not call doLogout again.
         expect(doLogout).not.toHaveBeenCalled();
     });
 
     it('a local recheck that finds the Session already expired calls doLogout when a token is still present', async () => {
         const t0 = 1_700_000_000_000;
-        window.localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(t0 - IDLE_TIMEOUT_MS));
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0 - IDLE_TIMEOUT_MS));
         window.localStorage.setItem('token', 'still-here');
         vi.setSystemTime(t0);
 
         await act(async () => {
-            renderHook(() => useIdleSessionTimeout(), { wrapper });
+            renderHook(() => useIdleTimeout(), { wrapper });
             // The Forced Sign-Out effect is fired from inside an async IIFE; let its
             // microtask chain (best-effort Draft flush, then doLogout) run.
             await Promise.resolve();
             await Promise.resolve();
         });
 
-        expect(doLogout).toHaveBeenCalledWith('idle');
+        expect(doLogout).toHaveBeenCalledWith('forced');
     });
 
     it('skips its own doLogout when another tab already cleared the token first (avoids a redundant concurrent Forced Sign-Out)', () => {
         const t0 = 1_700_000_000_000;
-        window.localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(t0 - IDLE_TIMEOUT_MS));
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0 - IDLE_TIMEOUT_MS));
         vi.setSystemTime(t0);
 
-        const { result } = renderHook(() => useIdleSessionTimeout(), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(), { wrapper });
 
         expect(result.current.state).toBe('expired');
         expect(doLogout).not.toHaveBeenCalled();

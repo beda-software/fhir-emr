@@ -46,8 +46,11 @@ export function getToken() {
     return window.localStorage.getItem('token') || undefined;
 }
 
+const SIGNOUT_REASON_STORAGE_KEY = 'signout_reason';
+
 export function setToken(token: string) {
     window.localStorage.setItem('token', token);
+    window.localStorage.removeItem(SIGNOUT_REASON_STORAGE_KEY);
 }
 
 export function removeToken() {
@@ -114,9 +117,7 @@ export function logout() {
     });
 }
 
-const SIGNOUT_REASON_STORAGE_KEY = 'signout_reason';
-
-export type SignOutReason = 'idle';
+export type SignOutReason = 'forced';
 
 export async function doLogout(reason?: SignOutReason) {
     await logout();
@@ -128,14 +129,12 @@ export async function doLogout(reason?: SignOutReason) {
     window.location.href = '/';
 }
 
-// One-shot: reading it clears it, so a subsequent sign-in never re-shows the message.
-export function consumeSignOutReason(): SignOutReason | undefined {
+// Not cleared on read: every tab redirected by the same Forced Sign-Out must see it.
+// setToken() clears it, so the next sign-in never re-shows the message.
+export function getSignOutReason(): SignOutReason | undefined {
     const reason = localStorage.getItem(SIGNOUT_REASON_STORAGE_KEY);
-    if (reason) {
-        localStorage.removeItem(SIGNOUT_REASON_STORAGE_KEY);
-    }
 
-    return reason === 'idle' ? reason : undefined;
+    return reason === 'forced' ? reason : undefined;
 }
 
 export function getUserInfo() {

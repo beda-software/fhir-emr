@@ -1,7 +1,7 @@
 import { Trans, t } from '@lingui/macro';
 import { Button } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { CSSProperties, useCallback, useContext, useEffect } from 'react';
+import { CSSProperties, useCallback, useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { calcInitialContext } from 'sdc-qrf';
 
@@ -9,9 +9,8 @@ import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-question
 import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
-import { registerActiveDraftFlush } from 'src/components/IdleSessionTimeout/draftFlushRegistry';
-
 import { S } from './BaseQuestionnaireResponseForm.styles';
+import { useActiveDraftFlushRegistration } from './hooks';
 
 export interface FormFooterComponentProps {
     submitting: boolean;
@@ -69,21 +68,7 @@ export function FormFooter(props: Props) {
         onCancel?.();
     }, [getCurrentResource, onSaveDraft, onCancel]);
 
-    // Registers this form's Server-persisted draft with draftFlushRegistry so a Forced
-    // Sign-Out elsewhere can flush it. Only onSaveDraft (qrDraftServiceType === 'server')
-    // implies that path, so the app-wide default (local) draft behavior is untouched.
-    useEffect(() => {
-        if (!onSaveDraft) {
-            return;
-        }
-
-        return registerActiveDraftFlush(async () => {
-            const resource = getCurrentResource();
-            if (resource) {
-                await onSaveDraft(resource);
-            }
-        });
-    }, [onSaveDraft, getCurrentResource]);
+    useActiveDraftFlushRegistration(getCurrentResource, onSaveDraft);
 
     if (readOnly) {
         return null;

@@ -1,14 +1,37 @@
 import { FormItemProps } from 'antd';
 import classNames from 'classnames';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormAnswerItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { getFieldErrorMessage } from '@beda.software/web-item-controls/controls';
 
+import { registerActiveDraftFlush } from 'src/components/IdleTimeout/utils';
+
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
+
+// Only a Server-persisted draft can be flushed before a Forced Sign-Out: onSaveDraft
+// is set only when qrDraftServiceType is 'server'.
+export function useActiveDraftFlushRegistration(
+    getCurrentResource: () => QuestionnaireResponse | undefined,
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<unknown>,
+) {
+    useEffect(() => {
+        if (!onSaveDraft) {
+            return;
+        }
+
+        return registerActiveDraftFlush(async () => {
+            const resource = getCurrentResource();
+            if (resource) {
+                await onSaveDraft(resource);
+            }
+        });
+    }, [onSaveDraft, getCurrentResource]);
+}
 
 export function useFieldController<T = unknown>(fieldName: Array<string | number>, questionItem: FCEQuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();

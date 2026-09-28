@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { LAST_ACTIVITY_STORAGE_KEY, STATE_BROADCAST_STORAGE_KEY, interpretStorageEvent } from '../multiTabSync';
+import { LAST_PROVIDER_ACTIVITY_STORAGE_KEY, STATE_BROADCAST_STORAGE_KEY, interpretStorageEvent } from '../utils';
 
 describe('interpretStorageEvent', () => {
     it('reads a bare clear() (key === null) as the Session having ended', () => {
@@ -8,8 +8,8 @@ describe('interpretStorageEvent', () => {
     });
 
     it('reads a valid last-activity write as remote Provider Activity', () => {
-        expect(interpretStorageEvent({ key: LAST_ACTIVITY_STORAGE_KEY, newValue: '12345' })).toEqual({
-            type: 'activity',
+        expect(interpretStorageEvent({ key: LAST_PROVIDER_ACTIVITY_STORAGE_KEY, newValue: '12345' })).toEqual({
+            type: 'providerActivity',
             at: 12345,
         });
     });
@@ -17,7 +17,9 @@ describe('interpretStorageEvent', () => {
     it.each([null, '', 'not-a-number', 'NaN'])(
         'ignores a last-activity write with an unusable value (%p)',
         (newValue) => {
-            expect(interpretStorageEvent({ key: LAST_ACTIVITY_STORAGE_KEY, newValue })).toEqual({ type: 'ignore' });
+            expect(interpretStorageEvent({ key: LAST_PROVIDER_ACTIVITY_STORAGE_KEY, newValue })).toEqual({
+                type: 'ignore',
+            });
         },
     );
 

@@ -1,10 +1,10 @@
 import { t } from '@lingui/macro';
 import { Button, Modal } from 'antd';
 
-import { useIdleSessionTimeout } from './hooks';
+import { useIdleTimeout } from './hooks';
 
-export function IdleSessionTimeout() {
-    const { state, stayActive, signOutNow } = useIdleSessionTimeout();
+export function IdleTimeout() {
+    const { state, stayActive, signOutNow } = useIdleTimeout();
 
     return (
         <Modal

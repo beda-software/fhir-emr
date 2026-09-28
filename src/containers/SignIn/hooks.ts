@@ -1,7 +1,7 @@
 import { notification } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { consumeSignOutReason, signinWithIdentityToken } from 'src/services/auth';
+import { getSignOutReason, signinWithIdentityToken } from 'src/services/auth';
 
 declare const AppleID: any;
 
@@ -22,10 +22,10 @@ interface AppleAuthenticationResponse {
     };
 }
 
-export function useIdleSignOut() {
-    const [isIdleSignOut] = useState(() => consumeSignOutReason() === 'idle');
+export function useIsForcedSignOut() {
+    const [isForcedSignOut] = useState(() => getSignOutReason() === 'forced');
 
-    return isIdleSignOut;
+    return isForcedSignOut;
 }
 
 export function useAppleAuthentication() {

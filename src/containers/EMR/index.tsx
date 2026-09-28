@@ -13,7 +13,7 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
-import { IdleSessionTimeout } from 'src/components/IdleSessionTimeout';
+import { IdleTimeout } from 'src/components/IdleTimeout';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
@@ -111,7 +111,7 @@ interface RouteProps {
 function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
     return (
         <>
-            <IdleSessionTimeout />
+            <IdleTimeout />
             <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
                 <Routes>
                     <Route

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { flushActiveDraftBestEffort, registerActiveDraftFlush } from '../draftFlushRegistry';
+import { flushActiveDraftBestEffort, registerActiveDraftFlush } from '../utils';
 
-describe('draftFlushRegistry', () => {
+describe('active draft flush', () => {
     afterEach(() => {
         vi.useRealTimers();
     });

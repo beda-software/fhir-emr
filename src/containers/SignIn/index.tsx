@@ -8,7 +8,7 @@ import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
-import { useAppleAuthentication, useIdleSignOut } from './hooks';
+import { useAppleAuthentication, useIsForcedSignOut } from './hooks';
 import s from './SignIn.module.scss';
 import { S } from './SignIn.styles';
 
@@ -31,7 +31,7 @@ interface SignInProps {
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
-    const isIdleSignOut = useIdleSignOut();
+    const isForcedSignOut = useIsForcedSignOut();
 
     return (
         <S.Container>
@@ -40,7 +40,7 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
-                {isIdleSignOut ? (
+                {isForcedSignOut ? (
                     <S.Message>{t`You were signed out because there was no activity for a while.`}</S.Message>
                 ) : null}
                 <Segmented
