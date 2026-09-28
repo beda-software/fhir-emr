@@ -1,28 +1,69 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Tooltip } from 'antd';
-import { QuestionnaireResponse, Resource } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
+import { useCallback } from 'react';
 
-import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { QuestionnaireResponseFormSaveResponse, useQuestionnaireResponseDraft } from 'src/hooks';
+import { FormWrapper } from 'src/components/FormWrapper';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
+import {
+    QuestionnaireResponseDraftService,
+    QuestionnaireResponseFormSaveResponse,
+    useQuestionnaireResponseDraft,
+} from 'src/hooks';
 
-export interface QuestionnaireResponseFormDraftProps extends QRFProps {
-    subject: Resource;
-    questionnaireId: string;
-    questionnaireResponse: WithId<QuestionnaireResponse> | undefined;
+interface BaseQuestionnaireResponseFormDraftProps extends QRFProps {
+    autoSave: boolean;
+    qrDraftServiceType: QuestionnaireResponseDraftService;
 }
 
+interface BaseQuestionnaireResponseFormDraftServerProps extends BaseQuestionnaireResponseFormDraftProps {
+    qrDraftServiceType: 'server';
+}
+
+interface BaseQuestionnaireResponseFormDraftLocalProps extends BaseQuestionnaireResponseFormDraftProps {
+    qrDraftServiceType: 'local';
+    subject: Resource;
+    questionnaireId: string;
+}
+
+type QuestionnaireResponseFormDraftProps =
+    | BaseQuestionnaireResponseFormDraftServerProps
+    | BaseQuestionnaireResponseFormDraftLocalProps;
+
 export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormDraftProps) {
-    const { response, draftInfoMessage, updateDraft, deleteDraft } = useQuestionnaireResponseDraft({
-        subject: props.subject,
-        questionnaireId: props.questionnaireId,
-        autoSave: true,
-        questionnaireResponse: props.questionnaireResponse,
-    });
+    const { qrDraftServiceType, onCancel } = props;
+    const { response, draftInfoMessage, deleteDraft, handleEdit, saveDraft } = useQuestionnaireResponseDraft(
+        props.qrDraftServiceType === 'server'
+            ? {
+                  autoSave: props.autoSave,
+                  qrDraftServiceType: props.qrDraftServiceType,
+                  questionnaireResponse: props.initialQuestionnaireResponse,
+              }
+            : {
+                  autoSave: props.autoSave,
+                  qrDraftServiceType: props.qrDraftServiceType,
+                  questionnaireResponse: props.initialQuestionnaireResponse,
+                  subject: props.subject,
+                  questionnaireId: props.questionnaireId,
+              },
+    );
+
+    const draftFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper
+                {...wrapperProps}
+                onCancel={onCancel}
+                onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
+            />
+        ),
+        [onCancel, qrDraftServiceType, saveDraft],
+    );
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
@@ -53,7 +94,8 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                             await deleteDraft();
                             props.onSuccess && props.onSuccess(resource);
                         }}
-                        onQRFUpdate={updateDraft}
+                        onEdit={handleEdit}
+                        FormWrapper={draftFormWrapper}
                     />
                 </>
             )}

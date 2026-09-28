@@ -1,0 +1,111 @@
+id: group-table-demo
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-table-demo
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: group-table-demo
+title: Group Table Demo
+status: active
+subjectType:
+  - Patient
+description: A questionnaire to demonstrate group-table item control
+item:
+  - linkId: group-table-demo
+    text: Group Table Demo
+    type: group
+    item:
+      - linkId: group-table-with-error
+        text: Group Table With Error
+        type: group
+        # It should be repeatable
+        repeats: false
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: id
+            text: ID
+            type: string
+          - linkId: error
+            text: Error
+            type: string
+      - linkId: note-group
+        text: Notes
+        type: group
+        repeats: true
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: date
+            text: Date
+            type: date
+          - linkId: time
+            text: Time
+            type: time
+          - linkId: note-author
+            text: Written by
+            type: reference
+            referenceResource:
+              - PractitionerRole
+            answerExpression:
+              language: application/x-fhir-query
+              expression: "PractitionerRole?_assoc=practitioner"
+            choiceColumn:
+              - forDisplay: true
+                path: >-
+                  practitioner.resource.name.given.first() + ' ' +
+                  practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+          - linkId: note-text
+            text: Note
+            type: string
+            itemControl:
+              coding:
+                - code: markdown-editor
+      - linkId: inputs-simple
+        text: Inputs Simple
+        type: group
+        repeats: true
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: date-time
+            text: Date Time
+            type: dateTime
+          - linkId: input-boolean
+            text: Boolean
+            type: boolean
+          - linkId: input-coding
+            text: Coding
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: "http://hl7.org/fhir/allergy-intolerance-category"
+                  code: "medication"
+                  display: "Medication"
+              - valueCoding:
+                  system: "http://hl7.org/fhir/allergy-intolerance-category"
+                  code: "food"
+                  display: "Food"
+              - valueCoding:
+                  system: "http://hl7.org/fhir/allergy-intolerance-category"
+                  code: "environment"
+                  display: "Environment"
+          - linkId: input-decimal
+            text: Decimal
+            type: decimal
+          - linkId: input-integer
+            text: Integer
+            type: integer
+          - linkId: input-quantity
+            text: Quantity
+            type: quantity
+            unitOption:
+              - code: cm
+                system: http://unitsofmeasure.org
+                display: cmy

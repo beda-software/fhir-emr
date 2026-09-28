@@ -15,12 +15,12 @@ export function PatientDetailsTabs(props: { extraMenuItems?: RouteItem[]; isDefa
         () =>
             (!props.isDefaultRoutesDisabled
                 ? [
-                      { label: t`Overview`, path: `/patients/${params.id}` },
+                      { label: t`Chart`, path: `/patients/${params.id}` },
                       { label: t`Encounters`, path: `/patients/${params.id}/encounters` },
                       { label: t`Documents`, path: `/patients/${params.id}/documents` },
-                      { label: t`Wearables`, path: `/patients/${params.id}/wearables` },
-                      { label: t`Orders`, path: `/patients/${params.id}/orders` },
+                      { label: t`Forms`, path: `/patients/${params.id}/forms` },
                       { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
+                      { label: t`HMB Diagnostic`, path: `/patients/${params.id}/hmb-diagnostic` },
                       { label: t`Resources`, path: `/patients/${params.id}/resources` },
                   ]
                 : []

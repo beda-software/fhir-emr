@@ -1,6 +1,23 @@
 resourceType: Questionnaire
 title: Fall Risk Screen
 status: active
+description: Screens patients for risk factors associated with falls to guide preventive interventions.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 id: fall-risk-screen
 url: fall-risk-screen
 name: fall-risk-screen

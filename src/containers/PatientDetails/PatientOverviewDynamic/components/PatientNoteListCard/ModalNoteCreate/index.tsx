@@ -1,14 +1,15 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Patient, Practitioner } from 'fhir/r4b';
+import { Patient } from 'fhir/r4b';
+import { useCallback } from 'react';
 
-import { WithId } from '@beda.software/fhir-react';
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 
-import { MDEditorControl } from 'src/components/BaseQuestionnaireResponseForm/widgets/MDEditorControl';
+import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
+import { getCurrentLocale } from 'src/services/i18n';
 
 interface ModalNoteCreateProps {
     patient: Patient;
@@ -16,8 +17,6 @@ interface ModalNoteCreateProps {
 }
 
 export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
-    const author = selectCurrentUserRoleResource() as WithId<Practitioner>;
-
     return (
         <ModalTrigger
             title={t`Add Note`}
@@ -29,24 +28,29 @@ export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
                 </Button>
             }
         >
-            {({ closeModal }) => (
-                <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('patient-note-create')}
-                    launchContextParameters={[
-                        { name: 'Patient', resource: props.patient },
-                        { name: 'Author', resource: author },
-                    ]}
-                    itemControlQuestionItemComponents={{
-                        'markdown-editor': (props) => <MDEditorControl {...props} />,
-                    }}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Note successfully created` });
-                        props.onCreate();
-                    }}
-                    onCancel={closeModal}
-                />
-            )}
+            {({ closeModal }) => <NoteCreateForm onCreate={props.onCreate} closeModal={closeModal} />}
         </ModalTrigger>
     );
 };
+
+function NoteCreateForm(props: { onCreate: () => void; closeModal: () => void }) {
+    const { onCreate, closeModal } = props;
+
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
+        [closeModal],
+    );
+
+    return (
+        <QuestionnaireResponseForm
+            language={getCurrentLocale()}
+            questionnaireLoader={questionnaireIdLoader('patient-note-create')}
+            onSuccess={() => {
+                closeModal();
+                notification.success({ message: t`Note successfully created` });
+                onCreate();
+            }}
+            FormWrapper={formWrapper}
+        />
+    );
+}

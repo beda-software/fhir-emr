@@ -1,7 +1,5 @@
-import config from '@beda.software/emr-config';
-
-import { getToken } from 'src/services/auth.ts';
-import { service } from 'src/services/fhir.ts';
+import { aiService } from './ai';
+import { getToken } from './auth';
 
 export interface TableColumnConfig {
     title: string;
@@ -15,14 +13,13 @@ export interface MagicSearchResponse {
     tableColumns: TableColumnConfig[];
 }
 
-export async function performMagicSearch(prompt: string) {
+export async function performMagicSearch(prompt: string, mcpServer: 'tx-tools' | 'semmatch' = 'tx-tools') {
     const appToken = getToken();
 
-    return await service<MagicSearchResponse>({
-        baseURL: config.aiAssistantServiceUrl,
+    return await aiService<MagicSearchResponse>({
         url: `/magic-search`,
         method: 'POST',
-        data: { prompt },
+        data: { prompt, mcpServer: mcpServer },
         headers: {
             Authorization: `Bearer ${appToken}`,
         },

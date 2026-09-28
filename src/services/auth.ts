@@ -1,20 +1,10 @@
 import { decodeJwt } from 'jose';
 
-import {
-    setInstanceToken as setAidboxInstanceToken,
-    resetInstanceToken as resetAidboxInstanceToken,
-} from 'aidbox-react/lib/services/instance';
-import { service } from 'aidbox-react/lib/services/service';
-import { Token } from 'aidbox-react/lib/services/token';
-
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError } from '@beda.software/remote-data';
+import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError, Token } from '@beda.software/remote-data';
 
-import {
-    setInstanceToken as setFHIRInstanceToken,
-    resetInstanceToken as resetFHIRInstanceToken,
-} from 'src/services/fhir';
+import { aidboxService, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -102,7 +92,7 @@ type TokenResponse = {
 } & Token;
 
 export async function login(data: LoginBody) {
-    return await service<TokenResponse>({
+    return await aidboxService<TokenResponse>({
         baseURL: config.baseURL,
         url: '/auth/token',
         method: 'POST',
@@ -117,7 +107,7 @@ export async function login(data: LoginBody) {
 }
 
 export function logout() {
-    return service({
+    return aidboxService({
         baseURL: config.baseURL,
         method: 'DELETE',
         url: '/Session',
@@ -126,14 +116,13 @@ export function logout() {
 
 export async function doLogout() {
     await logout();
-    resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
+    resetInstanceToken();
     localStorage.clear();
     window.location.href = '/';
 }
 
 export function getUserInfo() {
-    return service<User>({
+    return aidboxService<User>({
         baseURL: config.baseURL,
         method: 'GET',
         url: '/auth/userinfo',
@@ -141,7 +130,7 @@ export function getUserInfo() {
 }
 
 export async function getJitsiAuthToken() {
-    return service<{ jwt: string }>({
+    return aidboxService<{ jwt: string }>({
         baseURL: config.baseURL,
         method: 'POST',
         url: '/auth/$jitsi-token',
@@ -157,10 +146,9 @@ export async function signinWithIdentityToken(
     if (isSuccess(authTokenResponse)) {
         const authToken = authTokenResponse.data.access_token;
         setToken(authToken);
-        setAidboxInstanceToken({ access_token: authToken, token_type: 'Bearer' });
-        setFHIRInstanceToken({ access_token: authToken, token_type: 'Bearer' });
+        setInstanceToken({ access_token: authToken, token_type: 'Bearer' });
 
-        return await service({
+        return await aidboxService({
             method: 'POST',
             url: '/Questionnaire/federated-identity-signin/$extract',
             data: {

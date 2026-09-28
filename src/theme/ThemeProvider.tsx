@@ -2,7 +2,7 @@ import { ConfigProvider as ANTDConfigProvider } from 'antd';
 import { ReactNode } from 'react';
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components';
 
-import { antdLocaleMap, getCurrentLocale } from 'src/services/i18n';
+import { getCurrentLocale, localesConfig } from 'src/services/i18n';
 
 import { getAppTheme, getANTDTheme } from './';
 import { useTheme } from '../utils/theme';
@@ -13,6 +13,10 @@ interface Props {
 }
 
 const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
+  html {
+    scrollbar-gutter: stable;
+  }
+
   :root {
     --theme-icon-primary: ${({ theme }) => theme.iconColors.primary};
     --theme-icon-secondary: ${({ theme }) => theme.iconColors.secondary};
@@ -21,6 +25,10 @@ const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
 
   body {
     background-color: ${({ theme }) => theme.antdTheme?.colorBgBase};
+  }
+
+  .mdxeditor-popup-container {
+      z-index: 1000;
   }
 `;
 
@@ -38,7 +46,7 @@ export function ThemeProvider(props: Props) {
     };
 
     return (
-        <ANTDConfigProvider theme={antdTheme} locale={antdLocaleMap[getCurrentLocale()]}>
+        <ANTDConfigProvider theme={antdTheme} locale={localesConfig[getCurrentLocale()]?.antdLocale}>
             <StyledComponentsThemeProvider theme={appTheme}>
                 <GlobalStyle />
                 {children}

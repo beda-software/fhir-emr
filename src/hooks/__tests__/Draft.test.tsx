@@ -1,18 +1,17 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
-import { RemoteDataResult } from 'aidbox-react';
 import { Bundle, Patient, Practitioner, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { ensure, extractBundleResources, getReference, WithId, withRootAccess } from '@beda.software/fhir-react';
-import { mapSuccess } from '@beda.software/remote-data';
+import { mapSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
+import { inputText } from 'src/__tests__/sdc-helpers';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { makeLocalStorageDraftVersionedKey, QuestionnaireResponseDraftService } from 'src/hooks';
-import { getFHIRResources, updateFHIRResource } from 'src/services';
+import { axiosInstance, getFHIRResources, updateFHIRResource } from 'src/services/fhir';
 import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 
@@ -66,14 +65,19 @@ async function renderForm(
     render(
         <ThemeProvider>
             <I18nProvider i18n={i18n}>
-                <PatientDocument
-                    patient={patient}
-                    author={practitioner}
-                    questionnaireId={questionnaireId}
-                    onSuccess={onSuccess}
-                    autoSave={autoSave}
-                    qrDraftServiceType={qrDraftServiceType}
-                />
+                <ClinicalContext
+                    context={[
+                        { name: 'Patient', resource: patient },
+                        { name: 'Author', resource: practitioner },
+                    ]}
+                >
+                    <PatientDocument
+                        questionnaireId={questionnaireId}
+                        onSuccess={onSuccess}
+                        autoSave={autoSave}
+                        qrDraftServiceType={qrDraftServiceType}
+                    />
+                </ClinicalContext>
             </I18nProvider>
         </ThemeProvider>,
     );
@@ -92,12 +96,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         await new Promise((r) => setTimeout(r, 2000));
 
@@ -140,12 +139,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -187,6 +181,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
     test("Test QuestionnaireResponse autosave doesn't reset completed status", async () => {
         const testFieldValue = 'Test 1';
+        const testFieldUpdateValue = 'update value';
 
         const { patient, practitioner } = await setup();
 
@@ -195,12 +190,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -215,11 +205,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             },
         });
 
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: 'update value' },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -282,12 +268,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         await new Promise((r) => setTimeout(r, 3000));
 
@@ -330,12 +311,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -380,12 +356,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         await waitForAPIProcess<string | null>({
             service: () => Promise.resolve(localStorage.getItem(draftKey!)),
@@ -398,11 +369,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         const localStorageQR = JSON.parse(localStorage.getItem(draftKey!)!);
         expect(localStorageQR.item[0].answer[0].valueString).toBe(testFieldValue);
 
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldUpdateValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldUpdateValue);
 
         await waitForAPIProcess<string | null>({
             service: () => Promise.resolve(localStorage.getItem(draftKey!)),
@@ -454,12 +421,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -498,12 +460,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -545,6 +502,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
     test("Test QuestionnaireResponse disabled autosave doesn't reset completed status", async () => {
         const testFieldValue = 'Test 1';
+        const testFieldUpdateValue = 'update value';
 
         const { patient, practitioner } = await setup();
 
@@ -553,12 +511,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
-        const textInput = textField.querySelector('input')!;
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: testFieldValue },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldValue);
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -573,11 +526,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
             },
         });
 
-        act(() => {
-            fireEvent.change(textInput, {
-                target: { value: 'update value' },
-            });
-        });
+        await inputText(questionnaireLinkId, testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();

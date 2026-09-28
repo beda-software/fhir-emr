@@ -1,15 +1,12 @@
 import { Questionnaire } from 'fhir/r4b';
 
-import config from '@beda.software/emr-config';
-
+import { aiService } from './ai';
 import { getToken } from './auth';
-import { service } from './fhir';
 
 export async function generateQuestionnaire(prompt: string, questionnaire?: string) {
     const appToken = getToken();
 
-    return await service<Questionnaire>({
-        baseURL: config.aiAssistantServiceUrl,
+    return await aiService<Questionnaire>({
         url: `/questionnaire`,
         method: 'POST',
         data: { prompt: prompt, questionnaire },
@@ -27,8 +24,7 @@ export async function generateQuestionnaireFromFile(file: File, questionnaire?: 
     }
     const appToken = getToken();
 
-    return await service<{ questionnaire: Questionnaire; markdown: string }>({
-        baseURL: config.aiAssistantServiceUrl,
+    return await aiService<{ questionnaire: Questionnaire; markdown: string }>({
         url: `/questionnaire-from-file`,
         method: 'POST',
         data: formData,

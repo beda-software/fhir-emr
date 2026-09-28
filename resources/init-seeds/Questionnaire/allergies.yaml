@@ -1,12 +1,29 @@
 id: allergies
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergies
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/allergies
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: allergies
 title: Allergies
 status: active
+description: Records known allergies and intolerances with substance, reaction, and severity.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: common
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
   - Patient

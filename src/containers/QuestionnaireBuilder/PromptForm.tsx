@@ -1,7 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Form, Input, Timeline } from 'antd';
-import { FormProps } from 'antd/lib/form';
+import type { FormProps } from 'antd/es/form';
 import Markdown from 'react-markdown';
 
 import s from './QuestionnaireBuilder.module.scss';

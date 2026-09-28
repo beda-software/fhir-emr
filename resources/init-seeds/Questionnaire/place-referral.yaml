@@ -1,11 +1,12 @@
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/place-referral
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/place-referral
 meta:
     profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: e-request
 title: eReferral
 status: active
+description: Places an electronic referral to another provider or service.
 subjectType:
     - Patient
 launchContext:

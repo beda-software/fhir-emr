@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: creatinine-test
 title: Creatinine test
 status: active
+description: Records the result of a serum creatinine lab test.
 subjectType:
   - Patient
 launchContext:
@@ -70,4 +71,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/creatinine
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/creatinine

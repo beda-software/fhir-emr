@@ -12,14 +12,21 @@ import {
     persistSaveService,
     questionnaireIdLoader,
 } from 'src/hooks/questionnaire-response-form-data';
+import { getCurrentLocale } from 'src/services/i18n';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
     subject?: Reference;
     launchContextParameters?: ParametersParameter[];
+    onSuccess?: () => void;
 }
 
-export function QuestionanireModal({ questionnaire, subject, launchContextParameters }: QuestionnaireModalProps) {
+export function QuestionanireModal({
+    questionnaire,
+    subject,
+    launchContextParameters,
+    onSuccess,
+}: QuestionnaireModalProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = questionnaire.display ?? questionnaire.reference ?? 'N/A';
 
@@ -32,6 +39,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
         notification.success({
             message: `Successfully saved`,
         });
+        onSuccess?.();
     };
 
     return (
@@ -48,6 +56,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                 maskClosable={false}
             >
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     initialQuestionnaireResponse={{
                         questionnaire: parseFHIRReference(questionnaire).id,
                         subject,

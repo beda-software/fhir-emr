@@ -1,12 +1,15 @@
 import { GlobalOutlined } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
-import { ItemType } from 'antd/lib/menu/interface';
+import type { ItemType } from 'antd/es/menu/interface';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
+import config from '@beda.software/emr-config';
+
+import { Assistant } from 'src/components/Assistant';
 import { MenuIcon } from 'src/icons/general/Menu';
 import { getToken } from 'src/services/auth';
-import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales, LocaleCode } from 'src/services/i18n';
+import { dynamicActivate, setCurrentLocale, getCurrentLocale, localesConfig } from 'src/services/i18n';
 
 import { BottomMenuLayout } from './context';
 import s from './SidebarBottom.module.scss';
@@ -24,16 +27,24 @@ export function SidebarBottom(props: Props) {
     const { collapsed, toggleCollapsed, onItemClick, enableLocaleSwitcher = true, ...other } = props;
     const appToken = getToken();
     const isAnonymousUser = !appToken;
+    const enableAssistant = !!config.aiAssistantServiceUrl;
 
     return (
         <S.Container
+            $collapsed={collapsed}
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
             {...other}
         >
-            <S.Divider $hidden={collapsed} />
-            {enableLocaleSwitcher && <LocaleSwitcher onItemClick={onItemClick} />}
+            {enableAssistant && (
+                <>
+                    <S.FullWidthDivider $collapsed={collapsed} />
+                    <Assistant variant={collapsed ? 'sidebarFolded' : 'sidebarExpanded'} />
+                </>
+            )}
+            <S.FullWidthDivider $collapsed={collapsed} />
+            {enableLocaleSwitcher && !collapsed && <LocaleSwitcher onItemClick={onItemClick} />}
             {!isAnonymousUser ? (
                 <>
                     <S.Divider $hidden={collapsed} />
@@ -76,17 +87,17 @@ function BottomMenu(props: BottomMenuProps) {
 function LocaleSwitcher(props: { onItemClick?: () => void }) {
     const { onItemClick } = props;
     const currentLocale = getCurrentLocale();
-    const localesList = Object.entries(locales);
-    const items = localesList.map(([value, label]) => ({
-        label: <div>{label}</div>,
-        key: value,
+    const localesList = Object.entries(localesConfig);
+    const items = localesList.map(([localeCode, localeData]) => ({
+        label: <div>{localeData.label}</div>,
+        key: localeCode,
         onClick: () => {
-            onChangeLocale(value as LocaleCode);
+            onChangeLocale(localeCode);
             onItemClick?.();
         },
     }));
 
-    const onChangeLocale = (key: LocaleCode) => {
+    const onChangeLocale = (key: string) => {
         setCurrentLocale(key);
         dynamicActivate(key);
         location.reload();
@@ -101,7 +112,7 @@ function LocaleSwitcher(props: { onItemClick?: () => void }) {
                 {
                     key: 'locale',
                     icon: <GlobalOutlined />,
-                    label: locales[currentLocale],
+                    label: localesConfig[currentLocale]?.label,
                     children: items,
                 },
             ])}

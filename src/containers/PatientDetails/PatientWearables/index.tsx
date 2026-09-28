@@ -1,6 +1,8 @@
+// TODO: Not exposed in Patient Details menu or routes as of 2026-04-17.
+// Safe to delete this folder if it remains unused long-term.
 import { t } from '@lingui/macro';
 import { Alert, Empty, Result } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { Patient } from 'fhir/r4b';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';

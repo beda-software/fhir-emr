@@ -35,6 +35,9 @@ export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
             Result: {
                 colorSuccess: palette.secondary,
             },
+            Table: {
+                headerBg: palette.neutralPalette.gray_3,
+            },
         },
     };
 

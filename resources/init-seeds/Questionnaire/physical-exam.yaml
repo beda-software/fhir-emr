@@ -1,10 +1,28 @@
 resourceType: Questionnaire
 id: physical-exam
 status: active
+description: Documents findings from a focused or general physical examination.
 name: physical-exam
 title: Physical exam
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
+  - Patient
 launchContext:
   - name:
       code: Patient
@@ -214,4 +232,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/physical-exam
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/physical-exam

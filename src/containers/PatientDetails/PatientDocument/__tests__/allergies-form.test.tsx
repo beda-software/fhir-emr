@@ -3,15 +3,14 @@ import { I18nProvider } from '@lingui/react';
 import { screen, render, waitFor, fireEvent, act } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-
 import { AllergyIntolerance } from '@beda.software/aidbox-types';
-import { ensure, withRootAccess } from '@beda.software/fhir-react';
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
+import { extractBundleResources, ensure, withRootAccess } from '@beda.software/fhir-react';
 
 import { chooseInlineOption, inputText } from 'src/__tests__/sdc-helpers';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
-import { axiosInstance } from 'src/services/fhir';
-import { createPatient, loginAdminUser } from 'src/setupTests';
+import { axiosInstance, getFHIRResources } from 'src/services/fhir';
+import { createPatient, createPractitioner, loginAdminUser } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 
 describe('Test allergies patient form filling and extraction', () => {
@@ -24,6 +23,7 @@ describe('Test allergies patient form filling and extraction', () => {
 
             return { patient };
         });
+        const practitioner = await createPractitioner({ name: [{ given: ['John'], family: 'Smith' }] });
 
         const onSuccess = vi.fn();
         act(() => {
@@ -33,13 +33,14 @@ describe('Test allergies patient form filling and extraction', () => {
         render(
             <ThemeProvider>
                 <I18nProvider i18n={i18n}>
-                    <PatientDocument
-                        patient={patient}
-                        author={patient}
-                        questionnaireId="allergies"
-                        onSuccess={onSuccess}
-                        autoSave={false}
-                    />
+                    <ClinicalContext
+                        context={[
+                            { name: 'Author', resource: practitioner },
+                            { name: 'Patient', resource: patient },
+                        ]}
+                    >
+                        <PatientDocument questionnaireId="allergies" onSuccess={onSuccess} autoSave={false} />
+                    </ClinicalContext>
                 </I18nProvider>
             </ThemeProvider>,
         );

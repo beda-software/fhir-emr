@@ -1,25 +1,18 @@
 import { Patient } from 'fhir/r4b';
-import moment from 'moment';
-
-import { formatFHIRDate } from '@beda.software/fhir-react';
 
 import { DashboardInstance } from 'src/components/Dashboard/types';
 import {
-    prepareActivitySummary,
     prepareAllergies,
-    prepareAuERequest,
     prepareConditions,
-    prepareConsents,
     prepareImmunizations,
     prepareMedications,
-    prepareReferral,
+    prepareProcedures,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
-import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
+import { AppointmentCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
-import { SummaryContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/SummaryCardContainer';
 
-import { AppointmentCardContainer } from '../PatientOverviewDynamic/containers/AppointmentCardContainer';
+import { CreatinineDashboardContainer } from '../PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
@@ -34,47 +27,7 @@ export const patientDashboardConfig: DashboardInstance = {
             },
         },
         {
-            widget: SummaryContainer,
-        },
-        {
             widget: GeneralInformationDashboardContainer,
-        },
-        {
-            query: {
-                resourceType: 'ServiceRequest',
-                search: (patient: Patient) => ({
-                    subject: patient.id,
-                    _sort: '-_lastUpdated',
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareAuERequest),
-        },
-        {
-            query: {
-                resourceType: 'Appointment',
-                search: (patient: Patient) => ({
-                    status: 'proposed',
-                    _sort: '-_lastUpdated',
-                    patient: patient.id,
-                    _include: 'Appointment:patient',
-                    _revinclude: ['CommunicationRequest:based-on', 'QuestionnaireResponse:subject'],
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareReferral),
-        },
-    ],
-    left: [
-        {
-            query: {
-                resourceType: 'AllergyIntolerance',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    _sort: ['-date'],
-                    _revinclude: ['Provenance:target'],
-                    _count: 7,
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareAllergies),
         },
         {
             query: {
@@ -90,18 +43,28 @@ export const patientDashboardConfig: DashboardInstance = {
         },
         {
             query: {
-                resourceType: 'Observation',
+                resourceType: 'AllergyIntolerance',
                 search: (patient: Patient) => ({
                     patient: patient.id,
-                    status: 'final',
-                    code: 'activity-summary',
-                    date: `ge${formatFHIRDate(moment().subtract(6, 'days'))}`,
+                    _sort: ['-date'],
+                    _revinclude: ['Provenance:target'],
+                    _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareActivitySummary),
+            widget: StandardCardContainerFabric(prepareAllergies),
         },
-    ],
-    right: [
+        {
+            query: {
+                resourceType: 'MedicationStatement',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    _sort: ['-_lastUpdated'],
+                    _revinclude: ['Provenance:target'],
+                    _count: 7,
+                }),
+            },
+            widget: StandardCardContainerFabric(prepareMedications),
+        },
         {
             query: {
                 resourceType: 'Immunization',
@@ -117,40 +80,20 @@ export const patientDashboardConfig: DashboardInstance = {
         },
         {
             query: {
-                resourceType: 'Consent',
+                resourceType: 'Procedure',
                 search: (patient: Patient) => ({
-                    patient: patient.id,
-                    status: 'active',
-                    _sort: ['-_lastUpdated'],
+                    subject: patient.id,
+                    _sort: ['-date', '_id'],
                     _revinclude: ['Provenance:target'],
-                    _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareConsents),
-        },
-        {
-            query: {
-                resourceType: 'MedicationStatement',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    _sort: ['-_lastUpdated'],
-                    _revinclude: ['Provenance:target'],
-                    _count: 7,
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareMedications),
+            widget: StandardCardContainerFabric(prepareProcedures),
         },
     ],
+    left: [],
+    right: [],
     bottom: [
         {
-            query: {
-                resourceType: 'Observation',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    code: 'http://loinc.org|2160-0',
-                    _sort: ['-date'],
-                }),
-            },
             widget: CreatinineDashboardContainer,
         },
     ],

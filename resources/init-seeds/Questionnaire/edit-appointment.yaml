@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: edit-appointment
 status: active
 title: Edit appointment
+description: Edits the details of an existing appointment.
 mapping:
   - reference: urn:uuid:Mapping:edit-appointment-extract
 launchContext:
@@ -112,7 +113,7 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start"
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/edit-appointment
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/edit-appointment
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

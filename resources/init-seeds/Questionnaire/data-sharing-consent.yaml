@@ -2,11 +2,40 @@ id: data-sharing-consent
 resourceType: Questionnaire
 title: Demographic & clinical data sharing consent
 status: active
+description: Captures patient consent for sharing demographic and clinical data with other providers and services.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: common
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Patient
 mapping:
   - reference: urn:uuid:Mapping:data-sharing-consent-extract
 name: Demographic & clinical data sharing consent
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
 item:
   - text: Practitioner
     type: reference
@@ -46,4 +75,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/data-sharing-consent
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/data-sharing-consent

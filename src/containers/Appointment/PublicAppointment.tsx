@@ -2,18 +2,18 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
-
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { uuid4 } from '@beda.software/fhir-react';
+import { DateTimeSlotPicker } from '@beda.software/web-item-controls/controls';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
-import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
+import { itemControlComponents } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { axiosInstance } from 'src/services';
 import { getToken } from 'src/services/auth';
-import { axiosInstance as axiosFHIRInstance } from 'src/services/fhir';
 import { history } from 'src/services/history';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { S } from './PublicAppointment.styles';
 
@@ -25,8 +25,7 @@ export function PublicAppointment() {
 
     useEffect(() => {
         if (isAnonymousUser) {
-            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
-            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
+            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
             setIsLoading(false);
 
             return;
@@ -34,8 +33,7 @@ export function PublicAppointment() {
 
         return () => {
             if (isAnonymousUser) {
-                axiosFHIRInstance.defaults.headers.Authorization = null;
-                (axiosAidboxInstance.defaults.headers.Authorization as unknown) = undefined;
+                axiosInstance.defaults.headers.Authorization = null;
             }
         };
     }, [isAnonymousUser]);
@@ -47,17 +45,13 @@ export function PublicAppointment() {
                     <Spinner />
                 ) : (
                     <QuestionnaireResponseForm
+                        language={getCurrentLocale()}
                         questionnaireLoader={questionnaireIdLoader('public-appointment')}
                         onSuccess={() => {
                             notification.success({
                                 message: t`Appointment successfully created`,
                             });
                             history.replace('/');
-                        }}
-                        itemControlQuestionItemComponents={{
-                            'date-time-slot': (props) => (
-                                <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
-                            ),
                         }}
                         initialQuestionnaireResponse={{
                             questionnaire: 'public-appointment',
@@ -71,6 +65,12 @@ export function PublicAppointment() {
                                 },
                             },
                         ]}
+                        itemControlQuestionItemComponents={{
+                            ...itemControlComponents,
+                            'date-time-slot': (props) => (
+                                <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
+                            ),
+                        }}
                     />
                 )}
             </S.Content>

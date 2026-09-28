@@ -1,8 +1,9 @@
 import { FileTextOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { RemoteData } from 'aidbox-react';
 import { TablePaginationConfig } from 'antd';
 import { Observation, Patient } from 'fhir/r4b';
+
+import { RemoteData } from '@beda.software/remote-data';
 
 import { DashboardCard } from 'src/components/DashboardCard';
 

@@ -1,3 +1,5 @@
+// TODO: Not exposed in Patient Details menu or routes as of 2026-04-17.
+// Safe to delete this folder if it remains unused long-term.
 import { DownOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
@@ -6,16 +8,17 @@ import { useCallback, useState } from 'react';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 import styled from 'styled-components';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { WithId } from '@beda.software/fhir-react';
 
+import { FormWrapper } from 'src/components/FormWrapper';
 import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable } from 'src/components/ResourceTable';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { getCurrentLocale } from 'src/services/i18n';
 import { formatHumanDate } from 'src/utils/date';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
-
 const { Search } = Input;
 
 interface Props {
@@ -98,7 +101,6 @@ const Pannel = styled.div`
 
 function useOrders() {
     const [key, setKey] = useState(0);
-    const author = selectCurrentUserRoleResource();
     const [questionnaire, setQuestionnaire] = useState<string | undefined>(undefined);
 
     const close = useCallback(() => {
@@ -114,7 +116,6 @@ function useOrders() {
     }, [close]);
 
     return {
-        author,
         key,
         questionnaire,
         setQuestionnaire,
@@ -124,7 +125,12 @@ function useOrders() {
 }
 
 export function PatientOrders({ patient }: Props) {
-    const { key, author, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
+    const { key, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
+
+    const orderFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={close} />,
+        [close],
+    );
     const items: MenuProps['items'] = [
         {
             key: '1',
@@ -194,18 +200,15 @@ export function PatientOrders({ patient }: Props) {
                 footer={[]}
             >
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     initialQuestionnaireResponse={{
                         resourceType: 'QuestionnaireResponse',
                         questionnaire: 'creatinine',
                         subject: { reference: `Patient/${patient.id}` },
                     }}
                     questionnaireLoader={questionnaireIdLoader(questionnaire!)}
-                    launchContextParameters={[
-                        { name: 'Patient', resource: patient },
-                        { name: 'Author', resource: author },
-                    ]}
                     onSuccess={reloadListAndClose}
-                    onCancel={close}
+                    FormWrapper={orderFormWrapper}
                 />
             </Modal>
             <ResourceTable<Observation>

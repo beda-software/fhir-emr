@@ -55,3 +55,6 @@ resources/tests/generated/
 tsconfig.node.tsbuildinfo
 vite.config.js
 vite.config.d.ts
+
+# Folder for local files (Spec Driven Development)
+.scratch/

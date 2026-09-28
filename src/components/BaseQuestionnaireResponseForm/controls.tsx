@@ -6,93 +6,35 @@ import {
 } from 'sdc-qrf';
 
 import {
-    Col,
-    Group,
-    InlineChoice,
-    TimeRangePickerControl,
-    QuestionBoolean,
-    QuestionChoice,
-    QuestionDateTime,
-    QuestionDecimal,
-    QuestionInteger,
-    QuestionPhone,
-    QuestionSlider,
-    QuestionSolidRadio,
-    QuestionString,
-    QuestionText,
-    QuestionInputInsideText,
-    Row,
-    BloodPressure,
-    Gtable,
-    QuestionQuantity,
-    Grid,
-    MDEditorControl,
-    Section,
-    SectionWithDivider,
-    MainCard,
-    SubCard,
-    QuestionEmail,
-} from './widgets';
-import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
-import { Barcode } from './widgets/barcode';
-import { Display } from './widgets/display';
-import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
-import { PasswordInput } from './widgets/PasswordInput';
-import { QuestionReference } from './widgets/reference';
-import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
-import { UploadFileControl } from './widgets/UploadFileControl';
-import { TextWithMacroFill } from '../TextWithMacroFill';
+    groupItemComponent as defaultGroupComponent,
+    questionItemComponents as defaultItemComponents,
+    itemControlQuestionItemComponents as defaultItemControlComponents,
+    itemControlGroupItemComponents as defaultGroupControlComponents,
+} from '@beda.software/web-item-controls/controls';
+import {
+    AnxietyScore,
+    DepressionScore,
+    MarkdownCard,
+    MarkdownDisplay,
+} from '@beda.software/web-item-controls/readonly-controls';
+
+import { GroupVoice } from './widgets/GroupVoice';
 
 export const itemComponents: QuestionItemComponentMapping = {
-    text: QuestionText,
-    string: QuestionString,
-    decimal: QuestionDecimal,
-    integer: QuestionInteger,
-    date: QuestionDateTime,
-    dateTime: QuestionDateTime,
-    time: QuestionDateTime,
-    choice: QuestionChoice,
-    'open-choice': QuestionChoice,
-    boolean: QuestionBoolean,
-    display: Display,
-    reference: QuestionReference,
-    quantity: QuestionQuantity,
-    attachment: UploadFileControl,
+    ...defaultItemComponents,
 };
 
-export const groupComponent: GroupItemComponent = Group;
+export const groupComponent: GroupItemComponent = defaultGroupComponent;
 
 export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
-    phoneWidget: QuestionPhone,
-    email: QuestionEmail,
-    passwordWidget: PasswordInput,
-    slider: QuestionSlider,
-    'solid-radio-button': QuestionSolidRadio,
-    'inline-choice': InlineChoice,
-    'text-with-macro': TextWithMacroFill,
-    'radio-button': InlineChoice,
-    'reference-radio-button': ReferenceRadioButton,
-    'check-box': InlineChoice,
-    'input-inside-text': QuestionInputInsideText,
-    'markdown-editor': MDEditorControl,
-    'audio-recorder-uploader': AudioRecorderUploader,
-    barcode: Barcode,
+    ...defaultItemControlComponents,
+    markdown: MarkdownDisplay,
+    'markdown-card': MarkdownCard,
+    'anxiety-score': AnxietyScore,
+    'depression-score': DepressionScore,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
-    col: Col,
-    row: Row,
-    gtable: Gtable,
-    table: Gtable,
-    grid: Grid,
-    section: Section,
-    'section-with-divider': SectionWithDivider,
-    'main-card': MainCard,
-    'sub-card': SubCard,
-    'blood-pressure': BloodPressure,
-    'time-range-picker': TimeRangePickerControl,
-    wizard: GroupWizard,
-    'wizard-with-tooltips': GroupWizardWithTooltips,
-    'wizard-navigation-group': GroupWizard,
-    'wizard-vertical': GroupWizardVertical,
+    ...defaultGroupControlComponents,
+    'group-voice': GroupVoice,
 };

@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: complete-encounter
 status: active
 title: Complete encounter
+description: Marks an encounter as finished and records any closing details.
 mapping:
   - reference: urn:uuid:Mapping:complete-encounter-extract
 launchContext:
@@ -130,7 +131,7 @@ item:
       - text: Are you sure you want to finish this encounter?
         type: display
         linkId: are-you-sure-message
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/complete-encounter
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/complete-encounter
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

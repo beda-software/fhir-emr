@@ -3,6 +3,7 @@ name: labs
 title: Add Laboratory test results
 resourceType: Questionnaire
 status: active
+description: Captures one or more laboratory test results.
 subjectType:
   - Encounter
   - Patient
@@ -45,4 +46,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/labs

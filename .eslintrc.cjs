@@ -33,6 +33,13 @@ module.exports = {
                 },
                 extensions: ['.js', '.jsx', '.ts', '.tsx'],
             },
+            'typescript': {
+                'alwaysTryTypes': true,
+                'project': './tsconfig.json'
+            },
+            'node': {
+                'extensions': ['.js', '.jsx', '.ts', '.tsx']
+            }
         },
     },
     plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier', 'import', 'string-to-lingui'],
@@ -44,11 +51,12 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
         'string-to-lingui/t-call-in-function': 2,
+        'import/default': 'off',
         'curly': ['error', 'all'],
         'import/no-unresolved': [
             2,
             {
-                ignore: ['fhir/r4b', '@beda.software/emr-config', '@beda.software/aidbox-types', '@mdxeditor/editor'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
+                ignore: ['fhir/r4b', '@beda.software/emr-config', '@beda.software/aidbox-types', '@mdxeditor/editor', '@beda.software/web-item-controls'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
             },
         ],
         'import/order': [

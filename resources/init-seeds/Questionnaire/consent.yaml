@@ -2,6 +2,7 @@ id: consent
 resourceType: Questionnaire
 title: Sign-off Consent
 status: active
+description: Records a patient's sign-off consent.
 subjectType:
   - Encounter
   - Patient
@@ -52,4 +53,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/consent
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/consent

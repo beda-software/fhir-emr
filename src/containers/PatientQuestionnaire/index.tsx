@@ -1,17 +1,19 @@
 import { Trans } from '@lingui/macro';
+import { isSuccess } from 'aidbox-react';
 import { ParametersParameter, Patient } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
-
+import config from '@beda.software/emr-config';
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RenderRemoteData, WithId, useService } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Spinner } from 'src/components/Spinner';
 import { Paragraph } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
-import { axiosInstance as axiosFHIRInstance, getFHIRResource } from 'src/services/fhir';
+import { axiosInstance, getFHIRResource, service } from 'src/services/fhir';
+import { getResourceClinicalContext } from 'src/utils/clinicalContext';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { PatientDocument } from '../PatientDetails/PatientDocument';
@@ -57,17 +59,30 @@ export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
 
     useEffect(() => {
         if (isAnonymousUser) {
-            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
-            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
-            setIsLoading(false);
+            (async function () {
+                const tokenResponse = await service({
+                    baseURL: config.baseURL,
+                    url: '/auth/token',
+                    data: {
+                        client_id: 'patient-questionnaire',
+                        client_secret: 'secret',
+                        grant_type: 'client_credentials',
+                    },
+                    method: 'POST',
+                });
+                if (isSuccess(tokenResponse)) {
+                    const token = tokenResponse.data.access_token;
+                    axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+                    setIsLoading(false);
+                }
+            })();
 
             return;
         }
 
         return () => {
             if (isAnonymousUser) {
-                axiosFHIRInstance.defaults.headers.Authorization = null;
-                (axiosAidboxInstance.defaults.headers.Authorization as unknown) = undefined;
+                axiosInstance.defaults.headers.Authorization = null;
             }
         };
     }, [isAnonymousUser]);
@@ -96,15 +111,24 @@ function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
             }}
         >
             {(patient) => (
-                <PatientDocument
-                    patient={patient}
-                    author={isAnonymousUser ? patient : selectCurrentUserRoleResource()}
-                    questionnaireId={questionnaireId!}
-                    encounterId={encounterId}
-                    onSuccess={onSuccess}
-                    autoSave={autosave}
-                    launchContextParameters={launchContextParameters}
-                />
+                <ClinicalContext
+                    context={[
+                        ...getResourceClinicalContext('Patient', patient, ['patient']),
+                        ...getResourceClinicalContext(
+                            'Author',
+                            isAnonymousUser ? patient : selectCurrentUserRoleResource(),
+                            ['author'],
+                        ),
+                    ]}
+                >
+                    <PatientDocument
+                        questionnaireId={questionnaireId!}
+                        encounterId={encounterId}
+                        onSuccess={onSuccess}
+                        autoSave={autosave}
+                        launchContextParameters={launchContextParameters}
+                    />
+                </ClinicalContext>
             )}
         </RenderRemoteData>
     );

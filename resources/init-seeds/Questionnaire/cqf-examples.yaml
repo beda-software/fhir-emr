@@ -1,6 +1,7 @@
 
 name: CQF Examples
 title: CQF Examples
+description: Demo questionnaire showcasing CQF (Clinical Quality Framework) integrations.
 subjectType:
     - Encounter
     - Patient
@@ -54,4 +55,4 @@ meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: >-
-  https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/cqf-examples
+  https://aidbox.emr.beda.software/fhir/Questionnaire/cqf-examples

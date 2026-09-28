@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: patient-create
 title: Patient create
 status: active
+description: Registers a new patient in the system.
 mapping:
   - reference: urn:uuid:Mapping:patient-create
 item:
@@ -51,4 +52,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-create
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/patient-create

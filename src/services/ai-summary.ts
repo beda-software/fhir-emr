@@ -1,9 +1,9 @@
 import { Bundle, Composition, DomainResource, Patient } from 'fhir/r4b';
 
-import config from '@beda.software/emr-config';
 import { extractBundleResources, formatFHIRDateTime } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
+import { aiService } from 'src/services/ai.ts';
 import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 import { LOINC_CODESYSTEM } from 'src/utils';
 
@@ -50,9 +50,8 @@ export async function getLatestPatientSummary(patient: Patient) {
 }
 
 export async function generateNarrativeForResource(resource: DomainResource) {
-    return await service<{ resource: DomainResource; summary: string }>({
+    return await aiService<{ resource: DomainResource; summary: string }>({
         method: 'POST',
-        baseURL: config.aiAssistantServiceUrl ?? undefined,
         url: '/summarize_resource',
         data: resource,
         headers: { 'Content-Type': 'application/json' },
@@ -76,9 +75,8 @@ export async function addTextToResource(resource: DomainResource) {
 }
 
 export async function generatePatientSummary(inputData: string) {
-    return await service<{ summary: string }>({
+    return await aiService<{ summary: string }>({
         method: 'POST',
-        baseURL: config.aiAssistantServiceUrl ?? undefined,
         url: '/summarize',
         data: {
             purpose: 'Make a brief patient overview',

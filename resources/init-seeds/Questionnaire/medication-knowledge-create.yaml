@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: medication-knowledge-create
 title: medication-knowledge create
 status: active
+description: Registers a new medication-knowledge record.
 mapping:
   - reference: urn:uuid:Mapping:medication-knowledge-create-extract
 item:
@@ -357,4 +358,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-knowledge-create
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-knowledge-create

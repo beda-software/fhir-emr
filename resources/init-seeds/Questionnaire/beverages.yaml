@@ -1,4 +1,4 @@
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/baverages
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/beverages
 item:
   - linkId: slider
     itemControl:
@@ -34,6 +34,7 @@ meta:
 name: beverages
 title: Beverages
 status: draft
+description: Records the patient's typical beverage consumption.
 subjectType:
   - Patient
 id: beverages

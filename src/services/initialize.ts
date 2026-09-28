@@ -1,8 +1,7 @@
 import * as Sentry from '@sentry/browser';
 
-import { setInstanceBaseURL as setAidboxInstanceBaseURL } from 'aidbox-react/lib/services/instance';
-
 import config from '@beda.software/emr-config';
+import { setAidboxInstanceBaseURL } from 'src/services/fhir';
 
 if (config.webSentryDSN) {
     Sentry.init({

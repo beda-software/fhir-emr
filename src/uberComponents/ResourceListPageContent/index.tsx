@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import type { FilterValue, SorterResult, ColumnsType, TablePaginationConfig } from 'antd/es/table/interface';
 import { Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
@@ -10,6 +9,7 @@ import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
 import { SearchBar } from 'src/components/SearchBar';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -19,18 +19,18 @@ import { S } from './styles';
 import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
 import { HeaderNavigationAction, HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
 import { BatchActions } from '../ResourceListPage/BatchActions';
-import { useResourceListPage, useTableSorter, useSearchBarForGenericFilters } from '../ResourceListPage/hooks';
+import { useResourceListPage, useTableSorter } from '../ResourceListPage/hooks';
 import {
     isNavigationAction,
     isQuestionnaireAction,
     RecordType,
     ResourceListProps,
     TableManager,
+    TableProps,
 } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
-    expandableRowComponent?: (record: RecordType<R>) => React.ReactNode;
 };
 
 export function ResourceListPageContent<R extends Resource>({
@@ -45,13 +45,18 @@ export function ResourceListPageContent<R extends Resource>({
     getSorters,
     getTableColumns,
     defaultLaunchContext,
+    getClinicalContext,
     getReportColumns,
-    expandableRowComponent,
     maxWidth,
-}: ResourceListPageContentProps<R>) {
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
+    tableProps,
+    uniqueOrderSortSearchParam,
+}: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
+    const allFilters = getFilters?.({}) ?? [];
     const allSorters = getSorters?.() ?? [];
 
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: allFilters ?? [],
+    });
     const tableFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
@@ -59,10 +64,17 @@ export function ResourceListPageContent<R extends Resource>({
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
-            ...defaultSearchParams,
-            _sort: sortSearchParam,
-        });
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            {
+                ...defaultSearchParams,
+                _sort: sortSearchParam,
+            },
+            uniqueOrderSortSearchParam,
+        );
 
     const handleTableChange = useCallback(
         (
@@ -193,18 +205,13 @@ export function ResourceListPageContent<R extends Resource>({
                                   getRecordActions,
                                   reload,
                                   defaultLaunchContext: defaultLaunchContext ?? [],
+                                  getClinicalContext,
                               }),
                           ]
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
-                expandable={
-                    expandableRowComponent
-                        ? {
-                              expandedRowRender: (record: RecordType<R>) => expandableRowComponent(record),
-                          }
-                        : undefined
-                }
+                {...tableProps}
             />
         </PageContainerContent>
     );

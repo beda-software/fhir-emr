@@ -6,6 +6,7 @@ meta:
 name: sports
 title: Sport Preferences
 status: active
+description: Records the patient's sport activity preferences.
 subjectType:
   - Patient
   - Encounter

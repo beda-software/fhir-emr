@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: il6-test
 title: IL-6 test
 status: active
+description: Records the result of an IL-6 inflammatory marker test.
 subjectType:
   - Patient
 launchContext:
@@ -69,4 +70,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/glucose
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/il6

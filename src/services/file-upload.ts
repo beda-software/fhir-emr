@@ -1,9 +1,9 @@
 import type { UploadRequestOption } from 'rc-upload/lib/interface';
 
-import { service } from 'aidbox-react/lib/services/service';
-
 import config from '@beda.software/emr-config';
 import { mapSuccess } from '@beda.software/remote-data';
+
+import { aidboxService } from 'src/services/fhir';
 
 interface UploadUrlResponse {
     filename: string;
@@ -14,32 +14,53 @@ interface DownloadUrlResponse {
     get_presigned_url: string;
 }
 
-export async function generateUploadUrl(filename: string) {
+interface UploadUrlOptions {
+    contentType?: string;
+}
+
+export async function generateUploadUrl(filename: string, options?: UploadUrlOptions) {
     return mapSuccess(
-        await service<UploadUrlResponse>({
+        await aidboxService<UploadUrlResponse>({
             baseURL: config.baseURL,
             url: '/$generate-upload-url',
             method: 'POST',
             data: {
                 filename,
+                content_type: options?.contentType,
             },
         }),
         (data) => ({ filename: data.filename, uploadUrl: data.put_presigned_url }),
     );
 }
 
-export async function generateDownloadUrl(key: string) {
+interface DownloadUrlOptions {
+    contentType?: string;
+}
+
+export async function generateDownloadUrl(key: string, options?: DownloadUrlOptions) {
     return mapSuccess(
-        await service<DownloadUrlResponse>({
+        await aidboxService<DownloadUrlResponse>({
             baseURL: config.baseURL,
             url: '/$generate-download-url',
             method: 'POST',
             data: {
                 key,
+                content_type: options?.contentType,
             },
         }),
         ({ get_presigned_url }) => ({ downloadUrl: get_presigned_url }),
     );
+}
+
+export async function generateDownloadHeaders(key: string) {
+    return aidboxService<{ [key: string]: string }>({
+        baseURL: config.baseURL,
+        url: '/$generate-download-headers',
+        method: 'POST',
+        data: {
+            key,
+        },
+    });
 }
 
 export type CustomUploadRequestOption = Pick<UploadRequestOption, 'file' | 'onProgress' | 'onError' | 'onSuccess'>;

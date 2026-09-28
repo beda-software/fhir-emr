@@ -1,17 +1,19 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
-import { Empty } from 'antd';
-import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import { Empty, Flex } from 'antd';
+import type { ColumnsType, FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { mergeLaunchContextParameters } from '@beda.software/fhir-questionnaire';
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Report } from 'src/components/Report';
 import { SearchBar } from 'src/components/SearchBar';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -19,23 +21,25 @@ import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/ut
 import { Text } from 'src/components/Typography';
 
 import {
-    NavigationActionType,
     CustomActionType,
-    QuestionnaireActionType,
-    isNavigationAction,
-    isQuestionnaireAction,
-    NavigationAction,
-    RecordQuestionnaireAction,
     HeaderNavigationAction,
     HeaderQuestionnaireAction,
     isCustomAction,
+    isNavigationAction,
+    isQuestionnaireAction,
+    NavigationAction,
+    NavigationActionType,
+    QuestionnaireActionType,
+    RecordQuestionnaireAction,
     WebExtra,
 } from './actions';
-export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
-import { useResourceListPage, useTableSorter, useSearchBarForGenericFilters } from './hooks';
+import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
-import { ResourceListProps, ReportColumn, TableManager } from './types';
+import { ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
+import { getRecordClinicalContextDefault } from './utils';
+
+export { customAction, navigationAction, questionnaireAction } from './actions';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
@@ -51,8 +55,6 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
 
     /* Table columns without action column - action column is generated based on `getRecordActions` */
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
-
-    expandableRowComponent?: (record: RecordType<R>) => React.ReactNode;
 };
 
 export function ResourceListPage<R extends Resource>({
@@ -70,13 +72,21 @@ export function ResourceListPage<R extends Resource>({
     getSorters,
     getTableColumns,
     defaultLaunchContext,
+    getClinicalContext,
     getReportColumns,
-    expandableRowComponent,
-}: ResourceListPageProps<R>) {
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
-
+    tableProps,
+    uniqueOrderSortSearchParam,
+}: ResourceListPageProps<R> & { tableProps?: TableProps<R> }) {
+    const allFilters = getFilters?.({}) ?? [];
     const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
+    const navigate = useNavigate();
+    const goBack = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: allFilters ?? [],
+    });
     const tableFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
@@ -84,11 +94,18 @@ export function ResourceListPage<R extends Resource>({
 
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
-        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
-            ...defaultSearchParams,
-            _sort: sortSearchParam,
-        });
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            {
+                ...defaultSearchParams,
+                _sort: sortSearchParam,
+            },
+            uniqueOrderSortSearchParam,
+        );
 
     const handleTableChange = useCallback(
         (
@@ -132,25 +149,33 @@ export function ResourceListPage<R extends Resource>({
             title={title}
             maxWidth={maxWidth}
             titleLeftElement={backButtonVisible ? <ArrowLeftOutlined onClick={goBack} /> : null}
-            titleRightElement={headerActions.map((action, index) => {
-                if (isQuestionnaireAction(action)) {
-                    return (
-                        <React.Fragment key={index}>
-                            <HeaderQuestionnaireAction
-                                action={action}
-                                reload={reload}
-                                defaultLaunchContext={defaultLaunchContext ?? []}
-                            />
-                        </React.Fragment>
-                    );
-                } else if (isNavigationAction(action)) {
-                    return (
-                        <React.Fragment key={index}>
-                            <HeaderNavigationAction action={action} />
-                        </React.Fragment>
-                    );
-                }
-            })}
+            titleRightElement={
+                <Flex gap={16}>
+                    {headerActions.map((action, index) => {
+                        if (isQuestionnaireAction(action)) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <HeaderQuestionnaireAction
+                                        action={action}
+                                        reload={reload}
+                                        defaultLaunchContext={mergeLaunchContextParameters(
+                                            defaultLaunchContext ?? [],
+                                            getClinicalContext?.(undefined) ??
+                                                getRecordClinicalContextDefault(undefined),
+                                        )}
+                                    />
+                                </React.Fragment>
+                            );
+                        } else if (isNavigationAction(action)) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <HeaderNavigationAction action={action} />
+                                </React.Fragment>
+                            );
+                        }
+                    })}
+                </Flex>
+            }
             headerContent={
                 columnsFilterValues.length ? (
                     <SearchBar
@@ -173,7 +198,20 @@ export function ResourceListPage<R extends Resource>({
                     setSelectedRowKeys={setSelectedRowKeys}
                     reload={reload}
                     selectedResourcesBundle={selectedResourcesBundle}
-                    defaultLaunchContext={defaultLaunchContext}
+                    defaultLaunchContext={[
+                        ...(defaultLaunchContext ?? []),
+                        ...(selectedResourcesBundle.entry ?? []).flatMap((entry) =>
+                            getClinicalContext
+                                ? getClinicalContext({
+                                      resource: entry.resource as R,
+                                      bundle: selectedResourcesBundle as Bundle,
+                                  })
+                                : getRecordClinicalContextDefault({
+                                      resource: entry.resource as R,
+                                      bundle: selectedResourcesBundle as Bundle,
+                                  }),
+                        ),
+                    ]}
                 />
             ) : null}
 
@@ -205,18 +243,13 @@ export function ResourceListPage<R extends Resource>({
                                   getRecordActions,
                                   reload,
                                   defaultLaunchContext: defaultLaunchContext ?? [],
+                                  getClinicalContext,
                               }),
                           ]
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
-                expandable={
-                    expandableRowComponent
-                        ? {
-                              expandedRowRender: (record: RecordType<R>) => expandableRowComponent(record),
-                          }
-                        : undefined
-                }
+                {...tableProps}
             />
         </PageContainer>
     );
@@ -247,6 +280,7 @@ export function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R
 export function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
     defaultLaunchContext,
+    getClinicalContext,
     reload,
 }: {
     getRecordActions: (
@@ -254,6 +288,7 @@ export function getRecordActionsColumn<R extends Resource>({
         manager: TableManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
     defaultLaunchContext?: ParametersParameter[];
+    getClinicalContext?: (record: RecordType<R>) => ParametersParameter[];
     reload: () => void;
 }) {
     return {
@@ -270,7 +305,10 @@ export function getRecordActionsColumn<R extends Resource>({
                                     action={action}
                                     reload={reload}
                                     resource={record.resource}
-                                    defaultLaunchContext={defaultLaunchContext ?? []}
+                                    defaultLaunchContext={mergeLaunchContextParameters(
+                                        defaultLaunchContext ?? [],
+                                        getClinicalContext?.(record) ?? getRecordClinicalContextDefault(record),
+                                    )}
                                 />
                             ) : isNavigationAction(action) ? (
                                 <NavigationAction action={action} resource={record.resource} />

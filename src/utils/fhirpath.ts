@@ -30,15 +30,15 @@ export function initFHIRPathEvaluateOptions(userInvocationTable: UserInvocationT
 
 type NonEmptyArray<T> = [T, ...T[]];
 
-export function compileAsArray<SRC, DST = unknown, REQ = false>(expression: string) {
-    const path = fhirpath.compile(expression);
+export function compileAsArray<SRC, DST = unknown, REQ = false>(expression: string, model?: Model) {
+    const path = fhirpath.compile(expression, model);
 
     return (s: SRC, context?: Context | undefined) =>
         path(s, context) as REQ extends true ? NonEmptyArray<DST> : Array<DST>;
 }
 
-export function compileAsFirst<SRC, DST = unknown, REQ = false>(expression: string) {
-    const path = fhirpath.compile(expression);
+export function compileAsFirst<SRC, DST = unknown, REQ = false>(expression: string, model?: Model) {
+    const path = fhirpath.compile(expression, model);
 
     return (s: SRC, context?: Context | undefined) => path(s, context)[0] as REQ extends true ? DST : DST | undefined;
 }

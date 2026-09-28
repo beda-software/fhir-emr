@@ -31,7 +31,12 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
             status: 'draft' as any,
         },
     };
-    const [resourceType, searchParams] = parseFhirQueryExpression(columnFilterValue.column.expression!, mockContext);
+    const [resourceType, searchParams] = parseFhirQueryExpression(
+        columnFilterValue.column.expression!,
+        mockContext,
+        undefined,
+        evaluate,
+    );
 
     const loadOptions = async (searchText: string) => {
         const response = await loadResourceOptions<Resource>(

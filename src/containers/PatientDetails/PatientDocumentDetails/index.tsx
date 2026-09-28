@@ -2,15 +2,7 @@ import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import classNames from 'classnames';
-import {
-    Encounter,
-    Organization,
-    ParametersParameter,
-    Patient,
-    Practitioner,
-    Provenance,
-    QuestionnaireResponse,
-} from 'fhir/r4b';
+import { Encounter, ParametersParameter, Patient, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement, useContext } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
@@ -18,18 +10,18 @@ import { QuestionnaireResponseFormData } from 'sdc-qrf';
 import { extractBundleResources, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
+import { ReadonlyQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { Paragraph, Title } from 'src/components/Typography';
 import { DocumentHistory } from 'src/containers/PatientDetails/DocumentHistory';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
+import { ProvenanceClinicalContext } from 'src/containers/PatientDetails/PatientDocument/ProvenanceClinicalContext';
 import {
     PatientDocumentData,
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
 import { PatientDocumentDetailsReadonlyContext, PatientDocumentDetailsWrapperContext } from './context';
@@ -40,6 +32,7 @@ interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
     launchContextParameters?: ParametersParameter[];
+    maxWidth?: number | string;
 }
 
 const deleteDraft = async (navigate: NavigateFunction, qrId?: string) => {
@@ -268,15 +261,30 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
 
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
-    patient: WithId<Patient>;
-    author: WithId<Practitioner | Patient | Organization>;
+    launchContextParameters?: ParametersParameter[];
     children: (props: PatientDocumentData) => ReactElement;
 }) {
-    const { questionnaireResponse, children, patient } = props;
+    const { questionnaireResponse, children } = props;
+
+    return (
+        <ProvenanceClinicalContext questionnaireResponse={questionnaireResponse}>
+            <PatientDocumentDetailsFormDataContent {...props} questionnaireResponse={questionnaireResponse}>
+                {children}
+            </PatientDocumentDetailsFormDataContent>
+        </ProvenanceClinicalContext>
+    );
+}
+
+function PatientDocumentDetailsFormDataContent(props: {
+    questionnaireResponse: WithId<QuestionnaireResponse>;
+    launchContextParameters?: ParametersParameter[];
+    children: (props: PatientDocumentData) => ReactElement;
+}) {
+    const { questionnaireResponse, children, launchContextParameters } = props;
     const { response } = usePatientDocument({
-        ...props,
-        patient: patient,
+        questionnaireResponse,
         questionnaireId: questionnaireResponse.questionnaire!,
+        launchContextParameters,
     });
 
     return (
@@ -287,10 +295,9 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls, launchContextParameters } = props;
+    const { patient, hideControls, launchContextParameters, maxWidth } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
-    const author = selectCurrentUserRoleResource();
 
     return (
         <RenderRemoteData
@@ -305,8 +312,7 @@ export function PatientDocumentDetails(props: Props) {
                     return (
                         <PatientDocumentDetailsFormData
                             questionnaireResponse={questionnaireResponse}
-                            author={author}
-                            {...props}
+                            launchContextParameters={launchContextParameters}
                         >
                             {({ formData, provenance }) => (
                                 <Routes>
@@ -334,13 +340,12 @@ export function PatientDocumentDetails(props: Props) {
                                             path="/edit"
                                             element={
                                                 <PatientDocument
-                                                    patient={patient}
                                                     questionnaireResponse={questionnaireResponse}
                                                     questionnaireId={questionnaireResponse.questionnaire}
                                                     onSuccess={() => navigate(-2)}
-                                                    author={author}
                                                     autoSave={true}
                                                     launchContextParameters={launchContextParameters}
+                                                    maxWidth={maxWidth}
                                                 />
                                             }
                                         />

@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: medication-request-cancel
 status: active
 title: Medication Request Cancel
+description: Cancels an existing medication request.
 name: medication-request-cancel
 mapping:
   - reference: urn:uuid:Mapping:prescription-cancel
@@ -37,7 +38,7 @@ item:
       - text: Are you sure to cancel this request?
         linkId: are-you-sure
         type: display
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-cancel
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-request-cancel
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

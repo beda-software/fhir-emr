@@ -38,6 +38,9 @@ export const S = {
     Title: styled(Title)`
         margin-bottom: 0 !important;
     `,
+    TitleDetails: styled.div`
+        color: ${({ theme }) => theme.primaryText};
+    `,
     HeaderLeftColumn: styled.div`
         display: flex;
         align-items: center;

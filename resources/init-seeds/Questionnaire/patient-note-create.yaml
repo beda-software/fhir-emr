@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: patient-note-create
 title: patient note create
 status: active
+description: Captures a free-text progress note for the patient.
 launchContext:
   - name:
       code: Patient
@@ -53,4 +54,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-note-create
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/patient-note-create
