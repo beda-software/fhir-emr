@@ -114,11 +114,28 @@ export function logout() {
     });
 }
 
-export async function doLogout() {
+const SIGNOUT_REASON_STORAGE_KEY = 'signout_reason';
+
+export type SignOutReason = 'idle';
+
+export async function doLogout(reason?: SignOutReason) {
     await logout();
     resetInstanceToken();
     localStorage.clear();
+    if (reason) {
+        localStorage.setItem(SIGNOUT_REASON_STORAGE_KEY, reason);
+    }
     window.location.href = '/';
+}
+
+// One-shot: reading it clears it, so a subsequent sign-in never re-shows the message.
+export function consumeSignOutReason(): SignOutReason | undefined {
+    const reason = localStorage.getItem(SIGNOUT_REASON_STORAGE_KEY);
+    if (reason) {
+        localStorage.removeItem(SIGNOUT_REASON_STORAGE_KEY);
+    }
+
+    return reason === 'idle' ? reason : undefined;
 }
 
 export function getUserInfo() {
