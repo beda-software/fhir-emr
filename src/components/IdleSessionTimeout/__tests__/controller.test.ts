@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { IdleSessionController, deriveIdleSessionState } from '../controller';
+import {
+    DEFAULT_IDLE_TIMEOUT_MS,
+    DEFAULT_WARNING_WINDOW_MS,
+    IdleSessionController,
+    deriveIdleSessionState,
+    resolveIdleSessionTimeoutConfig,
+} from '../controller';
 
 const config = { idleTimeoutMs: 30 * 60 * 1000, warningWindowMs: 2 * 60 * 1000 };
 
@@ -97,5 +103,55 @@ describe('IdleSessionController', () => {
 
         expect(evaluation.state).toBe('expired');
         expect(controller.getLastActivityAt()).toBe(0);
+    });
+});
+
+describe('resolveIdleSessionTimeoutConfig', () => {
+    it('falls back to the defaults (30 minutes / 2 minutes) when both values are omitted', () => {
+        expect(resolveIdleSessionTimeoutConfig({})).toEqual({
+            idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
+            warningWindowMs: DEFAULT_WARNING_WINDOW_MS,
+        });
+    });
+
+    it('uses the configured values when both are valid', () => {
+        expect(resolveIdleSessionTimeoutConfig({ idleTimeoutMs: 10 * 60 * 1000, warningWindowMs: 60 * 1000 })).toEqual({
+            idleTimeoutMs: 10 * 60 * 1000,
+            warningWindowMs: 60 * 1000,
+        });
+    });
+
+    it('falls back to the default idle timeout when only the warning window is configured', () => {
+        expect(resolveIdleSessionTimeoutConfig({ warningWindowMs: 60 * 1000 })).toEqual({
+            idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
+            warningWindowMs: 60 * 1000,
+        });
+    });
+
+    it.each([NaN, Infinity, -1, 0])('treats %p as an invalid idle timeout and falls back to the default', (invalid) => {
+        expect(resolveIdleSessionTimeoutConfig({ idleTimeoutMs: invalid })).toEqual({
+            idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
+            warningWindowMs: DEFAULT_WARNING_WINDOW_MS,
+        });
+    });
+
+    it('clamps a Warning Window longer than the Idle Timeout instead of producing a negative countdown', () => {
+        expect(
+            resolveIdleSessionTimeoutConfig({ idleTimeoutMs: 5 * 60 * 1000, warningWindowMs: 10 * 60 * 1000 }),
+        ).toEqual({
+            idleTimeoutMs: 5 * 60 * 1000,
+            warningWindowMs: 5 * 60 * 1000,
+        });
+    });
+
+    it('produces a config that keeps deriveIdleSessionState sane when the Warning Window is clamped', () => {
+        const resolved = resolveIdleSessionTimeoutConfig({
+            idleTimeoutMs: 5 * 60 * 1000,
+            warningWindowMs: 10 * 60 * 1000,
+        });
+
+        // The whole window is now "warning" from the very first check, never a negative threshold.
+        expect(deriveIdleSessionState(0, resolved)).toBe('warning');
+        expect(deriveIdleSessionState(5 * 60 * 1000, resolved)).toBe('expired');
     });
 });

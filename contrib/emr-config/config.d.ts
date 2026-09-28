@@ -36,6 +36,18 @@ declare const config: {
     }>;
     localesConfig?: LocalesConfig;
     defaultLocale?: string;
+
+    /**
+     * Idle Timeout duration in milliseconds: how long a Session may go without
+     * Provider Activity before it's ended. Defaults to 30 minutes when omitted.
+     */
+    idleTimeoutMs?: number;
+    /**
+     * Warning Window duration in milliseconds: how long before the Idle Timeout
+     * the "about to end" warning is shown. Defaults to 2 minutes when omitted.
+     * Clamped to `idleTimeoutMs` if configured larger than it.
+     */
+    warningWindowMs?: number;
 };
 
 export default config;

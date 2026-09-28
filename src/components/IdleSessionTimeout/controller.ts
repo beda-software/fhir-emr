@@ -7,6 +7,32 @@ export interface IdleSessionTimeoutConfig {
     warningWindowMs: number;
 }
 
+export const DEFAULT_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
+export const DEFAULT_WARNING_WINDOW_MS = 2 * 60 * 1000;
+
+export interface RawIdleSessionTimeoutConfig {
+    idleTimeoutMs?: number;
+    warningWindowMs?: number;
+}
+
+function isPositiveFiniteNumber(value: unknown): value is number {
+    return typeof value === 'number' && Number.isFinite(value) && value > 0;
+}
+
+// Clamped to idleTimeoutMs so a Warning Window configured longer than the Idle
+// Timeout can't produce a negative or nonsensical countdown.
+export function resolveIdleSessionTimeoutConfig(raw: RawIdleSessionTimeoutConfig): IdleSessionTimeoutConfig {
+    const idleTimeoutMs = isPositiveFiniteNumber(raw.idleTimeoutMs) ? raw.idleTimeoutMs : DEFAULT_IDLE_TIMEOUT_MS;
+    const requestedWarningWindowMs = isPositiveFiniteNumber(raw.warningWindowMs)
+        ? raw.warningWindowMs
+        : DEFAULT_WARNING_WINDOW_MS;
+
+    return {
+        idleTimeoutMs,
+        warningWindowMs: Math.min(requestedWarningWindowMs, idleTimeoutMs),
+    };
+}
+
 export interface IdleSessionEvaluation {
     state: IdleSessionState;
     previousState: IdleSessionState;

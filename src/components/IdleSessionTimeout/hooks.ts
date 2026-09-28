@@ -1,13 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import config from '@beda.software/emr-config';
+
 import { doLogout } from 'src/services/auth';
 
-import { IdleSessionController, IdleSessionEvaluation, IdleSessionState } from './controller';
+import {
+    IdleSessionController,
+    IdleSessionEvaluation,
+    IdleSessionState,
+    resolveIdleSessionTimeoutConfig,
+} from './controller';
 
-// Hardcoded for now; made configurable per deployment in a later change.
-export const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
-export const WARNING_WINDOW_MS = 2 * 60 * 1000;
+const IDLE_SESSION_TIMEOUT_CONFIG = resolveIdleSessionTimeoutConfig({
+    idleTimeoutMs: config.idleTimeoutMs,
+    warningWindowMs: config.warningWindowMs,
+});
 
 const LAST_ACTIVITY_STORAGE_KEY = 'idle_session_last_activity_at';
 const RECHECK_INTERVAL_MS = 5000;
@@ -33,10 +41,7 @@ export function useIdleSessionTimeout(): UseIdleSessionTimeoutResult {
     const location = useLocation();
     const controllerRef = useRef<IdleSessionController>();
     if (!controllerRef.current) {
-        controllerRef.current = new IdleSessionController(
-            { idleTimeoutMs: IDLE_TIMEOUT_MS, warningWindowMs: WARNING_WINDOW_MS },
-            readPersistedLastActivityAt(),
-        );
+        controllerRef.current = new IdleSessionController(IDLE_SESSION_TIMEOUT_CONFIG, readPersistedLastActivityAt());
     }
     const controller = controllerRef.current;
 
