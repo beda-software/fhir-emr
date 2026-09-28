@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -5,7 +6,13 @@ import config from '@beda.software/emr-config';
 
 import { doLogout, getToken } from 'src/services/auth';
 
-import { IdleTimeoutEvaluation, IdleTimeoutEvaluationOrigin, IdleTimeoutState, UseIdleTimeoutResult } from './types';
+import {
+    IdleTimeoutEvaluation,
+    IdleTimeoutEvaluationOrigin,
+    IdleTimeoutState,
+    UseIdleTimeoutResult,
+    WarningWindowTexts,
+} from './types';
 import {
     IdleTimeoutController,
     LAST_PROVIDER_ACTIVITY_STORAGE_KEY,
@@ -171,4 +178,17 @@ export function useIdleTimeout(): UseIdleTimeoutResult {
     const signOutNow = useCallback(() => void doLogout(), []);
 
     return { state, recordProviderActivity, signOutNow };
+}
+
+// Required<WarningWindowTexts>: every field resolved, so the component only ever
+// renders text, never decides between a given override and a translated default.
+export function useWarningWindowTexts(texts?: WarningWindowTexts): Required<WarningWindowTexts> {
+    return {
+        title: texts?.title ?? t`Your session is about to end`,
+        body:
+            texts?.body ??
+            t`You've been inactive for a while. For your security, your session will end soon unless you stay signed in.`,
+        stayLabel: texts?.stayLabel ?? t`Stay signed in`,
+        signOutLabel: texts?.signOutLabel ?? t`Sign out now`,
+    };
 }

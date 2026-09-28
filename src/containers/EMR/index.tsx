@@ -13,7 +13,7 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
-import { IdleTimeout } from 'src/components/IdleTimeout';
+import { IdleTimeout, WarningWindowTexts } from 'src/components/IdleTimeout';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
@@ -32,6 +32,7 @@ interface EMRProps {
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
+    warningWindowTexts?: WarningWindowTexts;
 }
 
 export function EMR(props: EMRProps) {
@@ -43,6 +44,7 @@ export function EMR(props: EMRProps) {
         menuLayout,
         footer,
         getAuthenticatedClinicalContext,
+        warningWindowTexts,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -65,6 +67,7 @@ export function EMR(props: EMRProps) {
                     defaultRoute={defaultRoute}
                     extra={authenticatedRoutes}
                     getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}
+                    warningWindowTexts={warningWindowTexts}
                 />
             );
         }
@@ -106,12 +109,18 @@ interface RouteProps {
     defaultRoute: string;
     extra?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
+    warningWindowTexts?: WarningWindowTexts;
 }
 
-function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
+function AuthenticatedUserEMR({
+    defaultRoute,
+    extra,
+    getAuthenticatedClinicalContext,
+    warningWindowTexts,
+}: RouteProps) {
     return (
         <>
-            <IdleTimeout />
+            <IdleTimeout texts={warningWindowTexts} />
             <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
                 <Routes>
                     <Route

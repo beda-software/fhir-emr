@@ -36,3 +36,11 @@ export interface UseIdleTimeoutResult {
     recordProviderActivity: () => void;
     signOutNow: () => void;
 }
+
+// Any field left out falls back to fhir-emr's default, translated Warning Window copy.
+export interface WarningWindowTexts {
+    title?: string;
+    body?: string;
+    stayLabel?: string;
+    signOutLabel?: string;
+}

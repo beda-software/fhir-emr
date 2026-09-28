@@ -1,10 +1,17 @@
-import { t } from '@lingui/macro';
 import { Button, Modal } from 'antd';
 
-import { useIdleTimeout } from './hooks';
+import { useIdleTimeout, useWarningWindowTexts } from './hooks';
+import { WarningWindowTexts } from './types';
 
-export function IdleTimeout() {
+export type { WarningWindowTexts };
+
+interface IdleTimeoutProps {
+    texts?: WarningWindowTexts;
+}
+
+export function IdleTimeout({ texts }: IdleTimeoutProps) {
     const { state, recordProviderActivity, signOutNow } = useIdleTimeout();
+    const { title, body, stayLabel, signOutLabel } = useWarningWindowTexts(texts);
 
     return (
         <Modal
@@ -12,17 +19,17 @@ export function IdleTimeout() {
             closable={false}
             maskClosable={false}
             keyboard={false}
-            title={t`Your session is about to end`}
+            title={title}
             footer={[
                 <Button key="sign-out-now" onClick={signOutNow}>
-                    {t`Sign out now`}
+                    {signOutLabel}
                 </Button>,
                 <Button key="stay-signed-in" type="primary" onClick={recordProviderActivity}>
-                    {t`Stay signed in`}
+                    {stayLabel}
                 </Button>,
             ]}
         >
-            {t`You've been inactive for a while. For your security, your session will end soon unless you stay signed in.`}
+            {body}
         </Modal>
     );
 }
