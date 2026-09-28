@@ -51,16 +51,20 @@ describe('IdleSessionController', () => {
         expect(controller.evaluate(30 * 60 * 1000)).toEqual({
             state: 'expired',
             previousState: 'warning',
-            effects: ['endSession'],
+            effects: ['flushDraft', 'endSession'],
         });
     });
 
-    it('reports expired immediately (and requests endSession) if constructed long after the last activity (e.g. after a reload)', () => {
+    it('reports expired immediately (and requests flushDraft + endSession) if constructed long after the last activity (e.g. after a reload)', () => {
         // A negative `now` at construction simulates rehydrating from a persisted
         // timestamp already older than the idle timeout (e.g. reload after backgrounding).
         const controller = new IdleSessionController(config, -45 * 60 * 1000);
 
-        expect(controller.evaluate(0)).toEqual({ state: 'expired', previousState: 'active', effects: ['endSession'] });
+        expect(controller.evaluate(0)).toEqual({
+            state: 'expired',
+            previousState: 'active',
+            effects: ['flushDraft', 'endSession'],
+        });
     });
 
     it('recordActivity resets elapsed time back to active, cancelling a pending warning or expiry', () => {

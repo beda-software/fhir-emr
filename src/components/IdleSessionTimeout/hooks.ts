@@ -11,6 +11,7 @@ import {
     IdleSessionState,
     resolveIdleSessionTimeoutConfig,
 } from './controller';
+import { flushActiveDraftBestEffort } from './draftFlushRegistry';
 
 const IDLE_SESSION_TIMEOUT_CONFIG = resolveIdleSessionTimeoutConfig({
     idleTimeoutMs: config.idleTimeoutMs,
@@ -50,7 +51,14 @@ export function useIdleSessionTimeout(): UseIdleSessionTimeoutResult {
     const applyEvaluation = useCallback((evaluation: IdleSessionEvaluation) => {
         setState(evaluation.state);
         if (evaluation.effects.includes('endSession')) {
-            void doLogout('idle');
+            void (async () => {
+                // Best-effort, short-timeout flush of the currently open Questionnaire
+                // Draft; the Forced Sign-Out proceeds regardless of its outcome.
+                if (evaluation.effects.includes('flushDraft')) {
+                    await flushActiveDraftBestEffort();
+                }
+                await doLogout('idle');
+            })();
         }
     }, []);
 

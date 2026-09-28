@@ -1,13 +1,15 @@
 import { Trans, t } from '@lingui/macro';
 import { Button } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { CSSProperties, useCallback, useContext } from 'react';
+import { CSSProperties, useCallback, useContext, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { calcInitialContext } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-questionnaire/components';
 import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
 import { RemoteDataResult } from '@beda.software/remote-data';
+
+import { registerActiveDraftFlush } from 'src/components/IdleSessionTimeout/draftFlushRegistry';
 
 import { S } from './BaseQuestionnaireResponseForm.styles';
 
@@ -50,18 +52,38 @@ export function FormFooter(props: Props) {
 
     const formContext = useFormContext();
 
-    const handleSaveDraft = useCallback(async () => {
+    const getCurrentResource = useCallback((): QuestionnaireResponse | undefined => {
         const qrfDataContext = baseQRFPropsContext?.formData?.context;
         const formValues = formContext.getValues();
         const rootContext = qrfDataContext ? calcInitialContext(qrfDataContext, formValues) : undefined;
 
-        if (rootContext?.resource) {
-            await onSaveDraft?.(rootContext.resource);
-            onCancel?.();
-        } else {
-            onCancel?.();
+        return rootContext?.resource;
+    }, [baseQRFPropsContext?.formData?.context, formContext]);
+
+    const handleSaveDraft = useCallback(async () => {
+        const resource = getCurrentResource();
+
+        if (resource) {
+            await onSaveDraft?.(resource);
         }
-    }, [baseQRFPropsContext?.formData?.context, formContext, onSaveDraft, onCancel]);
+        onCancel?.();
+    }, [getCurrentResource, onSaveDraft, onCancel]);
+
+    // Registers this form's Server-persisted draft with draftFlushRegistry so a Forced
+    // Sign-Out elsewhere can flush it. Only onSaveDraft (qrDraftServiceType === 'server')
+    // implies that path, so the app-wide default (local) draft behavior is untouched.
+    useEffect(() => {
+        if (!onSaveDraft) {
+            return;
+        }
+
+        return registerActiveDraftFlush(async () => {
+            const resource = getCurrentResource();
+            if (resource) {
+                await onSaveDraft(resource);
+            }
+        });
+    }, [onSaveDraft, getCurrentResource]);
 
     if (readOnly) {
         return null;

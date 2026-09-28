@@ -1,6 +1,9 @@
 export type IdleSessionState = 'active' | 'warning' | 'expired';
 
-export type IdleSessionEffect = 'endSession';
+// Order matters: the caller runs effects in the order given, so 'flushDraft' is
+// listed before 'endSession' — the Questionnaire Draft flush must be attempted
+// before the Session actually ends.
+export type IdleSessionEffect = 'flushDraft' | 'endSession';
 
 export interface IdleSessionTimeoutConfig {
     idleTimeoutMs: number;
@@ -74,7 +77,7 @@ export class IdleSessionController {
 
         const effects: IdleSessionEffect[] = [];
         if (this.state === 'expired' && previousState !== 'expired') {
-            effects.push('endSession');
+            effects.push('flushDraft', 'endSession');
         }
 
         return { state: this.state, previousState, effects };
