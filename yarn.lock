@@ -502,10 +502,10 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@^0.1.22":
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.22.tgz#d546280d0d4f7066755008d6c05bcba638259d4f"
-  integrity sha512-tSb1jY4ZYEawqXmemLppM4b5w4YUVRbsIkI1eJSo5vH7Ritwwjrax2z+HOhaaKx9O3yL1EJSZ3CPwJb2rXkdCA==
+"@beda.software/web-item-controls@^0.1.26":
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.26.tgz#494c321e57f274ce46aef2063161e7f4c25fcdbc"
+  integrity sha512-5hqtSXooruGP4xCuTh/yAUBzuz+dYtPvUzXoSkSFJP21Ka7B02uIRUwWCaH/YR0M1BuYuyjHXVqQNliElkr6gQ==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
@@ -528,6 +528,7 @@
     react-select "^5.7.3"
     recharts "^3.8.0"
     rehype-raw "^7.0.0"
+    rehype-sanitize "^6.0.0"
     remark-directive "^4.0.0"
     remark-gfm "^4.0.1"
     yup "^1.7.0"
@@ -7848,6 +7849,15 @@ hast-util-raw@^9.0.0:
     web-namespaces "^2.0.0"
     zwitch "^2.0.0"
 
+hast-util-sanitize@^5.0.0:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/hast-util-sanitize/-/hast-util-sanitize-5.0.2.tgz#edb260d94e5bba2030eb9375790a8753e5bf391f"
+  integrity sha512-3yTWghByc50aGS7JlGhk61SPenfE/p1oaFeNwkOOyrscaOkMGrcW9+Cy/QAIOBpZxP1yqDIzFMR0+Np0i0+usg==
+  dependencies:
+    "@types/hast" "^3.0.0"
+    "@ungap/structured-clone" "^1.0.0"
+    unist-util-position "^5.0.0"
+
 hast-util-to-jsx-runtime@^2.0.0:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/hast-util-to-jsx-runtime/-/hast-util-to-jsx-runtime-2.3.6.tgz#ff31897aae59f62232e21594eac7ef6b63333e98"
@@ -11930,6 +11940,14 @@ rehype-raw@^7.0.0:
     "@types/hast" "^3.0.0"
     hast-util-raw "^9.0.0"
     vfile "^6.0.0"
+
+rehype-sanitize@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/rehype-sanitize/-/rehype-sanitize-6.0.0.tgz#16e95f4a67a69cbf0f79e113c8e0df48203db73c"
+  integrity sha512-CsnhKNsyI8Tub6L4sm5ZFsme4puGfc6pYylvXo1AeqaGbjOYyzNv3qZPwvs0oMJ39eryyeOdmxwUIo94IpEhqg==
+  dependencies:
+    "@types/hast" "^3.0.0"
+    hast-util-sanitize "^5.0.0"
 
 release-zalgo@^1.0.0:
   version "1.0.0"
