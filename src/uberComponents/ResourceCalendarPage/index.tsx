@@ -107,6 +107,7 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
                             <CalendarEventQuestionnaireAction<R>
                                 key="show-details-questionnaire-action"
                                 action={questionnaireActions.show}
+                                readOnly
                                 {...defaultEventQuetionnaireActionProps}
                             />
                         )}
