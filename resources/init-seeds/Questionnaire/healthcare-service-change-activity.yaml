@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: healthcare-service-change-activity
 title: healthcare-service change activity
 status: active
+description: Updates the activity status of a healthcare service.
 launchContext:
   - name:
       code: HealthcareService

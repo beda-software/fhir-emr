@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: patient-note-create
 title: patient note create
 status: active
+description: Captures a free-text progress note for the patient.
 launchContext:
   - name:
       code: Patient

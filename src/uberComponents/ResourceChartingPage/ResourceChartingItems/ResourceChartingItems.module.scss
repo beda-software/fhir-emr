@@ -1,0 +1,29 @@
+.collapseWrapper {
+    background-color: transparent;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.collapseIcon {
+    font-size: 14px;
+    color: #555;
+    margin-left: -15px;
+    pointer-events: none;
+}
+
+.itemTitle {
+    font-weight: bold;
+}
+
+.itemContent {
+    margin-left: -15px;
+}
+
+.itemListEntry {
+    border-bottom: 0px;
+    padding: 0px;
+}
+
+.actionWrapper {
+    display: inline-block;
+}

@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: pct-test
 title: PCT test
 status: active
+description: Records the result of a procalcitonin (PCT) lab test.
 subjectType:
   - Patient
 launchContext:

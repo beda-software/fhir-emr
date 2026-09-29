@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: activity-summary
 title: Daily activity summary (calories burned, exercises, stand hours)
 status: active
+description: Captures daily activity metrics including calories burned, exercise minutes, and stand hours.
 mapping:
   - reference: urn:uuid:Mapping:activity-summary-extract
 item:

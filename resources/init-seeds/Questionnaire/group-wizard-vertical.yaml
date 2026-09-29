@@ -1,5 +1,6 @@
 name: Group wizard vertical
 title: Group wizard vertical
+description: Demo of a vertical wizard group layout.
 subjectType:
   - Encounter
   - Patient

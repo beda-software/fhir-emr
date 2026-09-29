@@ -15,6 +15,21 @@ export function AidboxFormsBuilder() {
     const params = useParams();
     const [id, setId] = useState<string | undefined>(params.id);
     const builder = useRef<any>(null);
+
+    const builderConfig = {
+        builder: {
+            'custom-renderers': [
+                {
+                    name: 'Beda Forms',
+                    title: 'Beda Forms',
+                    source: config.bedaFormsUrl,
+                    url: config.bedaFormsUrl,
+                    default: true,
+                },
+            ],
+        },
+    };
+
     useEffect(() => {
         if (builder.current) {
             builder.current.addEventListener('save', async (event: any) => {
@@ -60,6 +75,7 @@ export function AidboxFormsBuilder() {
                 <aidbox-form-builder
                     ref={builder}
                     form-id={id}
+                    config={JSON.stringify(builderConfig)}
                     style={{
                         height: '100%',
                         width: '100%',
@@ -67,7 +83,7 @@ export function AidboxFormsBuilder() {
                         alignSelf: 'stretch',
                         display: 'flex',
                     }}
-                    hideBack="true"
+                    hide-back="true"
                 />
             </S.Content>
         </S.Container>

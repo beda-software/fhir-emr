@@ -8,8 +8,6 @@ body:
     - temperature: "{{ %QuestionnaireResponse.answers('temperature') }}"
     - bloodPressureSystolic: "{{ %QuestionnaireResponse.answers('blood-pressure-systolic') }}"
     - bloodPressureDiastolic: "{{ %QuestionnaireResponse.answers('blood-pressure-diastolic') }}"
-    - bloodPressureArm: "{{ %QuestionnaireResponse.answers('blood-pressure-arm') }}"
-    - bloodPressurePosition: "{{ %QuestionnaireResponse.answers('blood-pressure-positions') }}"
     - pulseRate: "{{ %QuestionnaireResponse.answers('pulse-rate') }}"
     - respiratoryRate: "{{ %QuestionnaireResponse.answers('respiratory-rate') }}"
     - oxygenSaturation: "{{ %QuestionnaireResponse.answers('oxygen-saturation') }}"
@@ -68,11 +66,6 @@ body:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
           effectiveDateTime: "{{ now() }}"
-          bodySite:
-            "{% if %bloodPressureArm.exists() or %bloodPressurePosition.exists() %}":
-              coding:
-                - "{{ %bloodPressureArm }}"
-                - "{{ %bloodPressurePosition }}"
           component:
             - code:
                 coding:

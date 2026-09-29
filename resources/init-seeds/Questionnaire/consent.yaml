@@ -2,6 +2,7 @@ id: consent
 resourceType: Questionnaire
 title: Sign-off Consent
 status: active
+description: Records a patient's sign-off consent.
 subjectType:
   - Encounter
   - Patient

@@ -25,8 +25,6 @@ export function Charting<R extends WithId<Resource>>(props: ChartingProps<R>) {
             resourceType={resourceType}
             getSearchParams={getSearchParams}
             extractPrimaryResource={extractPrimaryResource}
-            getTitle={getTitle}
-            tabs={[]}
         >
             {(context) => (
                 <PageChartingContainer

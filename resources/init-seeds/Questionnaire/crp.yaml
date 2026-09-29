@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: crp-test
 title: CRP test
 status: active
+description: Records the result of a C-reactive protein (CRP) lab test.
 subjectType:
   - Patient
 launchContext:

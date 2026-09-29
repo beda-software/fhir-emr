@@ -102,6 +102,7 @@ export async function expandFHIRValueSet(answerValueSet: string | undefined, sea
             params: {
                 ...(searchText ? { filter: searchText } : {}),
                 count: 50,
+                displayLanguage: getCurrentLocale(),
             },
         }),
         (expandedValueSet) => {

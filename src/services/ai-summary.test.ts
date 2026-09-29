@@ -24,7 +24,6 @@ vi.mock('src/services/fhir', async () => {
     };
 });
 
-
 const patient: Patient = { resourceType: 'Patient', id: 'patient1' };
 
 describe('AI Summary Module', () => {

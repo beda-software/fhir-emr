@@ -7,6 +7,7 @@ import {
     ComposedChart,
     Legend,
     Line,
+    ReferenceArea,
     ResponsiveContainer,
     Tooltip,
     XAxis,
@@ -18,15 +19,18 @@ import type { ChartDatumBase, ChartProps } from './Chart.types';
 import { ChartTooltip } from './ChartTooltip';
 import { getChartDisplayLabel, getDefaultChartTooltipLabel } from './formatters';
 
-type HaloDotProps = { cx?: number; cy?: number };
+type HaloDotProps = { cx?: number; cy?: number; payload?: ChartDatumBase };
 
 const DEFAULT_CHART_HEIGHT = 340;
 const DEFAULT_CHART_MARGIN = { left: 0, right: 20, top: 20, bottom: 20 };
 
 const renderHaloDot = (stroke: string, fill: string, coreR: number, haloR: number) =>
-    function HaloDot({ cx, cy }: HaloDotProps) {
+    function HaloDot({ cx, cy, payload }: HaloDotProps) {
         if (cx == null || cy == null) {
             return null;
+        }
+        if (payload?.dotColor) {
+            return <circle cx={cx} cy={cy} r={coreR} fill={payload.dotColor} />;
         }
         return (
             <g>
@@ -60,6 +64,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         gridProps,
         legendProps,
         tooltipProps,
+        referenceAreas,
         barProps: barSeriesProps,
         lineProps: lineSeriesProps,
         areaProps: areaSeriesProps,
@@ -129,6 +134,18 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     />
                 )}
 
+                {referenceAreas?.map((area, index) => (
+                    <ReferenceArea
+                        key={index}
+                        y1={area.y1}
+                        y2={area.y2}
+                        fill={area.fill}
+                        fillOpacity={area.fillOpacity ?? 1}
+                        stroke="none"
+                        ifOverflow="extendDomain"
+                    />
+                ))}
+
                 <Tooltip
                     cursor={{ fill: 'transparent' }}
                     content={ChartTooltip}
@@ -162,11 +179,11 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                             dataKey="y"
                             stroke={areaStroke}
                             strokeWidth={1}
+                            fill={`url(#${gradientId})`}
+                            fillOpacity={1}
                             dot={renderHaloDot(areaStroke, dotFill, 4, 8)}
                             activeDot={renderHaloDot(areaStroke, dotFill, 5, 10)}
                             {...areaSeriesProps}
-                            fill={`url(#${gradientId})`}
-                            fillOpacity={1}
                         />
                     </>
                 )}

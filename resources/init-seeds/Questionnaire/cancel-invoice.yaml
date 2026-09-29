@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: cancel-invoice
 status: active
 title: Change invoice status
+description: Updates the status of an existing invoice.
 mapping:
   - reference: urn:uuid:Mapping:cancel-invoice-extract
 launchContext:

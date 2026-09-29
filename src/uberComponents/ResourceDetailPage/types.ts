@@ -1,4 +1,4 @@
-import { Bundle, Resource } from 'fhir/r4b';
+import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { ReactElement } from 'react';
 
 import { SearchParams, WithId } from '@beda.software/fhir-react';
@@ -19,6 +19,7 @@ export interface DetailPageProps<R extends Resource> {
     getTitleRightElement?: (context: RecordType<WithId<R>>) => string | ReactElement;
     tabs: Array<Tab<WithId<R>>>;
     extractPrimaryResource?: (bundle: Bundle<R>) => WithId<R>;
+    getClinicalContext?: (context: RecordType<R>) => ParametersParameter[];
 
     /* Page content max width */
     maxWidth?: number | string;

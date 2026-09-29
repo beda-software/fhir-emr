@@ -27,6 +27,8 @@ export interface ChartDatumBase {
     y: ChartNumericValue;
     /** Secondary line value. Used only by the right axis in bar+line charts. */
     yLine?: ChartNumericValue;
+    /** Renders this point's area dot as a solid circle of this color instead of the default halo dot. */
+    dotColor?: string;
 }
 
 export interface ChartMargin {
@@ -34,6 +36,13 @@ export interface ChartMargin {
     right?: number;
     bottom?: number;
     left?: number;
+}
+
+export interface ChartReferenceArea {
+    y1?: number;
+    y2?: number;
+    fill: string;
+    fillOpacity?: number;
 }
 
 export type ChartXAxisProps = Partial<Pick<XAxisProps, 'tickMargin' | 'minTickGap' | 'interval' | 'tickFormatter'>>;
@@ -72,7 +81,16 @@ export type ChartLineSeriesProps = Partial<
 export type ChartAreaSeriesProps = Partial<
     Pick<
         RechartsAreaProps<unknown, unknown>,
-        'stroke' | 'strokeWidth' | 'fill' | 'fillOpacity' | 'dot' | 'activeDot' | 'type' | 'connectNulls' | 'name'
+        | 'stroke'
+        | 'strokeWidth'
+        | 'strokeDasharray'
+        | 'fill'
+        | 'fillOpacity'
+        | 'dot'
+        | 'activeDot'
+        | 'type'
+        | 'connectNulls'
+        | 'name'
     >
 >;
 
@@ -95,6 +113,7 @@ interface ChartBaseProps<TDatum extends ChartDatumBase = ChartDatumBase> {
     gridProps?: ChartGridProps;
     /** Tooltip overrides. Use formatter/labelFormatter for value labels. */
     tooltipProps?: ChartTooltipProps;
+    referenceAreas?: ChartReferenceArea[];
 }
 
 interface ChartPrimaryYAxisProps {

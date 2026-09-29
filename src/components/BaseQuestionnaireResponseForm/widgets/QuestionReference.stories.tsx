@@ -1,10 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf';
 
-import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+import { QuestionReference, InlineReference } from '@beda.software/web-item-controls/controls';
 
-import { InlineReference } from './inline-reference';
-import { QuestionReference } from './reference';
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 const meta: Meta<typeof QuestionReference> = {
     title: 'Questionnaire / questions / reference',

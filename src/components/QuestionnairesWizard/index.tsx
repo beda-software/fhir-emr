@@ -1,7 +1,9 @@
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { QuestionnaireResponseFormDraft } from 'src/components/QuestionnaireResponseFormDraft';
 import { Wizard } from 'src/components/Wizard';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
 import { QuestionnairesWizardProps, useQuestionnairesWizard } from './hooks';
@@ -34,6 +36,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
             {...props.wizard}
         >
             <QuestionnaireResponseFormDraft
+                language={getCurrentLocale()}
                 key={currentQuestionnaire?.id}
                 autoSave
                 qrDraftServiceType="local"

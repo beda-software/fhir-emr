@@ -1,0 +1,40 @@
+resourceType: Library
+id: hmb-pain-severity-score
+status: active
+name: hmb_pain_severity_score
+title: Period Pain Severity & Score
+description: >-
+  SQLQuery joining the hmb-pain-severity and hmb-pain-score ViewDefinitions by
+  QuestionnaireResponse id, for the combined HMB diagnostic chart.
+type:
+  coding:
+    - system: https://sql-on-fhir.org/ig/CodeSystem/LibraryTypesCodes
+      code: sql-query
+relatedArtifact:
+  - type: depends-on
+    resource: ViewDefinition/hmb-pain-severity
+    label: severity
+  - type: depends-on
+    resource: ViewDefinition/hmb-pain-score
+    label: score
+parameter:
+  - name: patient
+    use: in
+    type: string
+content:
+  - contentType: application/sql
+    extension:
+      - url: https://sql-on-fhir.org/ig/StructureDefinition/sql-text
+        valueString: >-
+          SELECT
+            COALESCE(severity.id, score.id) AS id,
+            COALESCE(severity.axis_label, score.axis_label) AS axis_label,
+            'Period Pain Severity & Score' AS title,
+            NULL AS reference_range,
+            severity.value_code AS value_code,
+            score.value_integer AS value_integer,
+            NULL AS value_quantity
+          FROM severity
+          FULL JOIN score ON severity.id = score.id
+          WHERE COALESCE(severity.patient_id, score.patient_id) = :patient
+    data: U0VMRUNUCiAgQ09BTEVTQ0Uoc2V2ZXJpdHkuaWQsIHNjb3JlLmlkKSBBUyBpZCwKICBDT0FMRVNDRShzZXZlcml0eS5heGlzX2xhYmVsLCBzY29yZS5heGlzX2xhYmVsKSBBUyBheGlzX2xhYmVsLAogICdQZXJpb2QgUGFpbiBTZXZlcml0eSAmIFNjb3JlJyBBUyB0aXRsZSwKICBOVUxMIEFTIHJlZmVyZW5jZV9yYW5nZSwKICBzZXZlcml0eS52YWx1ZV9jb2RlIEFTIHZhbHVlX2NvZGUsCiAgc2NvcmUudmFsdWVfaW50ZWdlciBBUyB2YWx1ZV9pbnRlZ2VyLAogIE5VTEwgQVMgdmFsdWVfcXVhbnRpdHkKRlJPTSBzZXZlcml0eQpGVUxMIEpPSU4gc2NvcmUgT04gc2V2ZXJpdHkuaWQgPSBzY29yZS5pZApXSEVSRSBDT0FMRVNDRShzZXZlcml0eS5wYXRpZW50X2lkLCBzY29yZS5wYXRpZW50X2lkKSA9IDpwYXRpZW50Cg==

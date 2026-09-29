@@ -20,6 +20,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: paediatrics
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient

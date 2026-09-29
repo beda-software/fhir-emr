@@ -1,3 +1,4 @@
+import { Patient, ParametersParameter } from 'fhir/r4b';
 import queryString from 'query-string';
 import { ReactElement, useEffect } from 'react';
 import { BrowserRouter, Routes, Navigate, Route, useLocation } from 'react-router-dom';
@@ -6,17 +7,21 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 
 import { User } from '@beda.software/aidbox-types';
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+
+import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -25,6 +30,7 @@ interface EMRProps {
     UserWithNoRolesComponent?: () => ReactElement;
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
+    getAuthenticatedClinicalContext?: () => ParametersParameter[];
 }
 
 export function EMR(props: EMRProps) {
@@ -35,6 +41,7 @@ export function EMR(props: EMRProps) {
         UserWithNoRolesComponent,
         menuLayout,
         footer,
+        getAuthenticatedClinicalContext,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -52,7 +59,13 @@ export function EMR(props: EMRProps) {
 
             const layout = menuLayout();
             const defaultRoute = layout[0]?.path ?? '/encounters';
-            return <AuthenticatedUserEMR defaultRoute={defaultRoute} extra={authenticatedRoutes} />;
+            return (
+                <AuthenticatedUserEMR
+                    defaultRoute={defaultRoute}
+                    extra={authenticatedRoutes}
+                    getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}
+                />
+            );
         }
 
         return <AnonymousUserEMR extra={anonymousRoutes} />;
@@ -91,26 +104,53 @@ function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
 interface RouteProps {
     defaultRoute: string;
     extra?: ReactElement;
+    getAuthenticatedClinicalContext?: () => ParametersParameter[];
 }
 
-function AuthenticatedUserEMR({ defaultRoute, extra }: RouteProps) {
+function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
     return (
-        <Routes>
-            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
-            <Route path="/appointment/book" element={<PublicAppointment />} />
-            <Route
-                path="*"
-                element={
-                    <BaseLayout>
-                        <Routes>
-                            {extra}
-                            <Route path="*" element={<Navigate to={defaultRoute} />} />
-                        </Routes>
-                    </BaseLayout>
-                }
-            />
-        </Routes>
+        <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
+            <Routes>
+                <Route
+                    path={`/print-patient-document/:id/:qrId`}
+                    element={
+                        <RenderBundleResourceContext<Patient>
+                            resourceType="Patient"
+                            getSearchParams={({ id }) => ({ _id: id as string })}
+                        >
+                            {() => <DocumentPrint />}
+                        </RenderBundleResourceContext>
+                    }
+                />
+                <Route path="/appointment/book" element={<PublicAppointment />} />
+                <Route
+                    path="*"
+                    element={
+                        <BaseLayout>
+                            <Routes>
+                                {extra}
+                                <Route path="*" element={<Navigate to={defaultRoute} />} />
+                            </Routes>
+                        </BaseLayout>
+                    }
+                />
+            </Routes>
+        </AuthenticatedClinicalContext>
     );
+}
+
+function AuthenticatedClinicalContext({
+    children,
+    getAuthenticatedClinicalContext,
+}: {
+    children: ReactElement;
+    getAuthenticatedClinicalContext?: () => ParametersParameter[];
+}) {
+    const context = getAuthenticatedClinicalContext
+        ? getAuthenticatedClinicalContext()
+        : getAuthenticatedClinicalContextDefault();
+
+    return <ClinicalContext context={context}>{children}</ClinicalContext>;
 }
 
 export function Auth() {

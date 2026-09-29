@@ -3,6 +3,7 @@ name: labs
 title: Add Laboratory test results
 resourceType: Questionnaire
 status: active
+description: Captures one or more laboratory test results.
 subjectType:
   - Encounter
   - Patient

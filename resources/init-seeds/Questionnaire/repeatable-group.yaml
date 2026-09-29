@@ -2,6 +2,7 @@ id: repeatable-group
 name: Repeatable Group
 title: Repeatable Group
 status: active
+description: Demo questionnaire showing a basic repeatable group.
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

@@ -32,7 +32,8 @@ export const S = {
             padding: 24px 24px 30px 24px;
         }
 
-        .form__question {
+        /* Editable forms only: read-only widgets keep their own label/value layout */
+        .app-form:not(.app-form--readonly) .form__question {
             flex-direction: column;
             align-items: flex-start;
             border: 0;

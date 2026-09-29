@@ -4,6 +4,7 @@ url: behavioral-screening
 name: behavioral-screening
 title: Behavioral/Social/Emotional Screening
 status: active
+description: Screens for behavioral, social, and emotional concerns in children to identify early signs that may benefit from support or further evaluation.
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
@@ -15,6 +16,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: paediatrics
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Patient
 launchContext:

@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: healthcare-service-create
 title: healthcare-service create
 status: active
+description: Registers a new healthcare service.
 mapping:
   - reference: urn:uuid:Mapping:healthcare-service-create-extract
 item:

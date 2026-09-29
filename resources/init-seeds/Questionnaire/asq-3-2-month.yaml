@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: asq-3-2-month
 title: "ASQ-3: 2 Month Questionnaire"
 status: active
+description: Ages & Stages Questionnaire screening developmental milestones at 2 months across communication, motor, problem-solving, and social-emotional domains.
 subjectType:
   - Patient
 meta:
@@ -17,6 +18,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: paediatrics
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient

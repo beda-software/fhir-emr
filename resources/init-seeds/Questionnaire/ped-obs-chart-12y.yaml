@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: ped-obs-chart-12y
 title: Paediatric Observation Chart (12 Years and over)
 status: active
+description: Paediatric observation chart for children aged 12 years and over, tracking vital signs against age-appropriate thresholds.
 subjectType:
   - Patient
   - Encounter
@@ -18,6 +19,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: paediatrics
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient

@@ -1,6 +1,8 @@
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
+import { mapResponseToForm, toFirstClassExtension } from 'sdc-qrf';
 
+import { useClinicalContext } from '@beda.software/fhir-questionnaire';
 import { useService } from '@beda.software/fhir-react';
 import { success, isSuccess } from '@beda.software/remote-data';
 
@@ -11,6 +13,7 @@ export function usePatientDocumentPrint() {
     const params = useParams<{ qrId: string; id: string }>();
     const qrId = params.qrId!;
     const patientId = params.id!;
+    const { parameters: clinicalParams } = useClinicalContext();
 
     const [response] = useService(async () => {
         const qrRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
@@ -24,14 +27,25 @@ export function usePatientDocumentPrint() {
                 // TODO: it is better to use '_include' to get questionnaire, but currently server does not return it
                 // Maybe this thread can help (https://github.com/hapifhir/hapi-fhir/issues/2843)
             });
+
             if (isSuccess(qRD)) {
                 const questionnaire = evaluate(qRD.data, 'entry.resource')[0];
-                return success({ questionnaireResponse, questionnaire });
+                const formValues = mapResponseToForm(questionnaireResponse, questionnaire);
+
+                return success({
+                    context: {
+                        fceQuestionnaire: toFirstClassExtension(questionnaire),
+                        questionnaire,
+                        questionnaireResponse,
+                        launchContextParameters: clinicalParams,
+                    },
+                    formValues,
+                });
             }
             return questionnaireResponse;
         }
         return qrRD;
-    });
+    }, [qrId, patientId, clinicalParams]);
 
     return { response };
 }

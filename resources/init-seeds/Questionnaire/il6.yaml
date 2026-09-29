@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: il6-test
 title: IL-6 test
 status: active
+description: Records the result of an IL-6 inflammatory marker test.
 subjectType:
   - Patient
 launchContext:

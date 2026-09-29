@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: medication-batch-create
 title: medication-batch create
 status: active
+description: Creates a new medication batch.
 mapping:
   - reference: urn:uuid:Mapping:medication-batch-create-extract
 launchContext:

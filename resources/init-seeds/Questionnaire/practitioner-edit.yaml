@@ -88,6 +88,7 @@ mapping:
 resourceType: Questionnaire
 title: Practitioner edit
 status: active
+description: Edits a practitioner's profile and credentials.
 id: practitioner-edit
 meta:
   profile:

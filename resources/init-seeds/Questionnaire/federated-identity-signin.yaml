@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: federated-identity-signin
 title: Use Federated Identity Provider to create User/Patient/Role
 status: active
+description: Creates a User/Patient/Role via a federated identity provider.
 mapping:
   - reference: urn:uuid:Mapping:federated-identity-signin
 item:

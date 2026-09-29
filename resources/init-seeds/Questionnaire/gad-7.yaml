@@ -2,7 +2,16 @@ id: gad-7
 resourceType: Questionnaire
 name: gad-7
 title: GAD-7
+_title:
+  translation:
+    - lang: es
+      content: GAD-7
 status: active
+description: Generalised Anxiety Disorder 7-item scale; screens severity of anxiety symptoms over the past two weeks.
+_description:
+  translation:
+    - lang: es
+      content: Escala de 7 ítems del Trastorno de Ansiedad Generalizada; evalúa la gravedad de los síntomas de ansiedad durante las últimas dos semanas.
 subjectType:
   - Encounter
   - Patient
@@ -14,6 +23,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: mental-health
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 mapping:
   - reference: urn:uuid:Mapping:gad-7-extract
 launchContext:
@@ -54,6 +71,10 @@ item:
       expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
 
   - text: Over the last two weeks, how often have you been bothered by the following problems?
+    _text:
+      translation:
+        - lang: es
+          content: Durante las últimas 2 semanas, ¿qué tan seguido ha tenido molestias debido a los siguientes problemas?
     type: group
     itemControl:
       coding:
@@ -62,6 +83,10 @@ item:
     item:
       - linkId: 69725-0
         text: Feeling nervous, anxious, or on edge
+        _text:
+          translation:
+            - lang: es
+              content: Se ha sentido nervioso(a), ansioso(a) o con los nervios de punta
         required: true
         type: choice
         itemControl:
@@ -72,6 +97,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -79,6 +108,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -86,6 +119,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -93,12 +130,20 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
       - linkId: 68509-9
         text: Not being able to stop or control worrying
+        _text:
+          translation:
+            - lang: es
+              content: No ha sido capaz de parar o controlar su preocupación
         required: true
         type: choice
         itemControl:
@@ -109,6 +154,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -116,6 +165,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -123,6 +176,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -130,12 +187,20 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
       - linkId: 69733-4
         text: Worrying too much about different things
+        _text:
+          translation:
+            - lang: es
+              content: Se ha preocupado demasiado por motivos diferentes
         required: true
         type: choice
         itemControl:
@@ -146,6 +211,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -153,6 +222,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -160,6 +233,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -167,12 +244,20 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
       - linkId: 69734-2
         text: Trouble relaxing
+        _text:
+          translation:
+            - lang: es
+              content: Ha tenido dificultad para relajarse
         required: true
         type: choice
         itemControl:
@@ -183,6 +268,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -190,6 +279,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -197,6 +290,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -204,12 +301,20 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
       - linkId: 69735-9
         text: Being so restless that it is hard to sit still
+        _text:
+          translation:
+            - lang: es
+              content: Se ha sentido tan inquieto(a) que no ha podido quedarse quieto(a)
         required: true
         type: choice
         itemControl:
@@ -220,6 +325,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -227,6 +336,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -234,6 +347,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -241,12 +358,20 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
       - linkId: 69689-8
         text: Becoming easily annoyed or irritable
+        _text:
+          translation:
+            - lang: es
+              content: Se ha molestado o irritado fácilmente
         required: true
         type: choice
         itemControl:
@@ -257,6 +382,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -264,6 +393,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -271,6 +404,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -278,12 +415,20 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
       - linkId: 69736-7
         text: Feeling afraid, as if something awful might happen
+        _text:
+          translation:
+            - lang: es
+              content: Ha tenido miedo de que algo terrible fuera a pasar
         required: true
         type: choice
         itemControl:
@@ -294,6 +439,10 @@ item:
               system: "http://loinc.org"
               code: "LA6568-5"
               display: "Not at all"
+              _display:
+                translation:
+                  - lang: es
+                    content: Ningún día
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 0
@@ -301,6 +450,10 @@ item:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Varios días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 1
@@ -308,6 +461,10 @@ item:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
+              _display:
+                translation:
+                  - lang: es
+                    content: Más de la mitad de los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
@@ -315,26 +472,34 @@ item:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
+              _display:
+                translation:
+                  - lang: es
+                    content: Casi todos los días
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
-  -     linkId: anxiety-score
-        text: GAD-7 Anxiety Severity Score
-        required: true
-        type: integer
-        readOnly: true
-        itemControl:
-          coding:
-            - code: anxiety-score
-        calculatedExpression:
-          language: text/fhirpath
-          expression: |
-            %resource.repeat(item)
-              .answer.valueCoding.extension
-              .where(url = 'http://hl7.org/fhir/StructureDefinition/itemWeight')
-              .valueDecimal
-              .sum()
+  - linkId: anxiety-score
+    text: GAD-7 Anxiety Severity Score
+    _text:
+      translation:
+        - lang: es
+          content: Puntuación de gravedad de la ansiedad GAD-7
+    required: true
+    type: integer
+    readOnly: true
+    itemControl:
+      coding:
+        - code: anxiety-score
+    calculatedExpression:
+      language: text/fhirpath
+      expression: |
+        %resource.repeat(item)
+          .answer.valueCoding.extension
+          .where(url = 'http://hl7.org/fhir/StructureDefinition/itemWeight')
+          .valueDecimal
+          .sum()
 
 meta:
   profile:

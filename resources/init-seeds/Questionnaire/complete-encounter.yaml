@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: complete-encounter
 status: active
 title: Complete encounter
+description: Marks an encounter as finished and records any closing details.
 mapping:
   - reference: urn:uuid:Mapping:complete-encounter-extract
 launchContext:

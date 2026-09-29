@@ -1,12 +1,12 @@
 import { t } from '@lingui/macro';
-import { Bundle, Medication, MedicationKnowledge, ParametersParameter } from 'fhir/r4b';
+import { Bundle, FhirResource, Medication, MedicationKnowledge } from 'fhir/r4b';
 
 import { Text } from 'src/components/Typography';
 import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType, ReportColumn } from 'src/uberComponents/ResourceListPage/types';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
-import { compileAsArray, compileAsFirst } from 'src/utils';
+import { compileAsArray, compileAsFirst, getResourceClinicalContext } from 'src/utils';
 
 // FHIRPath helpers
 const getMedicationName = compileAsFirst<MedicationKnowledge, string>(
@@ -75,7 +75,6 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
             resourceType="Medication"
             searchParams={{ code, status: 'active' }}
             getHeaderActions={() => [questionnaireAction(t`Add batch`, 'medication-batch-create')]}
-            defaultLaunchContext={[{ name: 'CurrentMedicationKnowledge', resource } as ParametersParameter]}
             getTableColumns={() => [
                 {
                     title: t`Lot number`,
@@ -89,6 +88,10 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
                 },
             ]}
             getReportColumns={getReportColumns}
+            getClinicalContext={(record) => [
+                ...getResourceClinicalContext('Medication', record?.resource ?? ({} as FhirResource)),
+                ...getResourceClinicalContext('MedicationKnowledge', resource, ['CurrentMedicationKnowledge']),
+            ]}
         />
     );
 }
@@ -109,6 +112,13 @@ export function MedicationManagementDetail() {
             resourceType="MedicationKnowledge"
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getMedicationName(resource, { bundle }) ?? ''}
+            getClinicalContext={(record) => {
+                return [
+                    ...getResourceClinicalContext('MedicationKnowledge', record.resource, [
+                        'CurrentMedicationKnowledge',
+                    ]),
+                ];
+            }}
             tabs={tabs}
         />
     );

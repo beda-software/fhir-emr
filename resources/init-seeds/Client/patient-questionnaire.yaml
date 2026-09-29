@@ -2,4 +2,5 @@ id: patient-questionnaire
 resourceType: Client
 grant_types:
   - basic
+  - client_credentials
 secret: "secret"

@@ -17,6 +17,7 @@ const config = {
 
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
     aiAssistantServiceUrl: 'http://localhost:3002/',
+    bedaFormsUrl: 'https://beda-forms.emr.beda.software/',
 };
 
 export { config as default };

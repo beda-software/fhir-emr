@@ -1,0 +1,57 @@
+.paged-footer-running {
+    position: running(footerContent);
+}
+
+.print-cover {
+    break-after: always;
+}
+
+.pagedjs_pagebox .pagedjs_margin-bottom-left {
+    align-items: stretch;
+}
+
+.pagedjs_margin-bottom-left > .pagedjs_margin-content {
+    display: flex;
+    align-items: center;
+    padding-left: 11mm;
+}
+
+.pagedjs_area {
+    position: relative;
+}
+
+.footer-last-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.footer-last-wrapper img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+@page {
+    size: A4;
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    @bottom-left {
+        content: element(footerContent);
+        width: 130mm;
+        height: 15mm;
+        font-weight: 400;
+        font-size: 2.82mm;
+        line-height: 3.53mm;
+        text-align: start;
+    }
+
+    @bottom-right {
+        padding-right: 11mm;
+        content: counter(page);
+    }
+}

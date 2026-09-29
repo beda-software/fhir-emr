@@ -14,6 +14,7 @@ const config = {
     wearablesDataStreamService: 'https://ingest.emr.beda.software/api/v1',
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
     aiAssistantServiceUrl: 'https://scribe.emr.beda.software',
+    bedaFormsUrl: 'https://beda-forms.emr.beda.software/',
 };
 
 export { config as default };

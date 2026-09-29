@@ -8,6 +8,7 @@ import {
     MedicationStatement,
     Observation,
     Patient,
+    Procedure,
     Provenance,
     ObservationComponent,
 } from 'fhir/r4b';
@@ -18,7 +19,7 @@ import { WithId } from '@beda.software/fhir-react';
 import { LinkToEdit } from 'src/components/LinkToEdit';
 import { ResourceTable, Option } from 'src/components/ResourceTable';
 import { compileAsArray } from 'src/utils';
-import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
+import { formatHumanDate, formatHumanDateTime, formatPeriodDateTime } from 'src/utils/date';
 
 const getInterpretation = compileAsArray<Observation, string>(
     'Observation.interpretation.text | Observation.interpretation.coding.display',
@@ -182,6 +183,49 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Date`,
                     key: 'date',
                     render: (r: Immunization) => (r.occurrenceDateTime ? formatHumanDate(r.occurrenceDateTime) : ''),
+                    width: 200,
+                },
+            ],
+        },
+        {
+            value: 'procedures',
+            label: t`Procedures`,
+            renderTable: (option: Option) => (
+                <ResourceTable<Procedure>
+                    key={`resource-table-${option.value}`}
+                    resourceType="Procedure"
+                    params={{
+                        subject: patient.id,
+                        _sort: ['-date', '_id'],
+                        _revinclude: ['Provenance:target'],
+                    }}
+                    getTableColumns={option.getTableColumns}
+                />
+            ),
+            getTableColumns: (provenanceList: Provenance[] = []) => [
+                {
+                    title: t`Title`,
+                    key: 'title',
+                    render: (resource: Procedure) => (
+                        <LinkToEdit
+                            name={resource.code?.coding?.[0]?.display ?? resource.code?.text}
+                            resource={resource}
+                            provenanceList={provenanceList}
+                        />
+                    ),
+                },
+                {
+                    title: t`Date`,
+                    key: 'date',
+                    render: (r: Procedure) => {
+                        if (r.performedDateTime) {
+                            return formatHumanDate(r.performedDateTime);
+                        }
+                        if (r.performedPeriod) {
+                            return formatPeriodDateTime(r.performedPeriod);
+                        }
+                        return '';
+                    },
                     width: 200,
                 },
             ],
