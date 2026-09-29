@@ -71,7 +71,7 @@ export function ReadonlyFormWrapper(props: FormWrapperProps) {
                 await handleSubmit(event);
                 setIsSubmitting(false);
             }}
-            className={classNames(s.form, 'app-form')}
+            className={classNames(s.form, 'app-form', 'app-form--readonly')}
             noValidate
         >
             <BaseQuestionnaireResponseFormPropsContext.Provider
