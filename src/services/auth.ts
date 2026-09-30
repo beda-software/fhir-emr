@@ -119,8 +119,24 @@ export function logout() {
 
 export type SignOutReason = 'forced';
 
-export async function doLogout(reason?: SignOutReason) {
-    await logout();
+let endSessionInFlight: Promise<void> | undefined;
+
+// The one end-of-session path for Manual (no reason) and Forced Sign-Out. Concurrent
+// calls share a single run, so the Session is only ever ended once.
+export function doLogout(reason?: SignOutReason): Promise<void> {
+    endSessionInFlight ??= endSession(reason).finally(() => {
+        endSessionInFlight = undefined;
+    });
+
+    return endSessionInFlight;
+}
+
+async function endSession(reason?: SignOutReason) {
+    try {
+        await logout();
+    } catch {
+        // A dead token fails DELETE /Session with 401; that must never block sign-out.
+    }
     resetInstanceToken();
     localStorage.clear();
     if (reason) {
