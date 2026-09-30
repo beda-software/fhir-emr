@@ -7,7 +7,7 @@ import {
     isIdleTimeoutElapsed,
     resolveIdleTimeoutConfig,
 } from 'src/components/IdleTimeout/utils';
-import { doLogout, getToken } from 'src/services/auth';
+import { doLogout, getToken, refreshSession } from 'src/services/auth';
 import { axiosInstance } from 'src/services/fhir';
 import { installSessionRejectionInterceptor } from 'src/services/sessionRejection';
 
@@ -29,6 +29,7 @@ export function useSessionRejectionInterceptor() {
                         }),
                     ),
                 endSession: doLogout,
+                refreshSession,
             }),
         [],
     );

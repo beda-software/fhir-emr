@@ -9,9 +9,10 @@ const BASE_URL = 'https://aidbox.test';
 interface Setup {
     token?: string;
     idleElapsed?: boolean;
+    refreshSession?: () => Promise<string | undefined>;
 }
 
-function setup({ token = 'live', idleElapsed = false }: Setup = {}) {
+function setup({ token = 'live', idleElapsed = false, refreshSession = async () => undefined }: Setup = {}) {
     const endSession = vi.fn();
     let currentToken: string | undefined = token;
     const respond = vi.fn<[InternalAxiosRequestConfig], { status: number; data?: unknown }>();
@@ -31,6 +32,12 @@ function setup({ token = 'live', idleElapsed = false }: Setup = {}) {
         getToken: () => currentToken,
         isIdleTimeoutElapsed: () => idleElapsed,
         endSession,
+        refreshSession: async () => {
+            const next = await refreshSession();
+            currentToken = next ?? currentToken;
+
+            return next;
+        },
     });
 
     return {
@@ -125,6 +132,7 @@ describe('session rejection interceptor', () => {
             getToken: () => 'live',
             isIdleTimeoutElapsed: () => false,
             endSession: t.endSession,
+            refreshSession: async () => undefined,
         });
 
         await expect(failing.get('/Patient', { headers: bearer('live') })).rejects.toMatchObject({
@@ -149,5 +157,135 @@ describe('session rejection interceptor', () => {
 
         expect(response.data).toEqual({ ok: true });
         expect(t.endSession).not.toHaveBeenCalled();
+    });
+
+    describe('Token Refresh', () => {
+        const replayingAdapter = (t: ReturnType<typeof setup>, validToken: string) =>
+            t.respond.mockImplementation((config) =>
+                config.headers.get('Authorization') === `Bearer ${validToken}`
+                    ? { status: 200, data: { ok: true } }
+                    : { status: 401 },
+            );
+
+        it('refreshes and replays the request with the new token, invisibly to the caller', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession });
+            replayingAdapter(t, 'fresh');
+
+            const response = await t.instance.get('/Patient', { headers: bearer('live') });
+
+            expect(response.data).toEqual({ ok: true });
+            expect(refreshSession).toHaveBeenCalledTimes(1);
+            expect(t.endSession).not.toHaveBeenCalled();
+        });
+
+        it('shares one refresh between concurrent 401s, including one that lands after it finished', async () => {
+            let finishRefresh!: (token: string) => void;
+            const refreshSession = vi.fn(() => new Promise<string>((resolve) => (finishRefresh = resolve)));
+            t = setup({ refreshSession });
+            replayingAdapter(t, 'fresh');
+
+            const results = Promise.all([
+                t.instance.get('/Patient', { headers: bearer('live') }),
+                t.instance.get('/Encounter', { headers: bearer('live') }),
+            ]);
+            await vi.waitFor(() => expect(refreshSession).toHaveBeenCalled());
+            finishRefresh('fresh');
+            const settled = await results;
+            const late = await t.instance.get('/Task', { headers: bearer('live') });
+
+            expect(settled.map((r) => r.data)).toEqual([{ ok: true }, { ok: true }]);
+            expect(late.data).toEqual({ ok: true });
+            expect(refreshSession).toHaveBeenCalledTimes(1);
+        });
+
+        it('does not refresh again when the replayed request is rejected too', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toBeDefined();
+
+            expect(refreshSession).toHaveBeenCalledTimes(1);
+            expect(t.respond).toHaveBeenCalledTimes(2);
+            expect(t.endSession).toHaveBeenCalledWith('expired');
+        });
+
+        it.each([
+            ['there is no refresh credential', () => Promise.resolve(undefined)],
+            ['the refresh is rejected', () => Promise.reject(new Error('Invalid refresh_token'))],
+        ])('ends as expired when %s', async (_name, refreshSession) => {
+            t = setup({ refreshSession });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toMatchObject({
+                response: { status: 401 },
+            });
+
+            expect(t.endSession).toHaveBeenCalledWith('expired');
+        });
+
+        it('skips the refresh and ends as forced when the Idle Timeout has elapsed', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession, idleElapsed: true });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toBeDefined();
+
+            expect(refreshSession).not.toHaveBeenCalled();
+            expect(t.endSession).toHaveBeenCalledWith('forced');
+        });
+
+        it('allows a later refresh once the previous one has settled', async () => {
+            const refreshSession = vi.fn().mockResolvedValueOnce('fresh').mockResolvedValueOnce('fresher');
+            t = setup({ refreshSession });
+            replayingAdapter(t, 'fresh');
+            await t.instance.get('/Patient', { headers: bearer('live') });
+            replayingAdapter(t, 'fresher');
+
+            const response = await t.instance.get('/Patient', { headers: bearer('fresh') });
+
+            expect(response.data).toEqual({ ok: true });
+            expect(refreshSession).toHaveBeenCalledTimes(2);
+        });
+
+        it('ends as forced when the Idle Timeout elapses while the refresh is in flight', async () => {
+            let idleElapsed = false;
+            const refreshSession = vi.fn(async () => {
+                idleElapsed = true;
+
+                return 'fresh';
+            });
+            const endSession = vi.fn();
+            const instance = axios.create({
+                baseURL: BASE_URL,
+                adapter: async (config) => {
+                    throw new AxiosError(
+                        'failed',
+                        'ERR_BAD_REQUEST',
+                        config,
+                        {},
+                        {
+                            status: 401,
+                            data: undefined,
+                            statusText: '',
+                            headers: {},
+                            config,
+                        },
+                    );
+                },
+            });
+            installSessionRejectionInterceptor(instance, {
+                baseURL: BASE_URL,
+                getToken: () => 'live',
+                isIdleTimeoutElapsed: () => idleElapsed,
+                endSession,
+                refreshSession,
+            });
+
+            await expect(instance.get('/Patient', { headers: bearer('live') })).rejects.toBeDefined();
+
+            expect(endSession).toHaveBeenCalledWith('forced');
+        });
     });
 });
