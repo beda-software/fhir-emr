@@ -8,7 +8,7 @@ import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
-import { useAppleAuthentication, useIsForcedSignOut } from './hooks';
+import { useAppleAuthentication, useSignOutReason } from './hooks';
 import s from './SignIn.module.scss';
 import { S } from './SignIn.styles';
 
@@ -31,7 +31,7 @@ interface SignInProps {
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
-    const isForcedSignOut = useIsForcedSignOut();
+    const signOutReason = useSignOutReason();
 
     return (
         <S.Container>
@@ -40,8 +40,11 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
-                {isForcedSignOut ? (
+                {signOutReason === 'forced' ? (
                     <S.Message>{t`You were signed out because there was no activity for a while.`}</S.Message>
+                ) : null}
+                {signOutReason === 'expired' ? (
+                    <S.Message>{t`Your session has expired. Please sign in again.`}</S.Message>
                 ) : null}
                 <Segmented
                     value={signInService}

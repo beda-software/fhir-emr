@@ -22,10 +22,10 @@ interface AppleAuthenticationResponse {
     };
 }
 
-export function useIsForcedSignOut() {
-    const [isForcedSignOut] = useState(() => getSignOutReason() === 'forced');
+export function useSignOutReason() {
+    const [reason] = useState(getSignOutReason);
 
-    return isForcedSignOut;
+    return reason;
 }
 
 export function useAppleAuthentication() {

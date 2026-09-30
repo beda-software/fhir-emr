@@ -141,3 +141,11 @@ export function interpretStorageEvent(event: StorageEventLike): MultiTabSyncSign
 
     return { type: 'ignore' };
 }
+
+// Reads the persisted timestamp rather than a mounted controller's state, so it is
+// correct even when the Idle Timeout has elapsed while this tab's recheck was throttled.
+export function isIdleTimeoutElapsed(now: number, persistedLastActivityAt: string | null, config: IdleTimeoutConfig) {
+    const lastActivityAt = parsePersistedTimestamp(persistedLastActivityAt);
+
+    return lastActivityAt !== undefined && deriveIdleTimeoutState(now - lastActivityAt, config) === 'expired';
+}

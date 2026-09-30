@@ -23,6 +23,7 @@ import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
+import { useSessionRejectionInterceptor } from './hooks';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -118,6 +119,8 @@ function AuthenticatedUserEMR({
     getAuthenticatedClinicalContext,
     warningWindowTexts,
 }: RouteProps) {
+    useSessionRejectionInterceptor();
+
     return (
         <>
             <IdleTimeout texts={warningWindowTexts} />

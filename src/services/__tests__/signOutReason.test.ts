@@ -42,3 +42,20 @@ describe('sign-out reason', () => {
         expect(getSignOutReason()).toBeUndefined();
     });
 });
+
+describe('expired sign-out reason', () => {
+    beforeEach(() => {
+        installFakeLocalStorage();
+    });
+
+    it('stays readable by every tab and is cleared by the next sign-in', () => {
+        window.localStorage.setItem('signout_reason', 'expired');
+
+        expect(getSignOutReason()).toBe('expired');
+        expect(getSignOutReason()).toBe('expired');
+
+        setToken('new-token');
+
+        expect(getSignOutReason()).toBeUndefined();
+    });
+});
