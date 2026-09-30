@@ -37,10 +37,17 @@ interface AppProps {
     anonymousRoutes?: ReactElement;
     populateUserInfoSharedState?: () => Promise<any>;
     UserWithNoRolesComponent?: () => ReactElement;
+    expiredSignOutMessage?: string;
 }
 
 export function App(props: AppProps) {
-    const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent } = props;
+    const {
+        authenticatedRoutes,
+        anonymousRoutes,
+        populateUserInfoSharedState,
+        UserWithNoRolesComponent,
+        expiredSignOutMessage,
+    } = props;
 
     // Define the default authenticated routes
     const defaultAuthenticatedRoutes = (
@@ -74,7 +81,12 @@ export function App(props: AppProps) {
     // Define the default anonymous routes
     const defaultAnonymousRoutes = (
         <>
-            <Route path="/signin" element={<SignIn originPathName={window.location.pathname} />} />
+            <Route
+                path="/signin"
+                element={
+                    <SignIn originPathName={window.location.pathname} expiredSignOutMessage={expiredSignOutMessage} />
+                }
+            />
             <Route path="/reset-password/:code" element={<SetPassword />} />
             <Route
                 path="/appointment/book"

@@ -16,12 +16,15 @@ vi.mock('src/components/BaseLayout/Footer', () => ({ AppFooter: () => null }));
 const FORCED = 'You were signed out because there was no activity for a while.';
 const EXPIRED = 'Your session has expired. Please sign in again.';
 
-async function renderWithReason(reason: 'forced' | 'expired' | undefined) {
+async function renderWithReason(
+    reason: 'forced' | 'expired' | undefined,
+    props: { expiredSignOutMessage?: string } = {},
+) {
     const { getSignOutReason } = await import('src/services/auth');
     vi.mocked(getSignOutReason).mockReturnValue(reason);
     render(
         <ThemeProvider>
-            <SignIn />
+            <SignIn {...props} />
         </ThemeProvider>,
     );
 }
@@ -36,6 +39,20 @@ describe('SignIn sign-out message', () => {
 
         expect(screen.getByText(EXPIRED)).toBeInTheDocument();
         expect(screen.queryByText(FORCED)).not.toBeInTheDocument();
+    });
+
+    it("shows the consuming app's expired message instead of the default", async () => {
+        await renderWithReason('expired', { expiredSignOutMessage: 'Custom expiry text' });
+
+        expect(screen.getByText('Custom expiry text')).toBeInTheDocument();
+        expect(screen.queryByText(EXPIRED)).not.toBeInTheDocument();
+    });
+
+    it('does not apply the expired override to a Forced Sign-Out', async () => {
+        await renderWithReason('forced', { expiredSignOutMessage: 'Custom expiry text' });
+
+        expect(screen.getByText(FORCED)).toBeInTheDocument();
+        expect(screen.queryByText('Custom expiry text')).not.toBeInTheDocument();
     });
 
     it('keeps the Forced Sign-Out message unchanged', async () => {

@@ -27,6 +27,7 @@ function authorize(state?: OAuthState) {
 
 interface SignInProps {
     originPathName?: string;
+    expiredSignOutMessage?: string;
 }
 
 export function SignIn(props: SignInProps) {
@@ -44,7 +45,9 @@ export function SignIn(props: SignInProps) {
                     <S.Message>{t`You were signed out because there was no activity for a while.`}</S.Message>
                 ) : null}
                 {signOutReason === 'expired' ? (
-                    <S.Message>{t`Your session has expired. Please sign in again.`}</S.Message>
+                    <S.Message>
+                        {props.expiredSignOutMessage ?? t`Your session has expired. Please sign in again.`}
+                    </S.Message>
                 ) : null}
                 <Segmented
                     value={signInService}
