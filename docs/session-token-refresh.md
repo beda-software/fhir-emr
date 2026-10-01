@@ -105,8 +105,6 @@ Checked against Aidbox 2607.5. Replace the host, client id and credentials with 
 
 4. Use the original access token after `access_token_expiration` seconds: Aidbox returns 401 (calling it repeatedly before then must not have extended it).
 
-Background and raw findings: `docs/research/session-management-via-interceptors.md`, section 8.
-
 ## Overriding the sign-out texts
 
 Every Session-ending text is overridden from one place: the `signOutTexts` prop of `EMR` (or of `App`, which forwards it). Any field left out keeps its default, translated text.

@@ -120,8 +120,6 @@ export const LAST_PROVIDER_ACTIVITY_STORAGE_KEY = 'idle_timeout_last_provider_ac
 // wait out their own recheck interval) when a state change wasn't itself a storage write.
 export const STATE_BROADCAST_STORAGE_KEY = 'idle_timeout_state_broadcast_at';
 
-// Shared by the read-on-load path and the `storage` event handler, so a persisted or
-// broadcast last-Provider-Activity timestamp is parsed and validated in exactly one place.
 export function parsePersistedTimestamp(raw: string | null): number | undefined {
     const parsed = raw ? Number(raw) : NaN;
 

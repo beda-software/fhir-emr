@@ -182,8 +182,6 @@ export function useIdleTimeout(): UseIdleTimeoutResult {
     return { state, recordProviderActivity, signOutNow };
 }
 
-// Required<WarningWindowTexts>: every field resolved, so the component only ever
-// renders text, never decides between a given override and a translated default.
 export function useWarningWindowTexts(texts?: WarningWindowTexts): Required<WarningWindowTexts> {
     return {
         title: texts?.title ?? t`Your session is about to end`,
