@@ -1,12 +1,63 @@
+# #-#-#-#-#  1.po  #-#-#-#-#
+# , fuzzy
+# , fuzzy
 msgid ""
 msgstr ""
+"#-#-#-#-#  1.po  #-#-#-#-#: \n"
+"#-#-#-#-#  1.po  #-#-#-#-#: \n"
 "POT-Creation-Date: 2026-05-01 12:37+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: \n"
+"#-#-#-#-#  2.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+"#-#-#-#-#  3.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+"#-#-#-#-#  2.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+"#-#-#-#-#  3.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
 
 #: src/uberComponents/ResourceListPage/BatchActions.tsx:57
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
@@ -307,6 +358,12 @@ msgstr "Berichtigen"
 msgid "Amount"
 msgstr "Menge"
 
+#: src/controls/ImageAnnotation/AnnotationImage.tsx:45
+#: src/controls/ImageAnnotation/index.tsx:51
+#: src/readonly-controls/ImageAnnotation/index.tsx:39
+#~ msgid "Annotation"
+#~ msgstr ""
+
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:105
 msgid "Appointment"
 msgstr "Termin"
@@ -409,7 +466,11 @@ msgstr "von"
 msgid "Calories"
 msgstr "Kalorien"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
+#: src/containers/SignIn/hooks.ts:49
+msgid "Can not sign in: secure browser cryptography is unavailable. Use HTTPS and try again."
+msgstr "Anmeldung nicht möglich: Die sichere Verschlüsselung des Browsers ist nicht verfügbar. Verwenden Sie HTTPS und versuchen Sie es erneut."
+
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:94
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:89
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
@@ -450,6 +511,10 @@ msgstr "Entwurf aus lokalem Speicher löschen und Formular zurücksetzen"
 #: src/components/SearchBar/SearchBarMobile/index.tsx:52
 msgid "Clear filters"
 msgstr "Filter zurücksetzen"
+
+#: src/controls/ImageAnnotation/index.tsx:121
+#~ msgid "Click on the diagram to place a marker"
+#~ msgstr ""
 
 #: src/controls/UploadFileControl/index.tsx:32
 #~ msgid "Click or drag file to this area to upload"
@@ -1053,11 +1118,11 @@ msgstr "Audio anhören"
 msgid "Loading..."
 msgstr "Wird geladen..."
 
-#: src/containers/SignIn/index.tsx:98
+#: src/containers/SignIn/index.tsx:90
 msgid "Log in"
 msgstr "Anmelden"
 
-#: src/containers/SignIn/index.tsx:139
+#: src/containers/SignIn/index.tsx:127
 msgid "Log in as demo patient"
 msgstr "Als Demo-Patient anmelden"
 
@@ -1085,10 +1150,6 @@ msgstr "Gemacht mit"
 msgid "Magic Search"
 msgstr "Magische Suche"
 
-#: src/components/DashboardCard/creatinine.tsx:96
-#~ msgid "Max"
-#~ msgstr ""
-
 #: src/containers/InvoiceDetails/index.tsx:96
 msgid "Medical Services Invoice"
 msgstr "Rechnung für medizinische Leistungen"
@@ -1114,10 +1175,6 @@ msgstr "Zweiter Vorname"
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:85
 msgid "Mild"
 msgstr "Leicht"
-
-#: src/components/DashboardCard/creatinine.tsx:95
-#~ msgid "Min"
-#~ msgstr ""
 
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:68
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:86
@@ -1165,6 +1222,11 @@ msgstr "Neuer Termin"
 #: src/utils/questionnaire.ts:54
 msgid "No"
 msgstr "Nein"
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#: src/readonly-controls/ImageAnnotation/index.tsx:48
+#~ msgid "No annotations"
+#~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
@@ -1219,8 +1281,8 @@ msgstr "Beobachtungen"
 msgid "On Hold"
 msgstr "Zurückgestellt"
 
-#: src/containers/SignIn/index.tsx:52
-#: src/containers/SignIn/index.tsx:104
+#: src/containers/SignIn/index.tsx:48
+#: src/containers/SignIn/index.tsx:96
 msgid "On the next page, please, use one of the following credentials"
 msgstr "Bitte verwenden Sie auf der nächsten Seite eine der folgenden Anmeldedaten"
 
@@ -1294,8 +1356,8 @@ msgstr "Schmerzschwere"
 msgid "Passed assessment"
 msgstr "Bewertung bestanden"
 
-#: src/containers/SignIn/index.tsx:83
-#: src/containers/SignIn/index.tsx:123
+#: src/containers/SignIn/index.tsx:79
+#: src/containers/SignIn/index.tsx:115
 msgid "Password"
 msgstr "Passwort"
 
@@ -1348,10 +1410,6 @@ msgstr "Bezahlen"
 msgid "PCT"
 msgstr "PCT"
 
-#: src/containers/PatientDetails/HMBDiagnostic/config.tsx:112
-#~ msgid "Period Pain Score"
-#~ msgstr ""
-
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:114
 msgid "Period Pain Severity & Score"
 msgstr "Periodenschmerz-Schwere & -Wert"
@@ -1364,6 +1422,10 @@ msgstr "Telefonnummer"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:42
 msgid "Phone widget"
 msgstr "Telefon-Widget"
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#~ msgid "Place a marker on the diagram to add an annotation"
+#~ msgstr ""
 
 #: src/containers/App/DefaultUserWithNoRoles.tsx:21
 msgid "Please ask administrator to add a role for your user"
@@ -1462,6 +1524,10 @@ msgstr "Reaktion"
 #~ msgid "Remove"
 #~ msgstr ""
 
+#: src/controls/ImageAnnotation/index.tsx:59
+#~ msgid "Remove annotation"
+#~ msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:54
 msgid "Repeats"
 msgstr "Wiederholungen"
@@ -1510,7 +1576,7 @@ msgstr "Zeile"
 msgid "Saturday"
 msgstr "Samstag"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:106
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:113
 #: src/containers/EncounterDetails/AIScribe/index.tsx:205
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
@@ -1519,7 +1585,7 @@ msgstr "Samstag"
 msgid "Save"
 msgstr "Speichern"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:96
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:103
 msgid "Save as draft"
 msgstr "Als Entwurf speichern"
 
@@ -1645,6 +1711,10 @@ msgstr "Link teilen"
 msgid "Show results"
 msgstr "Ergebnisse anzeigen"
 
+#: src/components/IdleTimeout/hooks.ts:194
+msgid "Sign out now"
+msgstr "Jetzt abmelden"
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
 msgid "Slider"
 msgstr "Schieberegler"
@@ -1719,6 +1789,10 @@ msgstr "Videoanruf starten"
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:85
 msgid "Status"
 msgstr "Status"
+
+#: src/components/IdleTimeout/hooks.ts:193
+msgid "Stay signed in"
+msgstr "Angemeldet bleiben"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:125
 msgid "Step"
@@ -1797,11 +1871,11 @@ msgstr "Text (Standard)"
 msgid "Text with macro"
 msgstr "Text mit Makro"
 
-#: src/containers/App/index.tsx:100
+#: src/containers/App/index.tsx:108
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Vielen Dank für das Ausfüllen des Fragebogens. Sie können diese Seite jetzt schließen."
 
-#: src/containers/App/index.tsx:99
+#: src/containers/App/index.tsx:107
 msgid "Thank you!"
 msgstr "Vielen Dank!"
 
@@ -1947,8 +2021,8 @@ msgstr "URL:"
 msgid "User with no roles in the system"
 msgstr "Benutzer ohne Rollen im System"
 
-#: src/containers/SignIn/index.tsx:55
-#: src/containers/SignIn/index.tsx:107
+#: src/containers/SignIn/index.tsx:51
+#: src/containers/SignIn/index.tsx:99
 msgid "Username"
 msgstr "Benutzername"
 
@@ -1991,7 +2065,7 @@ msgstr "Mittwoch"
 msgid "Week"
 msgstr "Woche"
 
-#: src/containers/SignIn/index.tsx:39
+#: src/containers/SignIn/index.tsx:33
 msgid "Welcome to"
 msgstr "Willkommen bei"
 
@@ -2010,6 +2084,22 @@ msgstr "Ja"
 msgid "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data."
 msgstr "Sie haben derzeit keinen Zugriff auf die Patientendaten. Um Zugriff zu erhalten, benötigen Sie die unterzeichnete Einwilligung des Patienten zur Freigabe seiner Aktivitätsdaten."
 
+#: src/components/SignOutTexts/index.tsx:20
+msgid "You were signed out because there was no activity for a while."
+msgstr "Sie wurden abgemeldet, da eine Zeit lang keine Aktivität stattgefunden hat."
+
+#: src/components/IdleTimeout/hooks.ts:192
+msgid "You've been inactive for a while. For your security, your session will end soon unless you stay signed in."
+msgstr "Sie waren eine Weile inaktiv. Zu Ihrer Sicherheit wird Ihre Sitzung bald beendet, sofern Sie nicht angemeldet bleiben."
+
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr "Ihr Browser unterstützt das Audio-Element nicht"
+
+#: src/components/SignOutTexts/index.tsx:24
+msgid "Your session has expired. Please sign in again."
+msgstr "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+
+#: src/components/IdleTimeout/hooks.ts:189
+msgid "Your session is about to end"
+msgstr "Ihre Sitzung endet in Kürze"
