@@ -118,25 +118,45 @@ export function logout() {
     });
 }
 
+export interface RefreshSessionDeps {
+    getRefreshToken: () => string | undefined | null;
+    saveAccessToken: (accessToken: string) => void;
+    clientId: string;
+    baseURL: string;
+}
+
 // Bypasses the shared HTTP client so it cannot re-enter the interceptor. Aidbox answers with a new
 // access token only, so the refresh credential and everything else stored at sign-in stay as they are.
-export async function refreshSession(): Promise<string | undefined> {
-    const refreshToken = window.localStorage.getItem('refresh_token');
+export function createRefreshSession(deps: RefreshSessionDeps): () => Promise<string | undefined> {
+    return async () => {
+        const refreshToken = deps.getRefreshToken();
 
-    if (!refreshToken) {
-        return undefined;
-    }
+        if (!refreshToken) {
+            return undefined;
+        }
 
-    const response = await axios.post<{ access_token: string }>(`${config.baseURL}/auth/token`, {
-        grant_type: 'refresh_token',
-        client_id: config.clientId || 'testAuth',
-        refresh_token: refreshToken,
-    });
-    const accessToken = response.data.access_token;
-    setToken(accessToken);
-    setInstanceToken({ access_token: accessToken, token_type: 'Bearer' });
+        const response = await axios.post<{ access_token: string }>(`${deps.baseURL}/auth/token`, {
+            grant_type: 'refresh_token',
+            client_id: deps.clientId,
+            refresh_token: refreshToken,
+        });
+        const accessToken = response.data.access_token;
+        deps.saveAccessToken(accessToken);
 
-    return accessToken;
+        return accessToken;
+    };
+}
+
+export function refreshSession(): Promise<string | undefined> {
+    return createRefreshSession({
+        getRefreshToken: () => window.localStorage.getItem('refresh_token'),
+        saveAccessToken: (accessToken) => {
+            setToken(accessToken);
+            setInstanceToken({ access_token: accessToken, token_type: 'Bearer' });
+        },
+        clientId: config.clientId || 'testAuth',
+        baseURL: config.baseURL,
+    })();
 }
 
 export type SignOutReason = 'forced' | 'expired';
