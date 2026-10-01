@@ -23,12 +23,21 @@ import {
 
 const RECHECK_INTERVAL_MS = 5000;
 
-function readPersistedLastProviderActivityAt(): number {
-    return parsePersistedTimestamp(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)) ?? Date.now();
-}
-
 function persistLastProviderActivityAt(now: number) {
     window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(now));
+}
+
+// Writes the fallback so an untouched Session has a timestamp the elapsed check and a reload can see.
+function readOrInitLastProviderActivityAt(): number {
+    const persisted = parsePersistedTimestamp(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY));
+    if (persisted !== undefined) {
+        return persisted;
+    }
+
+    const now = Date.now();
+    persistLastProviderActivityAt(now);
+
+    return now;
 }
 
 function useRecordNavigationAsProviderActivity(recordProviderActivity: () => void) {
@@ -47,7 +56,7 @@ function useRecordNavigationAsProviderActivity(recordProviderActivity: () => voi
 export function useIdleTimeout(): UseIdleTimeoutResult {
     const controllerRef = useRef<IdleTimeoutController>();
     if (!controllerRef.current) {
-        controllerRef.current = new IdleTimeoutController(IDLE_TIMEOUT_CONFIG, readPersistedLastProviderActivityAt());
+        controllerRef.current = new IdleTimeoutController(IDLE_TIMEOUT_CONFIG, readOrInitLastProviderActivityAt());
     }
     const controller = controllerRef.current;
 
