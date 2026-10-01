@@ -21,7 +21,7 @@ auth:
 
 All three `auth.password` attributes are needed. The repo's `resources/init-seeds/Client/testAuthRefresh.yaml` is a working example with very short lifetimes (4 s / 10 s), meant for tests.
 
-Pick `refresh_token_expiration` no shorter than the longest working day you want to survive: once it passes, refresh is rejected and the provider is signed out.
+Pick `refresh_token_expiration` no shorter than the longest gap between two refreshes you want to survive (the longest stretch with no request at all, since the access token must also have expired for a refresh to happen): once it passes without a refresh, refresh is rejected and the provider is signed out. The window restarts at every successful refresh.
 
 ## Code flow (PKCE) opt-in
 
@@ -52,13 +52,13 @@ In code mode the refresh request goes to `authTokenPath`. The refresh credential
 
 ## The implicit flow cannot refresh
 
-Aidbox rejects `refresh_token`, `access_token_expiration` and `refresh_token_expiration` under the `auth` block of a Client that uses the implicit grant, and issues only an access token. A consumer that needs Token Refresh must use the code flow or the password grant; with the implicit flow the app ends the Session with an Expired Sign-Out when the token is rejected.
+Aidbox rejects `refresh_token` and `refresh_token_expiration` under the `auth` block of a Client that uses the implicit grant (`unknown-key`), and issues only an access token. `access_token_expiration` is accepted and fixes that token's lifetime. A consumer that needs Token Refresh must use the code flow or the password grant; with the implicit flow the app ends the Session with an Expired Sign-Out when the token is rejected.
 
 | Grant                | Valid `auth.<grant>` attributes for refresh                                  |
 | -------------------- | ---------------------------------------------------------------------------- |
 | `password`           | `access_token_expiration`, `refresh_token_expiration`, `refresh_token: true` |
 | `authorization_code` | `redirect_uri`, `pkce`, `secret_required`, plus the same three               |
-| `implicit`           | none (no refresh attributes accepted)                                        |
+| `implicit`           | `redirect_uri`, `access_token_expiration` only (no refresh attributes)       |
 
 ## Behaviour with and without a refresh credential
 
@@ -71,11 +71,15 @@ Aidbox rejects `refresh_token`, `access_token_expiration` and `refresh_token_exp
 
 A Client without the attributes above (for example the default `testAuth`) issues no `refresh_token` and no `expires_in`, and its tokens never expire server-side. Upgrading fhir-emr therefore changes nothing for it.
 
+### Reloading the page
+
+The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out; if the Idle Timeout has already elapsed, a Forced Sign-Out with no refresh attempt. Without a refresh credential, or on a network failure, nothing changes: the sign-in screen, or the existing network-error handling. The refresh on reload is not Provider Activity.
+
 ## What refresh does not do
 
--   **Reactive only.** Refresh runs only in response to a 401 on a request. There is no timer and no proactive renewal.
+-   **Reactive only.** Refresh runs only in response to a 401 on a request (including the Session restore on page load). There is no timer and no proactive renewal.
 -   **Never extends an idle Session.** Refresh does not count as Provider Activity and does not touch the last-activity timestamp. The Idle Timeout stays the only authority for ending an idle Session.
--   **Expiry does not slide.** Aidbox fixes token expiry at issue time; using a token does not extend it. A provider working continuously is renewed when the access token dies, and signed out when the refresh token dies.
+-   **The access token does not slide; the refresh token does.** Aidbox fixes the access token's expiry at issue time, and using it does not extend it. The refresh token's lifetime is counted from issue or from its last use (checked on Aidbox with a 20 s lifetime: an unused token was rejected after 24 s, a token used every 12 s kept working past 36 s, and was rejected after 22 s idle). A provider who keeps working is renewed each time the access token dies and the refresh window restarts; one who is away longer than `refresh_token_expiration` is signed out.
 -   Only the app's shared HTTP client is covered (not the fhir-react instance, value-set clients or raw `fetch` callers).
 
 ## Verifying your Aidbox

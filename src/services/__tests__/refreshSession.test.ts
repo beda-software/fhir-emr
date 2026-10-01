@@ -53,4 +53,13 @@ describe('refreshSession', () => {
 
         expect(localStorage.getItem('token')).toBe('old');
     });
+
+    it('shares one request between concurrent callers', async () => {
+        localStorage.setItem('refresh_token', 'refresh');
+        const post = vi.spyOn(axios, 'post').mockResolvedValue({ data: { access_token: 'new' } });
+
+        await expect(Promise.all([refreshSession(), refreshSession()])).resolves.toEqual(['new', 'new']);
+
+        expect(post).toHaveBeenCalledTimes(1);
+    });
 });

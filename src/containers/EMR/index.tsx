@@ -14,6 +14,7 @@ import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { IdleTimeout } from 'src/components/IdleTimeout';
+import { isIdleTimeoutElapsedNow } from 'src/components/IdleTimeout/utils';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
@@ -21,10 +22,16 @@ import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRole
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+import { doLogout, getToken, parseOAuthState, refreshSession, setToken } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
 import { useSessionRejectionInterceptor } from './hooks';
+
+const restoreDeps = {
+    isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
+    refreshSession,
+    endSession: doLogout,
+};
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -51,7 +58,7 @@ export function EMR(props: EMRProps) {
 
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
+        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, restoreDeps) : success(null);
     });
 
     const renderRoutes = (user: User | null) => {

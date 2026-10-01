@@ -166,8 +166,11 @@ export function createRefreshSession(deps: RefreshSessionDeps): () => Promise<st
     };
 }
 
+let refreshInFlight: Promise<string | undefined> | undefined;
+
+// Concurrent callers (Session restore, interceptor 401s) share one request.
 export function refreshSession(): Promise<string | undefined> {
-    return createRefreshSession({
+    refreshInFlight ??= createRefreshSession({
         getRefreshToken: () => window.localStorage.getItem('refresh_token'),
         saveAccessToken: (accessToken) => {
             setToken(accessToken);
@@ -176,7 +179,11 @@ export function refreshSession(): Promise<string | undefined> {
         clientId: config.clientId,
         baseURL: config.baseURL,
         tokenPath: getAuthFlow().refreshTokenPath(),
-    })();
+    })().finally(() => {
+        refreshInFlight = undefined;
+    });
+
+    return refreshInFlight;
 }
 
 export type SignOutReason = 'manual' | 'forced' | 'expired';
