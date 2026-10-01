@@ -1,32 +1,17 @@
 import { t } from '@lingui/macro';
-import { Button, Segmented, Tooltip, notification } from 'antd';
+import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
-
-import { isFailure } from '@beda.software/remote-data';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo.svg';
-import { getSignInUrl, OAuthState } from 'src/services/auth';
 
-import { useAppleAuthentication, useSignOutReason } from './hooks';
+import { useAppleAuthentication, useSignIn, useSignOutReason } from './hooks';
 import s from './SignIn.module.scss';
 import { S } from './SignIn.styles';
 
 enum SignInService {
     EMR = 'EMR',
     PatientPortal = 'Patient Portal',
-}
-
-async function authorize(state?: OAuthState) {
-    const result = await getSignInUrl(state);
-
-    if (isFailure(result)) {
-        notification.error({ message: result.error.message });
-
-        return;
-    }
-
-    window.location.href = result.data;
 }
 
 interface SignInProps {
@@ -37,6 +22,7 @@ interface SignInProps {
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
     const signOutReason = useSignOutReason();
+    const authorize = useSignIn(props.originPathName);
 
     return (
         <S.Container>
@@ -104,11 +90,7 @@ export function SignIn(props: SignInProps) {
                                 </S.CredentialsBlock>
                             </S.CredentialsWrapper>
                         </S.Message>
-                        <Button
-                            type="primary"
-                            onClick={() => authorize({ nextUrl: props.originPathName })}
-                            size="large"
-                        >
+                        <Button type="primary" onClick={authorize} size="large">
                             {t`Log in`}
                         </Button>
                     </>
@@ -145,11 +127,7 @@ export function SignIn(props: SignInProps) {
                             </S.CredentialsWrapper>
                         </S.Message>
                         <S.ButtonsWrapper>
-                            <Button
-                                type="primary"
-                                onClick={() => authorize({ nextUrl: props.originPathName })}
-                                size="large"
-                            >
+                            <Button type="primary" onClick={authorize} size="large">
                                 {t`Log in as demo patient`}
                             </Button>
                             {/*<AppleButton />*/}

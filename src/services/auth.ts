@@ -310,6 +310,7 @@ export async function getSignInUrl(state?: OAuthState): Promise<RemoteDataResult
     }
 
     const verifier = createCodeVerifier();
+    const codeChallenge = await createCodeChallenge(verifier);
     saveCodeVerifier(verifier);
 
     return success(
@@ -319,7 +320,7 @@ export async function getSignInUrl(state?: OAuthState): Promise<RemoteDataResult
                 client_id: clientId,
                 response_type: 'code',
                 redirect_uri: config.authClientRedirectURL,
-                code_challenge: await createCodeChallenge(verifier),
+                code_challenge: codeChallenge,
                 code_challenge_method: 'S256',
             }),
             state,
