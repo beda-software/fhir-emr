@@ -1,12 +1,12 @@
 import { t } from '@lingui/macro';
-import { Button, Segmented, Tooltip } from 'antd';
+import { Button, Segmented, Tooltip, notification } from 'antd';
 import { useState } from 'react';
 
-import config from '@beda.software/emr-config';
+import { isFailure } from '@beda.software/remote-data';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo.svg';
-import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
+import { getSignInUrl, OAuthState } from 'src/services/auth';
 
 import { useAppleAuthentication, useSignOutReason } from './hooks';
 import s from './SignIn.module.scss';
@@ -17,12 +17,16 @@ enum SignInService {
     PatientPortal = 'Patient Portal',
 }
 
-function authorize(state?: OAuthState) {
-    window.location.href = getAuthorizeUrl({
-        authPath: 'auth/authorize',
-        params: new URLSearchParams({ client_id: config.clientId, response_type: 'token' }),
-        state,
-    });
+async function authorize(state?: OAuthState) {
+    const result = await getSignInUrl(state);
+
+    if (isFailure(result)) {
+        notification.error({ message: result.error.message });
+
+        return;
+    }
+
+    window.location.href = result.data;
 }
 
 interface SignInProps {

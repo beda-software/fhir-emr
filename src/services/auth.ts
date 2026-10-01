@@ -3,9 +3,24 @@ import { decodeJwt } from 'jose';
 
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError, Token } from '@beda.software/remote-data';
+import {
+    serviceFetch,
+    isSuccess,
+    RemoteDataResult,
+    failure,
+    success,
+    FetchError,
+    Token,
+} from '@beda.software/remote-data';
 
 import { aidboxService, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
+import {
+    clearCodeVerifier,
+    createCodeChallenge,
+    createCodeVerifier,
+    getCodeVerifier,
+    saveCodeVerifier,
+} from 'src/services/pkce';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -269,6 +284,44 @@ async function getAuthToken(appleToken: string) {
     });
 }
 
+export async function getSignInUrl(state?: OAuthState): Promise<RemoteDataResult<string>> {
+    const clientId = config.clientId;
+
+    if (config.authFlow !== 'code') {
+        return success(
+            getAuthorizeUrl({
+                authPath: 'auth/authorize',
+                params: new URLSearchParams({ client_id: clientId, response_type: 'token' }),
+                state,
+            }),
+        );
+    }
+
+    if (config.authTokenPath === undefined) {
+        return failure<FetchError>({ message: 'authTokenPath is not configured in emr-config package' });
+    }
+    if (config.authClientRedirectURL === undefined) {
+        return failure<FetchError>({ message: 'authClientRedirectURL is not configured in emr-config package' });
+    }
+
+    const verifier = createCodeVerifier();
+    saveCodeVerifier(verifier);
+
+    return success(
+        getAuthorizeUrl({
+            authPath: 'auth/authorize',
+            params: new URLSearchParams({
+                client_id: clientId,
+                response_type: 'code',
+                redirect_uri: config.authClientRedirectURL,
+                code_challenge: await createCodeChallenge(verifier),
+                code_challenge_method: 'S256',
+            }),
+            state,
+        }),
+    );
+}
+
 export async function exchangeAuthorizationCodeForToken(code: string) {
     const tokenPath = config.authTokenPath;
     if (tokenPath === undefined) {
@@ -280,14 +333,31 @@ export async function exchangeAuthorizationCodeForToken(code: string) {
     }
 
     const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
-    const data = {
+    const data: Record<string, string> = {
         grant_type: 'authorization_code',
         code,
         redirect_uri: redirectURL,
         client_id: `${config.clientId}`,
     };
 
-    return await serviceFetch<AuthTokenResponse>(tokenEndpoint, {
+    if (config.authFlow !== 'code') {
+        return await postAuthorizationCode(tokenEndpoint, data);
+    }
+
+    const verifier = getCodeVerifier();
+    if (verifier === undefined) {
+        return failure<FetchError>({ message: 'PKCE code verifier is missing, please sign in again' });
+    }
+
+    try {
+        return await postAuthorizationCode(tokenEndpoint, { ...data, code_verifier: verifier });
+    } finally {
+        clearCodeVerifier();
+    }
+}
+
+function postAuthorizationCode(tokenEndpoint: string, data: Record<string, string>) {
+    return serviceFetch<AuthTokenResponse>(tokenEndpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
