@@ -138,6 +138,7 @@ export interface RefreshSessionDeps {
     saveAccessToken: (accessToken: string) => void;
     clientId: string;
     baseURL: string;
+    tokenPath?: string;
 }
 
 // Bypasses the shared HTTP client so it cannot re-enter the interceptor. Aidbox answers with a new
@@ -150,11 +151,14 @@ export function createRefreshSession(deps: RefreshSessionDeps): () => Promise<st
             return undefined;
         }
 
-        const response = await axios.post<{ access_token: string }>(`${deps.baseURL}/auth/token`, {
-            grant_type: 'refresh_token',
-            client_id: deps.clientId,
-            refresh_token: refreshToken,
-        });
+        const response = await axios.post<{ access_token: string }>(
+            `${deps.baseURL}/${deps.tokenPath ?? 'auth/token'}`,
+            {
+                grant_type: 'refresh_token',
+                client_id: deps.clientId,
+                refresh_token: refreshToken,
+            },
+        );
         const accessToken = response.data.access_token;
         deps.saveAccessToken(accessToken);
 
@@ -171,6 +175,7 @@ export function refreshSession(): Promise<string | undefined> {
         },
         clientId: config.clientId || 'testAuth',
         baseURL: config.baseURL,
+        tokenPath: config.authFlow === 'code' ? config.authTokenPath : undefined,
     })();
 }
 

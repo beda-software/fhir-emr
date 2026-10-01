@@ -15,3 +15,4 @@ const config = {
 - Mount `CodeGrantAuth` on the redirect route yourself; this repo does not.
 - The login `Client` must allow the authorization code grant with PKCE and no client secret. `resources/init-seeds/Client/web-code.yaml` is a working example with short lifetimes.
 - The one-time verifier is kept in `sessionStorage` across the redirect and removed after the exchange, whether it succeeded or failed.
+- Token Refresh works for a code-grant Session; see `docs/session-token-refresh.md`.

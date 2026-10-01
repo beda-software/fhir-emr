@@ -46,6 +46,21 @@ describe('createRefreshSession', () => {
         expect(saveAccessToken).toHaveBeenCalledWith('new');
     });
 
+    it('refreshes against the configured token path when one is given', async () => {
+        const post = vi.spyOn(axios, 'post').mockResolvedValue({ data: { access_token: 'new' } });
+        const refresh = createRefreshSession({
+            getRefreshToken: () => 'refresh',
+            saveAccessToken: vi.fn(),
+            clientId: 'web-code',
+            baseURL: 'https://emr.test',
+            tokenPath: 'custom/token',
+        });
+
+        await refresh();
+
+        expect(post).toHaveBeenCalledWith('https://emr.test/custom/token', expect.anything());
+    });
+
     it('rejects when the server rejects the refresh', async () => {
         vi.spyOn(axios, 'post').mockRejectedValue(new Error('Invalid refresh_token'));
         const { refresh, saveAccessToken } = build('refresh');
