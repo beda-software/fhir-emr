@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { ThemeProvider } from 'src/theme';
 
 import { SignIn } from '../index';
@@ -16,16 +17,15 @@ vi.mock('src/components/BaseLayout/Footer', () => ({ AppFooter: () => null }));
 const FORCED = 'You were signed out because there was no activity for a while.';
 const EXPIRED = 'Your session has expired. Please sign in again.';
 
-async function renderWithReason(
-    reason: 'forced' | 'expired' | undefined,
-    props: { expiredSignOutMessage?: string } = {},
-) {
+async function renderWithReason(reason: 'forced' | 'expired' | undefined, signOutTexts?: SignOutTexts) {
     const { getSignOutReason } = await import('src/services/auth');
     vi.mocked(getSignOutReason).mockReturnValue(reason);
     render(
-        <ThemeProvider>
-            <SignIn {...props} />
-        </ThemeProvider>,
+        <SignOutTextsContext.Provider value={signOutTexts}>
+            <ThemeProvider>
+                <SignIn />
+            </ThemeProvider>
+        </SignOutTextsContext.Provider>,
     );
 }
 
@@ -53,6 +53,20 @@ describe('SignIn sign-out message', () => {
 
         expect(screen.getByText(FORCED)).toBeInTheDocument();
         expect(screen.queryByText('Custom expiry text')).not.toBeInTheDocument();
+    });
+
+    it("shows the consuming app's forced message instead of the default", async () => {
+        await renderWithReason('forced', { forcedSignOutMessage: 'Custom forced text' });
+
+        expect(screen.getByText('Custom forced text')).toBeInTheDocument();
+        expect(screen.queryByText(FORCED)).not.toBeInTheDocument();
+    });
+
+    it('does not apply the forced override to an Expired Sign-Out', async () => {
+        await renderWithReason('expired', { forcedSignOutMessage: 'Custom forced text' });
+
+        expect(screen.getByText(EXPIRED)).toBeInTheDocument();
+        expect(screen.queryByText('Custom forced text')).not.toBeInTheDocument();
     });
 
     it('keeps the Forced Sign-Out message unchanged', async () => {

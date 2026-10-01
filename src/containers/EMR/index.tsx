@@ -13,8 +13,9 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
-import { IdleTimeout, WarningWindowTexts } from 'src/components/IdleTimeout';
+import { IdleTimeout } from 'src/components/IdleTimeout';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
+import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
@@ -33,7 +34,7 @@ interface EMRProps {
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
-    warningWindowTexts?: WarningWindowTexts;
+    signOutTexts?: SignOutTexts;
 }
 
 export function EMR(props: EMRProps) {
@@ -45,7 +46,7 @@ export function EMR(props: EMRProps) {
         menuLayout,
         footer,
         getAuthenticatedClinicalContext,
-        warningWindowTexts,
+        signOutTexts,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -68,7 +69,6 @@ export function EMR(props: EMRProps) {
                     defaultRoute={defaultRoute}
                     extra={authenticatedRoutes}
                     getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}
-                    warningWindowTexts={warningWindowTexts}
                 />
             );
         }
@@ -80,9 +80,11 @@ export function EMR(props: EMRProps) {
         <div data-testid="emr-container">
             <MenuLayout.Provider value={menuLayout}>
                 <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
-                    <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                        {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-                    </RenderRemoteData>
+                    <SignOutTextsContext.Provider value={signOutTexts}>
+                        <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                            {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
+                        </RenderRemoteData>
+                    </SignOutTextsContext.Provider>
                 </FooterLayout.Provider>
             </MenuLayout.Provider>
         </div>
@@ -110,20 +112,14 @@ interface RouteProps {
     defaultRoute: string;
     extra?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
-    warningWindowTexts?: WarningWindowTexts;
 }
 
-function AuthenticatedUserEMR({
-    defaultRoute,
-    extra,
-    getAuthenticatedClinicalContext,
-    warningWindowTexts,
-}: RouteProps) {
+function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
     useSessionRejectionInterceptor();
 
     return (
         <>
-            <IdleTimeout texts={warningWindowTexts} />
+            <IdleTimeout />
             <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
                 <Routes>
                     <Route

@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 import { AnonymousLayout } from 'src/components/BaseLayout';
 import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { SignOutTexts } from 'src/components/SignOutTexts';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { FormList } from 'src/containers/FormList';
@@ -37,7 +38,7 @@ interface AppProps {
     anonymousRoutes?: ReactElement;
     populateUserInfoSharedState?: () => Promise<any>;
     UserWithNoRolesComponent?: () => ReactElement;
-    expiredSignOutMessage?: string;
+    signOutTexts?: SignOutTexts;
 }
 
 export function App(props: AppProps) {
@@ -46,7 +47,7 @@ export function App(props: AppProps) {
         anonymousRoutes,
         populateUserInfoSharedState,
         UserWithNoRolesComponent,
-        expiredSignOutMessage,
+        signOutTexts,
     } = props;
 
     // Define the default authenticated routes
@@ -81,12 +82,7 @@ export function App(props: AppProps) {
     // Define the default anonymous routes
     const defaultAnonymousRoutes = (
         <>
-            <Route
-                path="/signin"
-                element={
-                    <SignIn originPathName={window.location.pathname} expiredSignOutMessage={expiredSignOutMessage} />
-                }
-            />
+            <Route path="/signin" element={<SignIn originPathName={window.location.pathname} />} />
             <Route path="/reset-password/:code" element={<SetPassword />} />
             <Route
                 path="/appointment/book"
@@ -125,6 +121,7 @@ export function App(props: AppProps) {
                 UserWithNoRolesComponent={UserWithNoRolesComponent}
                 menuLayout={defaultMenuLayout}
                 footer={defaultFooterLayout}
+                signOutTexts={signOutTexts}
             />
         </div>
     );

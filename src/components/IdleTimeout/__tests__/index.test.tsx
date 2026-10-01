@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { SignOutTextsContext } from 'src/components/SignOutTexts';
+
 import { IdleTimeout } from '../index';
 
 vi.mock('../hooks', async () => {
@@ -32,14 +34,18 @@ describe('IdleTimeout Warning Window texts', () => {
 
     it('uses given texts in place of the defaults', () => {
         render(
-            <IdleTimeout
-                texts={{
-                    title: 'Custom title',
-                    body: 'Custom body',
-                    stayLabel: 'Custom stay label',
-                    signOutLabel: 'Custom sign-out label',
+            <SignOutTextsContext.Provider
+                value={{
+                    warningWindow: {
+                        title: 'Custom title',
+                        body: 'Custom body',
+                        stayLabel: 'Custom stay label',
+                        signOutLabel: 'Custom sign-out label',
+                    },
                 }}
-            />,
+            >
+                <IdleTimeout />
+            </SignOutTextsContext.Provider>,
         );
 
         expect(screen.getByText('Custom title')).toBeInTheDocument();
@@ -49,7 +55,11 @@ describe('IdleTimeout Warning Window texts', () => {
     });
 
     it('falls back to individual defaults for texts left out', () => {
-        render(<IdleTimeout texts={{ title: 'Custom title' }} />);
+        render(
+            <SignOutTextsContext.Provider value={{ warningWindow: { title: 'Custom title' } }}>
+                <IdleTimeout />
+            </SignOutTextsContext.Provider>,
+        );
 
         expect(screen.getByText('Custom title')).toBeInTheDocument();
         expect(screen.getByText('Stay signed in')).toBeInTheDocument();

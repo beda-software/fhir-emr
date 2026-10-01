@@ -3,6 +3,7 @@ import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
+import { useExpiredSignOutMessage, useForcedSignOutMessage } from 'src/components/SignOutTexts';
 import logo from 'src/images/logo.svg';
 
 import { useAppleAuthentication, useSignIn, useSignOutReason } from './hooks';
@@ -16,13 +17,14 @@ enum SignInService {
 
 interface SignInProps {
     originPathName?: string;
-    expiredSignOutMessage?: string;
 }
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
     const signOutReason = useSignOutReason();
     const authorize = useSignIn(props.originPathName);
+    const forcedSignOutMessage = useForcedSignOutMessage();
+    const expiredSignOutMessage = useExpiredSignOutMessage();
 
     return (
         <S.Container>
@@ -31,14 +33,8 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
-                {signOutReason === 'forced' ? (
-                    <S.Message>{t`You were signed out because there was no activity for a while.`}</S.Message>
-                ) : null}
-                {signOutReason === 'expired' ? (
-                    <S.Message>
-                        {props.expiredSignOutMessage ?? t`Your session has expired. Please sign in again.`}
-                    </S.Message>
-                ) : null}
+                {signOutReason === 'forced' ? <S.Message>{forcedSignOutMessage}</S.Message> : null}
+                {signOutReason === 'expired' ? <S.Message>{expiredSignOutMessage}</S.Message> : null}
                 <Segmented
                     value={signInService}
                     options={[SignInService.EMR, SignInService.PatientPortal]}
