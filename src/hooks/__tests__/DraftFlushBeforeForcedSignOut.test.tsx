@@ -1,19 +1,32 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act } from '@testing-library/react';
-import { Bundle, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
-import { describe, expect, test } from 'vitest';
+import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, expect, test, vi } from 'vitest';
 
 import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { ensure, extractBundleResources, getReference, WithId, withRootAccess } from '@beda.software/fhir-react';
-import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { inputText } from 'src/__tests__/sdc-helpers';
+import { IdleTimeout } from 'src/components/IdleTimeout';
 import { flushActiveDraftBestEffort } from 'src/components/IdleTimeout/utils';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
+import { doLogout } from 'src/services/auth';
 import { axiosInstance, getFHIRResources, updateFHIRResource } from 'src/services/fhir';
-import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
+import { createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
+
+// Only the end of the Session is stubbed (jsdom cannot navigate); the token check stays truthy
+// because setupTests stubs localStorage, which getToken() reads.
+vi.mock('src/services/auth', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('src/services/auth')>()),
+    doLogout: vi.fn().mockResolvedValue(undefined),
+    getToken: () => 'test-token',
+}));
+
+const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
+const RECHECK_INTERVAL_MS = 5000;
 
 const questionnaireId = 'test-idle-flush-q';
 const questionnaireLinkId = 'test-idle-flush-q-text';
@@ -51,9 +64,7 @@ async function setup() {
 }
 
 describe('Draft flush before a Forced Sign-Out', () => {
-    // Calls flushActiveDraftBestEffort() directly rather than waiting out a real Idle
-    // Timeout; the timeout/warning/expiry flow itself is covered by IdleTimeoutController unit tests.
-    test('the currently open server-persisted Questionnaire Draft is saved by a best-effort flush', async () => {
+    test('a Forced Sign-Out caused by the Idle Timeout elapsing persists the open Questionnaire Draft first', async () => {
         const testFieldValue = 'in-progress visit note';
 
         const { patient, practitioner } = await setup();
@@ -62,23 +73,30 @@ describe('Draft flush before a Forced Sign-Out', () => {
             i18n.activate('en');
         });
 
+        // Installed before mount so the Idle Timeout's recheck interval is the faked one; only the
+        // interval and the clock are faked, so HTTP and userEvent keep running on real timers.
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'Date'], now: Date.now() });
+
         render(
-            <ThemeProvider>
-                <I18nProvider i18n={i18n}>
-                    <ClinicalContext
-                        context={[
-                            { name: 'Patient', resource: patient },
-                            { name: 'Author', resource: practitioner },
-                        ]}
-                    >
-                        <PatientDocument
-                            questionnaireId={questionnaireId}
-                            autoSave={false}
-                            qrDraftServiceType="server"
-                        />
-                    </ClinicalContext>
-                </I18nProvider>
-            </ThemeProvider>,
+            <MemoryRouter>
+                <ThemeProvider>
+                    <I18nProvider i18n={i18n}>
+                        <IdleTimeout />
+                        <ClinicalContext
+                            context={[
+                                { name: 'Patient', resource: patient },
+                                { name: 'Author', resource: practitioner },
+                            ]}
+                        >
+                            <PatientDocument
+                                questionnaireId={questionnaireId}
+                                autoSave={false}
+                                qrDraftServiceType="server"
+                            />
+                        </ClinicalContext>
+                    </I18nProvider>
+                </ThemeProvider>
+            </MemoryRouter>,
         );
 
         const textField = await screen.findByTestId(questionnaireLinkId);
@@ -86,41 +104,40 @@ describe('Draft flush before a Forced Sign-Out', () => {
 
         await inputText(questionnaireLinkId, testFieldValue);
 
-        // autoSave is off, so nothing is on the server before the flush.
-        const beforeFlush = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-            questionnaire: questionnaireId,
-            status: 'in-progress',
-        });
-        expect(extractBundleResources(ensure(beforeFlush)).QuestionnaireResponse.length).toBe(0);
+        const draftsOnServer = async () =>
+            extractBundleResources(
+                ensure(
+                    await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                        questionnaire: questionnaireId,
+                        status: 'in-progress',
+                        _sort: ['-createdAt', '_id'],
+                    }),
+                ),
+            ).QuestionnaireResponse;
 
-        await flushActiveDraftBestEffort();
+        expect(await draftsOnServer()).toHaveLength(0);
 
-        await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
-            service: () =>
-                getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
-                    status: 'in-progress',
-                    _sort: ['-createdAt', '_id'],
-                }),
-            resolver: (result) => {
-                const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
-                return qrs.length === 1;
-            },
+        // Drafts the server held at the moment the Session was ended.
+        let draftsAtSignOut: QuestionnaireResponse[] | undefined;
+        vi.mocked(doLogout).mockImplementationOnce(async () => {
+            draftsAtSignOut = await draftsOnServer();
         });
 
-        const afterFlush = ensure(
-            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: questionnaireId,
-                status: 'in-progress',
-                _sort: ['-createdAt', '_id'],
-            }),
-        );
-        const qrs = extractBundleResources(afterFlush).QuestionnaireResponse;
+        try {
+            await act(async () => {
+                vi.advanceTimersByTime(IDLE_TIMEOUT_MS + RECHECK_INTERVAL_MS);
+            });
+        } finally {
+            vi.useRealTimers();
+        }
 
-        expect(qrs.length).toBe(1);
-        expect(qrs[0]!.status).toBe('in-progress');
-        expect(qrs[0]!.subject!.reference).toBe(getReference(patient).reference);
-        expect(qrs[0]!.item?.[0]?.answer?.[0]?.valueString).toBe(testFieldValue);
+        await vi.waitFor(() => expect(doLogout).toHaveBeenCalledWith('forced'), { timeout: 15000 });
+        await vi.waitFor(() => expect(draftsAtSignOut).toBeDefined());
+
+        expect(draftsAtSignOut).toHaveLength(1);
+        expect(draftsAtSignOut![0]!.status).toBe('in-progress');
+        expect(draftsAtSignOut![0]!.subject!.reference).toBe(getReference(patient).reference);
+        expect(draftsAtSignOut![0]!.item?.[0]?.answer?.[0]?.valueString).toBe(testFieldValue);
     }, 60000);
 
     test('the flush is a no-op when no Questionnaire Draft form is currently open', async () => {
