@@ -2,11 +2,7 @@ import { useEffect } from 'react';
 
 import config from '@beda.software/emr-config';
 
-import {
-    LAST_PROVIDER_ACTIVITY_STORAGE_KEY,
-    isIdleTimeoutElapsed,
-    resolveIdleTimeoutConfig,
-} from 'src/components/IdleTimeout/utils';
+import { isIdleTimeoutElapsedNow } from 'src/components/IdleTimeout/utils';
 import { doLogout, getToken, refreshSession } from 'src/services/auth';
 import { axiosInstance } from 'src/services/fhir';
 import { installSessionRejectionInterceptor } from 'src/services/sessionRejection';
@@ -19,15 +15,7 @@ export function useSessionRejectionInterceptor() {
             installSessionRejectionInterceptor(axiosInstance, {
                 baseURL: config.baseURL,
                 getToken,
-                isIdleTimeoutElapsed: () =>
-                    isIdleTimeoutElapsed(
-                        Date.now(),
-                        window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY),
-                        resolveIdleTimeoutConfig({
-                            idleTimeoutMs: config.idleTimeoutMs,
-                            warningWindowMs: config.warningWindowMs,
-                        }),
-                    ),
+                isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
                 endSession: doLogout,
                 refreshSession,
             }),

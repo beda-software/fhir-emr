@@ -1,3 +1,5 @@
+import emrConfig from '@beda.software/emr-config';
+
 import {
     DraftFlushFn,
     IdleTimeoutConfig,
@@ -29,6 +31,11 @@ export function resolveIdleTimeoutConfig(raw: RawIdleTimeoutConfig): IdleTimeout
 
     return { idleTimeoutMs, warningWindowMs: Math.min(DEFAULT_WARNING_WINDOW_MS, idleTimeoutMs / 2) };
 }
+
+export const IDLE_TIMEOUT_CONFIG = resolveIdleTimeoutConfig({
+    idleTimeoutMs: emrConfig.idleTimeoutMs,
+    warningWindowMs: emrConfig.warningWindowMs,
+});
 
 export function deriveIdleTimeoutState(elapsedMs: number, config: IdleTimeoutConfig): IdleTimeoutState {
     if (elapsedMs >= config.idleTimeoutMs) {
@@ -148,4 +155,12 @@ export function isIdleTimeoutElapsed(now: number, persistedLastActivityAt: strin
     const lastActivityAt = parsePersistedTimestamp(persistedLastActivityAt);
 
     return lastActivityAt !== undefined && deriveIdleTimeoutState(now - lastActivityAt, config) === 'expired';
+}
+
+export function isIdleTimeoutElapsedNow(): boolean {
+    return isIdleTimeoutElapsed(
+        Date.now(),
+        window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY),
+        IDLE_TIMEOUT_CONFIG,
+    );
 }

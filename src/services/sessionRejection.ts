@@ -111,8 +111,9 @@ export function installSessionRejectionInterceptor(instance: AxiosInstance, deps
 
         const config = error.config as ReplayableConfig;
         const fresh = await resolveFreshToken(config);
-        if (!fresh || deps.isIdleTimeoutElapsed()) {
-            void deps.endSession(deps.isIdleTimeoutElapsed() ? 'forced' : 'expired');
+        const idleTimeoutElapsed = deps.isIdleTimeoutElapsed();
+        if (!fresh || idleTimeoutElapsed) {
+            void deps.endSession(idleTimeoutElapsed ? 'forced' : 'expired');
 
             return Promise.reject(error);
         }

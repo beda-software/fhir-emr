@@ -2,8 +2,6 @@ import { t } from '@lingui/macro';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import config from '@beda.software/emr-config';
-
 import { doLogout, getToken } from 'src/services/auth';
 
 import {
@@ -14,19 +12,14 @@ import {
     WarningWindowTexts,
 } from './types';
 import {
+    IDLE_TIMEOUT_CONFIG,
     IdleTimeoutController,
     LAST_PROVIDER_ACTIVITY_STORAGE_KEY,
     STATE_BROADCAST_STORAGE_KEY,
     flushActiveDraftBestEffort,
     interpretStorageEvent,
     parsePersistedTimestamp,
-    resolveIdleTimeoutConfig,
 } from './utils';
-
-const IDLE_TIMEOUT_CONFIG = resolveIdleTimeoutConfig({
-    idleTimeoutMs: config.idleTimeoutMs,
-    warningWindowMs: config.warningWindowMs,
-});
 
 const RECHECK_INTERVAL_MS = 5000;
 
