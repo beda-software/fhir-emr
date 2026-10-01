@@ -42,7 +42,7 @@ const defaultBottomMenuLayout: BottomMenuLayoutValue = (onItemClick?: () => void
                     label: t`Log out`,
                     key: 'logout',
                     onClick: () => {
-                        doLogout();
+                        doLogout('manual');
                         onItemClick?.();
                     },
                     icon: <LogoutOutlined />,

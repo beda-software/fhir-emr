@@ -177,7 +177,7 @@ export function useIdleTimeout(): UseIdleTimeoutResult {
         };
     }, [recheck]);
 
-    const signOutNow = useCallback(() => void doLogout(), []);
+    const signOutNow = useCallback(() => void doLogout('manual'), []);
 
     return { state, recordProviderActivity, signOutNow };
 }

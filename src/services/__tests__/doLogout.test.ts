@@ -49,8 +49,18 @@ describe('doLogout', () => {
         expect(window.location.href).toBe('/');
     });
 
+    it('records no sign-out reason for a Manual Sign-Out', async () => {
+        window.localStorage.setItem('token', 't');
+
+        await doLogout('manual');
+
+        expect(window.localStorage.getItem('token')).toBeNull();
+        expect(window.localStorage.getItem('signout_reason')).toBeNull();
+        expect(window.location.href).toBe('/');
+    });
+
     it('ends the Session exactly once when invoked concurrently', async () => {
-        await Promise.all([doLogout('forced'), doLogout('forced'), doLogout()]);
+        await Promise.all([doLogout('forced'), doLogout('forced'), doLogout('manual')]);
 
         expect(aidboxService).toHaveBeenCalledTimes(1);
         expect(resetInstanceToken).toHaveBeenCalledTimes(1);
