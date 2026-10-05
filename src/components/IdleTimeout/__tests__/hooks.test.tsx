@@ -45,6 +45,8 @@ function installFakeLocalStorage() {
 }
 
 describe('useIdleTimeout multi-tab coordination', () => {
+    const originalLocation = window.location;
+
     beforeEach(() => {
         vi.useFakeTimers();
         installFakeLocalStorage();
@@ -52,6 +54,7 @@ describe('useIdleTimeout multi-tab coordination', () => {
     });
 
     afterEach(() => {
+        Object.defineProperty(window, 'location', { configurable: true, value: originalLocation });
         vi.useRealTimers();
     });
 
