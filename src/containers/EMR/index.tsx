@@ -13,6 +13,8 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { IdleTimeout } from 'src/components/IdleTimeout';
+import { isIdleTimeoutElapsedNow } from 'src/components/IdleTimeout/utils';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
@@ -26,6 +28,7 @@ import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedCl
 import { useSessionRejectionInterceptor } from './hooks';
 
 const restoreDeps = {
+    isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
     refreshSession,
     endSession: doLogout,
 };
@@ -122,33 +125,36 @@ function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalCon
     useSessionRejectionInterceptor();
 
     return (
-        <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
-            <Routes>
-                <Route
-                    path={`/print-patient-document/:id/:qrId`}
-                    element={
-                        <RenderBundleResourceContext<Patient>
-                            resourceType="Patient"
-                            getSearchParams={({ id }) => ({ _id: id as string })}
-                        >
-                            {() => <DocumentPrint />}
-                        </RenderBundleResourceContext>
-                    }
-                />
-                <Route path="/appointment/book" element={<PublicAppointment />} />
-                <Route
-                    path="*"
-                    element={
-                        <BaseLayout>
-                            <Routes>
-                                {extra}
-                                <Route path="*" element={<Navigate to={defaultRoute} />} />
-                            </Routes>
-                        </BaseLayout>
-                    }
-                />
-            </Routes>
-        </AuthenticatedClinicalContext>
+        <>
+            <IdleTimeout />
+            <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
+                <Routes>
+                    <Route
+                        path={`/print-patient-document/:id/:qrId`}
+                        element={
+                            <RenderBundleResourceContext<Patient>
+                                resourceType="Patient"
+                                getSearchParams={({ id }) => ({ _id: id as string })}
+                            >
+                                {() => <DocumentPrint />}
+                            </RenderBundleResourceContext>
+                        }
+                    />
+                    <Route path="/appointment/book" element={<PublicAppointment />} />
+                    <Route
+                        path="*"
+                        element={
+                            <BaseLayout>
+                                <Routes>
+                                    {extra}
+                                    <Route path="*" element={<Navigate to={defaultRoute} />} />
+                                </Routes>
+                            </BaseLayout>
+                        }
+                    />
+                </Routes>
+            </AuthenticatedClinicalContext>
+        </>
     );
 }
 

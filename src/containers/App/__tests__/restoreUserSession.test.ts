@@ -35,6 +35,7 @@ describe('restoreUserSession with a rejected access token', () => {
 
     beforeEach(() => {
         deps = {
+            isIdleTimeoutElapsed: vi.fn(() => false),
             refreshSession: vi.fn(async () => 'fresh'),
             endSession: vi.fn(async () => undefined),
         };
@@ -79,6 +80,15 @@ describe('restoreUserSession with a rejected access token', () => {
         await expect(restore(vi.fn(rejectedWith(401)))).resolves.toEqual(success(null));
 
         expect(deps.endSession).not.toHaveBeenCalled();
+    });
+
+    it('forces sign-out without refreshing when the Idle Timeout has elapsed', async () => {
+        deps.isIdleTimeoutElapsed.mockReturnValue(true);
+
+        await expect(restore(vi.fn(rejectedWith(401)))).resolves.toEqual(success(null));
+
+        expect(deps.refreshSession).not.toHaveBeenCalled();
+        expect(deps.endSession).toHaveBeenCalledWith('forced');
     });
 
     it('does not refresh or sign out on a network failure', async () => {

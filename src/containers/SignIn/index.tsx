@@ -3,7 +3,7 @@ import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
-import { useExpiredSignOutMessage } from 'src/components/SignOutTexts';
+import { useExpiredSignOutMessage, useForcedSignOutMessage } from 'src/components/SignOutTexts';
 import logo from 'src/images/logo.svg';
 
 import { useAppleAuthentication, useSignIn, useSignOutReason } from './hooks';
@@ -23,6 +23,7 @@ export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
     const signOutReason = useSignOutReason();
     const authorize = useSignIn(props.originPathName);
+    const forcedSignOutMessage = useForcedSignOutMessage();
     const expiredSignOutMessage = useExpiredSignOutMessage();
 
     return (
@@ -32,6 +33,7 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
+                {signOutReason === 'forced' ? <S.Message>{forcedSignOutMessage}</S.Message> : null}
                 {signOutReason === 'expired' ? <S.Message>{expiredSignOutMessage}</S.Message> : null}
                 <Segmented
                     value={signInService}

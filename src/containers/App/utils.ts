@@ -105,6 +105,7 @@ export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataRes
 }
 
 export interface RestoreUserSessionDeps {
+    isIdleTimeoutElapsed: () => boolean;
     refreshSession: () => Promise<string | undefined>;
     endSession: (reason: SignOutReason) => void | Promise<void>;
 }
@@ -135,6 +136,12 @@ export async function restoreUserSession(
     let { response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState);
 
     if (deps && isFailure(response) && rejected) {
+        if (deps.isIdleTimeoutElapsed()) {
+            await deps.endSession('forced');
+
+            return success(null);
+        }
+
         const freshToken = await deps.refreshSession().catch(() => null);
         if (freshToken === undefined) {
             resetInstanceToken();

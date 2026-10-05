@@ -48,7 +48,7 @@ The password grant is not the only way to get refresh. A Session signed in throu
 
 3. Mount `CodeGrantAuth` on the redirect route yourself. If it is not mounted, the provider returns from Aidbox to a route that never exchanges the code: no token or refresh credential is stored and sign-in does not complete.
 
-In code mode the refresh request goes to `authTokenPath`. The refresh credential is stored at sign-in and replaces nothing on refresh, exactly as in the password grant. An expired refresh credential behaves as described below.
+In code mode the refresh request goes to `authTokenPath`. The refresh credential is stored at sign-in and replaces nothing on refresh, exactly as in the password grant. Expired refresh credential, Idle Timeout precedence and "refresh is not Provider Activity" behave as described below.
 
 ## The implicit flow cannot refresh
 
@@ -64,19 +64,23 @@ Aidbox rejects `refresh_token` and `refresh_token_expiration` under the `auth` b
 
 | Client issues a refresh token | Server rejects the access token (401) | Result                                                                    |
 | ----------------------------- | ------------------------------------- | ------------------------------------------------------------------------- |
-| Yes                           | Refresh succeeds                      | Token Refresh, the request is replayed once, the provider notices nothing |
+| Yes                           | Idle Timeout not elapsed              | Token Refresh, the request is replayed once, the provider notices nothing |
 | Yes                           | Refresh rejected or unreachable       | Expired Sign-Out                                                          |
 | No (default login Client)     | any                                   | Expired Sign-Out, no refresh attempted                                    |
+| any                           | Idle Timeout already elapsed          | Forced Sign-Out; refresh is never attempted                               |
+
+The Idle Timeout is opt-in: it is off unless the app config sets `idleTimeoutMs` to a positive number (omitted or `null` disables it, along with the Warning Window). While it is off, the "Idle Timeout already elapsed" row never applies.
 
 A Client without the attributes above (for example the default `testAuth`) issues no `refresh_token` and no `expires_in`, and its tokens never expire server-side. Upgrading fhir-emr therefore changes nothing for it.
 
 ### Reloading the page
 
-The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out. Without a refresh credential, or on a network failure, nothing changes: the sign-in screen, or the existing network-error handling.
+The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out; if the Idle Timeout has already elapsed, a Forced Sign-Out with no refresh attempt. Without a refresh credential, or on a network failure, nothing changes: the sign-in screen, or the existing network-error handling. The refresh on reload is not Provider Activity.
 
 ## What refresh does not do
 
 -   **Reactive only.** Refresh runs only in response to a 401 on a request (including the Session restore on page load). There is no timer and no proactive renewal.
+-   **Never extends an idle Session.** Refresh does not count as Provider Activity and does not touch the last-activity timestamp. The Idle Timeout stays the only authority for ending an idle Session.
 -   **The access token does not slide; the refresh token does.** Aidbox fixes the access token's expiry at issue time, and using it does not extend it. The refresh token's lifetime is counted from issue or from its last use (checked on Aidbox with a 20 s lifetime: an unused token was rejected after 24 s, a token used every 12 s kept working past 36 s, and was rejected after 22 s idle). A provider who keeps working is renewed each time the access token dies and the refresh window restarts; one who is away longer than `refresh_token_expiration` is signed out.
 -   Only the app's shared HTTP client is covered (not the fhir-react instance, value-set clients or raw `fetch` callers).
 
@@ -114,9 +118,11 @@ Every Session-ending text is overridden from one place: the `signOutTexts` prop 
 ```tsx
 <App
     signOutTexts={{
+        warningWindow: { title: 'Still there?', stayLabel: 'Keep working' },
+        forcedSignOutMessage: 'You were signed out after a period of inactivity.',
         expiredSignOutMessage: 'Your session is no longer valid. Please sign in again.',
     }}
 />
 ```
 
-The message is shown on the sign-in screen after an Expired Sign-Out; the sign-in page itself takes no props for it.
+`warningWindow` takes `title`, `body`, `stayLabel` and `signOutLabel`. The two messages are shown on the sign-in screen after a Forced Sign-Out and an Expired Sign-Out respectively; the sign-in page itself takes no props for them.

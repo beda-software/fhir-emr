@@ -18,13 +18,34 @@ function installFakeLocalStorage() {
     });
 }
 
-describe('expired sign-out reason', () => {
+describe('sign-out reason', () => {
     beforeEach(() => {
         installFakeLocalStorage();
     });
 
-    it('is absent when no Expired Sign-Out happened', () => {
+    it('is absent when no Forced Sign-Out happened', () => {
         expect(getSignOutReason()).toBeUndefined();
+    });
+
+    it('stays readable by every tab redirected by the same Forced Sign-Out', () => {
+        window.localStorage.setItem('signout_reason', 'forced');
+
+        expect(getSignOutReason()).toBe('forced');
+        expect(getSignOutReason()).toBe('forced');
+    });
+
+    it('is cleared by the next sign-in', () => {
+        window.localStorage.setItem('signout_reason', 'forced');
+
+        setToken('new-token');
+
+        expect(getSignOutReason()).toBeUndefined();
+    });
+});
+
+describe('expired sign-out reason', () => {
+    beforeEach(() => {
+        installFakeLocalStorage();
     });
 
     it('stays readable by every tab and is cleared by the next sign-in', () => {

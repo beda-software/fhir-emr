@@ -186,11 +186,11 @@ export function refreshSession(): Promise<string | undefined> {
     return refreshInFlight;
 }
 
-export type SignOutReason = 'manual' | 'expired';
+export type SignOutReason = 'manual' | 'forced' | 'expired';
 
 let endSessionInFlight: Promise<void> | undefined;
 
-// The one end-of-session path for Manual and Expired Sign-Out. Concurrent
+// The one end-of-session path for Manual, Forced and Expired Sign-Out. Concurrent
 // calls share a single run, so the Session is only ever ended once.
 export function doLogout(reason: SignOutReason): Promise<void> {
     endSessionInFlight ??= endSession(reason).finally(() => {
@@ -214,12 +214,12 @@ async function endSession(reason: SignOutReason) {
     window.location.href = '/';
 }
 
-// Not cleared on read: every tab redirected by the same Expired Sign-Out must see it.
+// Not cleared on read: every tab redirected by the same Forced or Expired Sign-Out must see it.
 // setToken() clears it, so the next sign-in never re-shows the message.
 export function getSignOutReason(): Exclude<SignOutReason, 'manual'> | undefined {
     const reason = localStorage.getItem(SIGNOUT_REASON_STORAGE_KEY);
 
-    return reason === 'expired' ? reason : undefined;
+    return reason === 'forced' || reason === 'expired' ? reason : undefined;
 }
 
 export function getUserInfo() {

@@ -47,11 +47,11 @@ describe('doLogout', () => {
     it('revokes the Session, clears storage, records the reason and redirects', async () => {
         window.localStorage.setItem('token', 't');
 
-        await doLogout('expired');
+        await doLogout('forced');
 
         expect(aidboxService).toHaveBeenCalledWith(expect.objectContaining({ method: 'DELETE', url: '/Session' }));
         expect(window.localStorage.getItem('token')).toBeNull();
-        expect(window.localStorage.getItem('signout_reason')).toBe('expired');
+        expect(window.localStorage.getItem('signout_reason')).toBe('forced');
         expect(window.location.href).toBe('/');
     });
 
@@ -66,7 +66,7 @@ describe('doLogout', () => {
     });
 
     it('ends the Session exactly once when invoked concurrently', async () => {
-        await Promise.all([doLogout('expired'), doLogout('expired'), doLogout('manual')]);
+        await Promise.all([doLogout('forced'), doLogout('forced'), doLogout('manual')]);
 
         expect(aidboxService).toHaveBeenCalledTimes(1);
         expect(resetInstanceToken).toHaveBeenCalledTimes(1);
@@ -76,10 +76,10 @@ describe('doLogout', () => {
         vi.mocked(aidboxService).mockRejectedValue(new Error('401'));
         window.localStorage.setItem('token', 't');
 
-        await doLogout('expired');
+        await doLogout('forced');
 
         expect(window.localStorage.getItem('token')).toBeNull();
-        expect(window.localStorage.getItem('signout_reason')).toBe('expired');
+        expect(window.localStorage.getItem('signout_reason')).toBe('forced');
         expect(window.location.href).toBe('/');
     });
 });

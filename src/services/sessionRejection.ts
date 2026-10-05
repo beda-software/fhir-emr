@@ -5,6 +5,7 @@ import type { SignOutReason } from 'src/services/auth';
 export interface SessionRejectionDeps {
     baseURL: string;
     getToken: () => string | undefined;
+    isIdleTimeoutElapsed: () => boolean;
     endSession: (reason: SignOutReason) => void | Promise<void>;
     // Resolves the new access token; undefined (no refresh credential) or a rejection means refresh is impossible.
     refreshSession: () => Promise<string | undefined>;
@@ -102,10 +103,17 @@ export function installSessionRejectionInterceptor(instance: AxiosInstance, deps
         if (!isSessionRejection(error, deps, wasReplaced)) {
             return Promise.reject(error);
         }
+        if (deps.isIdleTimeoutElapsed()) {
+            void deps.endSession('forced');
+
+            return Promise.reject(error);
+        }
+
         const config = error.config as ReplayableConfig;
         const fresh = await resolveFreshToken(config);
-        if (!fresh) {
-            void deps.endSession('expired');
+        const idleTimeoutElapsed = deps.isIdleTimeoutElapsed();
+        if (!fresh || idleTimeoutElapsed) {
+            void deps.endSession(idleTimeoutElapsed ? 'forced' : 'expired');
 
             return Promise.reject(error);
         }
