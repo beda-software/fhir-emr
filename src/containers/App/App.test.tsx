@@ -12,7 +12,7 @@ test('Renders welcome text', async () => {
         antdTheme: antdTheme.token,
     };
 
-    const { getByTestId } = render(
+    const { getByTestId, container } = render(
         <ThemeProvider theme={appTheme}>
             <App />
         </ThemeProvider>,
@@ -22,5 +22,7 @@ test('Renders welcome text', async () => {
 
     await waitFor(() => {
         expect(textElement).toBeInTheDocument();
+        // Let EMR finish restoring the session and mount the router before the test ends
+        expect(container.querySelector('.ant-spin')).not.toBeInTheDocument();
     });
 });
