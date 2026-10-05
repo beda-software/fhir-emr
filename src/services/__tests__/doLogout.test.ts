@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('src/services/fhir', () => ({
     aidboxService: vi.fn(),
@@ -26,6 +26,8 @@ let aidboxService: typeof import('src/services/fhir').aidboxService;
 let resetInstanceToken: typeof import('src/services/fhir').resetInstanceToken;
 
 describe('doLogout', () => {
+    const originalLocation = window.location;
+
     beforeEach(async () => {
         vi.resetModules();
         ({ doLogout } = await import('src/services/auth'));
@@ -36,6 +38,10 @@ describe('doLogout', () => {
             .mockResolvedValue(undefined as never);
         vi.mocked(resetInstanceToken).mockClear();
         Object.defineProperty(window, 'location', { configurable: true, writable: true, value: { href: '/x' } });
+    });
+
+    afterEach(() => {
+        Object.defineProperty(window, 'location', { configurable: true, value: originalLocation });
     });
 
     it('revokes the Session, clears storage, records the reason and redirects', async () => {
