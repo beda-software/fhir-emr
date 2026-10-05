@@ -14,14 +14,21 @@ import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
+import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+import { doLogout, getToken, parseOAuthState, refreshSession, setToken } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
+import { useSessionRejectionInterceptor } from './hooks';
+
+const restoreDeps = {
+    refreshSession,
+    endSession: doLogout,
+};
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -31,6 +38,7 @@ interface EMRProps {
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
+    signOutTexts?: SignOutTexts;
 }
 
 export function EMR(props: EMRProps) {
@@ -42,11 +50,12 @@ export function EMR(props: EMRProps) {
         menuLayout,
         footer,
         getAuthenticatedClinicalContext,
+        signOutTexts,
     } = props;
 
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
+        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, restoreDeps) : success(null);
     });
 
     const renderRoutes = (user: User | null) => {
@@ -75,9 +84,11 @@ export function EMR(props: EMRProps) {
         <div data-testid="emr-container">
             <MenuLayout.Provider value={menuLayout}>
                 <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
-                    <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                        {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-                    </RenderRemoteData>
+                    <SignOutTextsContext.Provider value={signOutTexts}>
+                        <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                            {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
+                        </RenderRemoteData>
+                    </SignOutTextsContext.Provider>
                 </FooterLayout.Provider>
             </MenuLayout.Provider>
         </div>
@@ -108,6 +119,8 @@ interface RouteProps {
 }
 
 function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
+    useSessionRejectionInterceptor();
+
     return (
         <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
             <Routes>

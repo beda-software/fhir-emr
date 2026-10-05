@@ -1,10 +1,26 @@
+import axios from 'axios';
 import { decodeJwt } from 'jose';
 
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError, Token } from '@beda.software/remote-data';
+import {
+    serviceFetch,
+    isSuccess,
+    RemoteDataResult,
+    failure,
+    success,
+    FetchError,
+    Token,
+} from '@beda.software/remote-data';
 
 import { aidboxService, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
+import {
+    clearCodeVerifier,
+    createCodeChallenge,
+    createCodeVerifier,
+    getCodeVerifier,
+    saveCodeVerifier,
+} from 'src/services/pkce';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -46,8 +62,11 @@ export function getToken() {
     return window.localStorage.getItem('token') || undefined;
 }
 
+const SIGNOUT_REASON_STORAGE_KEY = 'signout_reason';
+
 export function setToken(token: string) {
     window.localStorage.setItem('token', token);
+    window.localStorage.removeItem(SIGNOUT_REASON_STORAGE_KEY);
 }
 
 export function removeToken() {
@@ -114,11 +133,93 @@ export function logout() {
     });
 }
 
-export async function doLogout() {
-    await logout();
+export interface RefreshSessionDeps {
+    getRefreshToken: () => string | undefined | null;
+    saveAccessToken: (accessToken: string) => void;
+    clientId: string;
+    baseURL: string;
+    tokenPath?: string;
+}
+
+// Bypasses the shared HTTP client so it cannot re-enter the interceptor. Aidbox answers with a new
+// access token only, so the refresh credential and everything else stored at sign-in stay as they are.
+export function createRefreshSession(deps: RefreshSessionDeps): () => Promise<string | undefined> {
+    return async () => {
+        const refreshToken = deps.getRefreshToken();
+
+        if (!refreshToken) {
+            return undefined;
+        }
+
+        const response = await axios.post<{ access_token: string }>(
+            `${deps.baseURL}/${deps.tokenPath ?? 'auth/token'}`,
+            {
+                grant_type: 'refresh_token',
+                client_id: deps.clientId,
+                refresh_token: refreshToken,
+            },
+        );
+        const accessToken = response.data.access_token;
+        deps.saveAccessToken(accessToken);
+
+        return accessToken;
+    };
+}
+
+let refreshInFlight: Promise<string | undefined> | undefined;
+
+// Concurrent callers (Session restore, interceptor 401s) share one request.
+export function refreshSession(): Promise<string | undefined> {
+    refreshInFlight ??= createRefreshSession({
+        getRefreshToken: () => window.localStorage.getItem('refresh_token'),
+        saveAccessToken: (accessToken) => {
+            setToken(accessToken);
+            setInstanceToken({ access_token: accessToken, token_type: 'Bearer' });
+        },
+        clientId: config.clientId,
+        baseURL: config.baseURL,
+        tokenPath: getAuthFlow().refreshTokenPath(),
+    })().finally(() => {
+        refreshInFlight = undefined;
+    });
+
+    return refreshInFlight;
+}
+
+export type SignOutReason = 'manual' | 'expired';
+
+let endSessionInFlight: Promise<void> | undefined;
+
+// The one end-of-session path for Manual and Expired Sign-Out. Concurrent
+// calls share a single run, so the Session is only ever ended once.
+export function doLogout(reason: SignOutReason): Promise<void> {
+    endSessionInFlight ??= endSession(reason).finally(() => {
+        endSessionInFlight = undefined;
+    });
+
+    return endSessionInFlight;
+}
+
+async function endSession(reason: SignOutReason) {
+    try {
+        await logout();
+    } catch {
+        // A dead token fails DELETE /Session with 401; that must never block sign-out.
+    }
     resetInstanceToken();
     localStorage.clear();
+    if (reason !== 'manual') {
+        localStorage.setItem(SIGNOUT_REASON_STORAGE_KEY, reason);
+    }
     window.location.href = '/';
+}
+
+// Not cleared on read: every tab redirected by the same Expired Sign-Out must see it.
+// setToken() clears it, so the next sign-in never re-shows the message.
+export function getSignOutReason(): Exclude<SignOutReason, 'manual'> | undefined {
+    const reason = localStorage.getItem(SIGNOUT_REASON_STORAGE_KEY);
+
+    return reason === 'expired' ? reason : undefined;
 }
 
 export function getUserInfo() {
@@ -195,6 +296,76 @@ async function getAuthToken(appleToken: string) {
     });
 }
 
+interface AuthFlow {
+    getSignInUrl(state?: OAuthState): Promise<RemoteDataResult<string>>;
+    exchangeCode(tokenEndpoint: string, data: Record<string, string>): Promise<RemoteDataResult<AuthTokenResponse>>;
+    refreshTokenPath(): string | undefined;
+}
+
+const implicitFlow: AuthFlow = {
+    async getSignInUrl(state) {
+        return success(
+            getAuthorizeUrl({
+                authPath: 'auth/authorize',
+                params: new URLSearchParams({ client_id: config.clientId, response_type: 'token' }),
+                state,
+            }),
+        );
+    },
+    exchangeCode: postAuthorizationCode,
+    refreshTokenPath: () => undefined,
+};
+
+const codeFlow: AuthFlow = {
+    async getSignInUrl(state) {
+        if (config.authTokenPath === undefined) {
+            return failure<FetchError>({ message: 'authTokenPath is not configured in emr-config package' });
+        }
+        if (config.authClientRedirectURL === undefined) {
+            return failure<FetchError>({ message: 'authClientRedirectURL is not configured in emr-config package' });
+        }
+
+        const verifier = createCodeVerifier();
+        const codeChallenge = await createCodeChallenge(verifier);
+        saveCodeVerifier(verifier);
+
+        return success(
+            getAuthorizeUrl({
+                authPath: 'auth/authorize',
+                params: new URLSearchParams({
+                    client_id: config.clientId,
+                    response_type: 'code',
+                    redirect_uri: config.authClientRedirectURL,
+                    code_challenge: codeChallenge,
+                    code_challenge_method: 'S256',
+                }),
+                state,
+            }),
+        );
+    },
+    async exchangeCode(tokenEndpoint, data) {
+        const verifier = getCodeVerifier();
+        if (verifier === undefined) {
+            return failure<FetchError>({ message: 'PKCE code verifier is missing, please sign in again' });
+        }
+
+        try {
+            return await postAuthorizationCode(tokenEndpoint, { ...data, code_verifier: verifier });
+        } finally {
+            clearCodeVerifier();
+        }
+    },
+    refreshTokenPath: () => config.authTokenPath,
+};
+
+function getAuthFlow(): AuthFlow {
+    return config.authFlow === 'code' ? codeFlow : implicitFlow;
+}
+
+export function getSignInUrl(state?: OAuthState): Promise<RemoteDataResult<string>> {
+    return getAuthFlow().getSignInUrl(state);
+}
+
 export async function exchangeAuthorizationCodeForToken(code: string) {
     const tokenPath = config.authTokenPath;
     if (tokenPath === undefined) {
@@ -205,15 +376,16 @@ export async function exchangeAuthorizationCodeForToken(code: string) {
         return failure<FetchError>({ message: 'authClientRedirectURL is not configured in emr-config package' });
     }
 
-    const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
-    const data = {
+    return getAuthFlow().exchangeCode(`${config.baseURL}/${tokenPath}`, {
         grant_type: 'authorization_code',
         code,
         redirect_uri: redirectURL,
-        client_id: `${config.clientId}`,
-    };
+        client_id: config.clientId,
+    });
+}
 
-    return await serviceFetch<AuthTokenResponse>(tokenEndpoint, {
+function postAuthorizationCode(tokenEndpoint: string, data: Record<string, string>) {
+    return serviceFetch<AuthTokenResponse>(tokenEndpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

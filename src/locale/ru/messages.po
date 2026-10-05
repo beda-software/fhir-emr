@@ -1,6 +1,12 @@
 # #-#-#-#-#  1.po  #-#-#-#-#
 # #-#-#-#-#  1.po  #-#-#-#-#
 # #-#-#-#-#  1.po  #-#-#-#-#
+# #-#-#-#-#  1.po  #-#-#-#-#
+# #-#-#-#-#  1.po  #-#-#-#-#
+# #-#-#-#-#  1.po  #-#-#-#-#
+# , fuzzy
+# , fuzzy
+# , fuzzy
 # , fuzzy
 # , fuzzy
 # , fuzzy
@@ -11,6 +17,9 @@ msgstr ""
 "#-#-#-#-#  1.po  #-#-#-#-#: \n"
 "#-#-#-#-#  1.po  #-#-#-#-#: \n"
 "#-#-#-#-#  1.po  #-#-#-#-#: \n"
+"#-#-#-#-#  1.po  #-#-#-#-#: \n"
+"#-#-#-#-#  1.po  #-#-#-#-#: \n"
+"#-#-#-#-#  1.po  #-#-#-#-#: \n"
 "POT-Creation-Date: 2026-05-01 12:37+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -63,6 +72,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ru\n"
+"#-#-#-#-#  2.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+"#-#-#-#-#  3.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"#-#-#-#-#  2.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+"#-#-#-#-#  3.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"#-#-#-#-#  2.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+"#-#-#-#-#  3.po  #-#-#-#-#: \n"
+"POT-Creation-Date: 2026-05-01 12:37+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 "#-#-#-#-#  2.po  #-#-#-#-#: \n"
 "POT-Creation-Date: 2026-05-01 12:37+0400\n"
 "MIME-Version: 1.0\n"
@@ -408,6 +483,12 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
+#: src/controls/ImageAnnotation/AnnotationImage.tsx:45
+#: src/controls/ImageAnnotation/index.tsx:51
+#: src/readonly-controls/ImageAnnotation/index.tsx:39
+#~ msgid "Annotation"
+#~ msgstr ""
+
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:105
 msgid "Appointment"
 msgstr ""
@@ -510,6 +591,10 @@ msgstr ""
 msgid "Calories"
 msgstr ""
 
+#: src/containers/SignIn/hooks.ts:49
+msgid "Can not sign in: secure browser cryptography is unavailable. Use HTTPS and try again."
+msgstr "Не удаётся войти: защищённая криптография браузера недоступна. Используйте HTTPS и повторите попытку."
+
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:89
 #: src/containers/InvoiceList/index.tsx:108
@@ -551,6 +636,10 @@ msgstr ""
 #: src/components/SearchBar/SearchBarMobile/index.tsx:52
 msgid "Clear filters"
 msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:121
+#~ msgid "Click on the diagram to place a marker"
+#~ msgstr ""
 
 #: src/controls/UploadFileControl/index.tsx:32
 #~ msgid "Click or drag file to this area to upload"
@@ -1154,11 +1243,11 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:98
+#: src/containers/SignIn/index.tsx:88
 msgid "Log in"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:139
+#: src/containers/SignIn/index.tsx:125
 msgid "Log in as demo patient"
 msgstr ""
 
@@ -1186,10 +1275,6 @@ msgstr ""
 msgid "Magic Search"
 msgstr ""
 
-#: src/components/DashboardCard/creatinine.tsx:96
-#~ msgid "Max"
-#~ msgstr ""
-
 #: src/containers/InvoiceDetails/index.tsx:96
 msgid "Medical Services Invoice"
 msgstr ""
@@ -1215,10 +1300,6 @@ msgstr ""
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:85
 msgid "Mild"
 msgstr ""
-
-#: src/components/DashboardCard/creatinine.tsx:95
-#~ msgid "Min"
-#~ msgstr ""
 
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:68
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:86
@@ -1266,6 +1347,11 @@ msgstr ""
 #: src/utils/questionnaire.ts:54
 msgid "No"
 msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#: src/readonly-controls/ImageAnnotation/index.tsx:48
+#~ msgid "No annotations"
+#~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
@@ -1320,8 +1406,8 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:52
-#: src/containers/SignIn/index.tsx:104
+#: src/containers/SignIn/index.tsx:46
+#: src/containers/SignIn/index.tsx:94
 msgid "On the next page, please, use one of the following credentials"
 msgstr ""
 
@@ -1395,8 +1481,8 @@ msgstr ""
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:83
-#: src/containers/SignIn/index.tsx:123
+#: src/containers/SignIn/index.tsx:77
+#: src/containers/SignIn/index.tsx:113
 msgid "Password"
 msgstr ""
 
@@ -1453,10 +1539,6 @@ msgstr ""
 msgid "PCT"
 msgstr ""
 
-#: src/containers/PatientDetails/HMBDiagnostic/config.tsx:112
-#~ msgid "Period Pain Score"
-#~ msgstr ""
-
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:114
 msgid "Period Pain Severity & Score"
 msgstr ""
@@ -1469,6 +1551,10 @@ msgstr ""
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:42
 msgid "Phone widget"
 msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#~ msgid "Place a marker on the diagram to add an annotation"
+#~ msgstr ""
 
 #: src/containers/App/DefaultUserWithNoRoles.tsx:21
 msgid "Please ask administrator to add a role for your user"
@@ -1565,6 +1651,10 @@ msgstr ""
 
 #: src/controls/Group/GroupCard/index.tsx:85
 #~ msgid "Remove"
+#~ msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:59
+#~ msgid "Remove annotation"
 #~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:54
@@ -1906,11 +1996,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:100
+#: src/containers/App/index.tsx:108
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:99
+#: src/containers/App/index.tsx:107
 msgid "Thank you!"
 msgstr ""
 
@@ -2056,8 +2146,8 @@ msgstr ""
 msgid "User with no roles in the system"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:55
-#: src/containers/SignIn/index.tsx:107
+#: src/containers/SignIn/index.tsx:49
+#: src/containers/SignIn/index.tsx:97
 msgid "Username"
 msgstr ""
 
@@ -2100,7 +2190,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:39
+#: src/containers/SignIn/index.tsx:32
 msgid "Welcome to"
 msgstr ""
 
@@ -2122,3 +2212,7 @@ msgstr ""
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr ""
+
+#: src/components/SignOutTexts/index.tsx:16
+msgid "Your session has expired. Please sign in again."
+msgstr "Ваш сеанс истёк. Пожалуйста, войдите снова."

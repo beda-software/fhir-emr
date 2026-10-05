@@ -5,8 +5,15 @@ import config from '@beda.software/emr-config';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
 import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
+import type { SignOutReason } from 'src/services/auth';
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
-import { getFHIRResource, getFHIRResources, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
+import {
+    axiosInstance,
+    getFHIRResource,
+    getFHIRResources,
+    resetInstanceToken,
+    setInstanceToken,
+} from 'src/services/fhir';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -97,13 +104,52 @@ export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataRes
     return userResponse;
 }
 
+export interface RestoreUserSessionDeps {
+    refreshSession: () => Promise<string | undefined>;
+    endSession: (reason: SignOutReason) => void | Promise<void>;
+}
+
+// The failure result drops the HTTP status, so a 401 is observed on the shared client instead.
+async function populateAndDetectRejection(populate: () => Promise<RemoteDataResult<User>>) {
+    let rejected = false;
+    const id = axiosInstance.interceptors.response.use(undefined, (error) => {
+        rejected ||= error?.response?.status === 401;
+
+        return Promise.reject(error);
+    });
+
+    try {
+        return { response: await populate(), rejected };
+    } finally {
+        axiosInstance.interceptors.response.eject(id);
+    }
+}
+
 export async function restoreUserSession(
     token: string,
     populateUserInfoSharedState = aidboxPopulateUserInfoSharedState,
+    deps?: RestoreUserSessionDeps,
 ): Promise<RemoteDataResult> {
     setInstanceToken({ access_token: token, token_type: 'Bearer' });
 
-    const response = await populateUserInfoSharedState();
+    let { response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState);
+
+    if (deps && isFailure(response) && rejected) {
+        const freshToken = await deps.refreshSession().catch(() => null);
+        if (freshToken === undefined) {
+            resetInstanceToken();
+
+            return success(null);
+        }
+        if (freshToken !== null) {
+            ({ response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState));
+        }
+        if (freshToken === null || (isFailure(response) && rejected)) {
+            await deps.endSession('expired');
+
+            return success(null);
+        }
+    }
 
     if (isSuccess(response)) {
         if (config.jitsiMeetServer) {

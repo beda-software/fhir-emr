@@ -11,6 +11,12 @@ export type LocalesConfig = Record<string, LocaleData>;
 
 declare const config: {
     clientId: string;
+    /**
+     * Sign-in flow. `'implicit'` (default) or `'code'`, the authorization code flow with PKCE.
+     * `'code'` requires `authTokenPath` and `authClientRedirectURL`, and a route that mounts
+     * `CodeGrantAuth` at the redirect URL.
+     */
+    authFlow?: 'implicit' | 'code';
     authTokenPath?: string;
     authClientRedirectURL?: string;
 
