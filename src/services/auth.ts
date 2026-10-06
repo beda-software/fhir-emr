@@ -192,6 +192,17 @@ export interface SignInLocationState {
     signOutReason?: Exclude<SignOutReason, 'manual'>;
 }
 
+export function parseSignInLocationState(state: unknown): SignInLocationState {
+    if (typeof state !== 'object' || state === null) {
+        return {};
+    }
+
+    return {
+        nextUrl: 'nextUrl' in state && typeof state.nextUrl === 'string' ? state.nextUrl : undefined,
+        signOutReason: 'signOutReason' in state && state.signOutReason === 'expired' ? 'expired' : undefined,
+    };
+}
+
 let endSessionInFlight: Promise<void> | undefined;
 
 // The one end-of-session path for Manual and Expired Sign-Out. Concurrent

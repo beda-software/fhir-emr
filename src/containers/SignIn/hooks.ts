@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 import { isFailure } from '@beda.software/remote-data';
 
-import { getSignInUrl, signinWithIdentityToken, type SignInLocationState } from 'src/services/auth';
+import { getSignInUrl, parseSignInLocationState, signinWithIdentityToken } from 'src/services/auth';
 
 declare const AppleID: any;
 
@@ -26,10 +26,10 @@ interface AppleAuthenticationResponse {
     };
 }
 
-export function useSignOutReason() {
+export function useSignInLocationState() {
     const location = useLocation();
 
-    return (location.state as SignInLocationState | null)?.signOutReason;
+    return parseSignInLocationState(location.state);
 }
 
 export function useSignIn(originPathName?: string) {

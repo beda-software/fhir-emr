@@ -1,14 +1,12 @@
 import { t } from '@lingui/macro';
 import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
 import { useExpiredSignOutMessage } from 'src/components/SignOutTexts';
 import logo from 'src/images/logo.svg';
-import type { SignInLocationState } from 'src/services/auth';
 
-import { useAppleAuthentication, useSignIn, useSignOutReason } from './hooks';
+import { useAppleAuthentication, useSignIn, useSignInLocationState } from './hooks';
 import s from './SignIn.module.scss';
 import { S } from './SignIn.styles';
 
@@ -23,9 +21,8 @@ interface SignInProps {
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
-    const signOutReason = useSignOutReason();
-    const location = useLocation();
-    const authorize = useSignIn((location.state as SignInLocationState | null)?.nextUrl ?? props.originPathName);
+    const { signOutReason, nextUrl } = useSignInLocationState();
+    const authorize = useSignIn(nextUrl ?? props.originPathName);
     const expiredSignOutMessage = useExpiredSignOutMessage();
 
     return (
