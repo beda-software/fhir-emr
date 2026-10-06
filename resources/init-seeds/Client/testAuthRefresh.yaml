@@ -1,10 +1,13 @@
 id: testAuthRefresh
 resourceType: Client
+first_party: true
 grant_types:
-  - password
-secret: "123456"
+  - authorization_code
 auth:
-  password:
+  authorization_code:
+    redirect_uri: "http://localhost:3000/auth"
+    pkce: true
+    secret_required: false
+    refresh_token: true
     access_token_expiration: 4
     refresh_token_expiration: 10
-    refresh_token: true

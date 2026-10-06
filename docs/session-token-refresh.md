@@ -19,7 +19,7 @@ auth:
         refresh_token: true
 ```
 
-All three `auth.password` attributes are needed. The repo's `resources/init-seeds/Client/testAuthRefresh.yaml` is a working example with very short lifetimes (4 s / 10 s), meant for tests.
+All three `auth.password` attributes are needed. The repo's `resources/init-seeds/Client/testAuthRefresh.yaml` is a working code-grant (PKCE) example with very short lifetimes (4 s / 10 s), meant for tests.
 
 Pick `refresh_token_expiration` no shorter than the longest gap between two refreshes you want to survive (the longest stretch with no request at all, since the access token must also have expired for a refresh to happen): once it passes without a refresh, refresh is rejected and the provider is signed out. The window restarts at every successful refresh.
 
