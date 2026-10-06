@@ -7,6 +7,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 
 import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
@@ -16,6 +17,7 @@ import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/S
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
+import { CodeGrantAuth } from 'src/containers/App/auth';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
@@ -113,7 +115,7 @@ function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
     return (
         <Routes>
             {extra}
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<AuthCallback />} />
             <Route path="*" element={<RedirectToSignIn />} />
         </Routes>
     );
@@ -171,6 +173,10 @@ function AuthenticatedClinicalContext({
         : getAuthenticatedClinicalContextDefault();
 
     return <ClinicalContext context={context}>{children}</ClinicalContext>;
+}
+
+function AuthCallback() {
+    return config.authFlow === 'code' ? <CodeGrantAuth /> : <Auth />;
 }
 
 export function Auth() {

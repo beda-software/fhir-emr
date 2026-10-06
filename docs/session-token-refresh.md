@@ -29,7 +29,7 @@ Pick `refresh_token_expiration` no shorter than the longest gap between two refr
 ## App setup for the code flow
 
 1. Set `authFlow: 'code'` in the app config, with `clientId` naming the code-grant Client, `authTokenPath: 'auth/token'` and `authClientRedirectURL` (the redirect URI). Both paths are required; see `docs/code-grant-sign-in.md`.
-2. Mount `CodeGrantAuth` on the redirect route yourself. If it is not mounted, the provider returns from Aidbox to a route that never exchanges the code: no token or refresh credential is stored and sign-in does not complete.
+2. Nothing to mount: the built-in callback route exchanges the code when `authFlow` is `'code'`.
 
 The refresh request goes to `authTokenPath`. The refresh credential is stored at sign-in and replaces nothing on refresh. An expired refresh credential behaves as described below.
 
