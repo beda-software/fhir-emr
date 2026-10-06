@@ -61,6 +61,13 @@ describe('doLogout', () => {
         expect(window.location.reload).toHaveBeenCalled();
     });
 
+    it('defaults to a manual sign-out', async () => {
+        await doLogout();
+
+        expect(window.history.replaceState).not.toHaveBeenCalled();
+        expect(window.location.href).toBe('/');
+    });
+
     it('carries no sign-out reason for a Manual Sign-Out', async () => {
         window.localStorage.setItem('token', 't');
 

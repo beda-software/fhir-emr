@@ -43,6 +43,21 @@ describe('refreshSession', () => {
         expect(localStorage.getItem('id_token')).toBe('id');
     });
 
+    it('posts to the configured token path in the default flow', async () => {
+        localStorage.setItem('refresh_token', 'refresh');
+        const original = config.authTokenPath;
+        config.authTokenPath = 'custom/token';
+        const post = vi.spyOn(axios, 'post').mockResolvedValue({ data: { access_token: 'new' } });
+
+        try {
+            await refreshSession();
+        } finally {
+            config.authTokenPath = original;
+        }
+
+        expect(post).toHaveBeenCalledWith(`${config.baseURL}/custom/token`, expect.anything());
+    });
+
     it('rejects when the server rejects the refresh, keeping the stored token', async () => {
         localStorage.setItem('refresh_token', 'refresh');
         vi.spyOn(axios, 'post').mockRejectedValue(new Error('Invalid refresh_token'));

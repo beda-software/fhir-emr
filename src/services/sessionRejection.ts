@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import { isAxiosError, type AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
 
 import type { SignOutReason } from 'src/services/auth';
 
@@ -6,13 +6,19 @@ export interface SessionRejectionDeps {
     baseURL: string;
     getToken: () => string | undefined;
     endSession: (reason: SignOutReason) => void | Promise<void>;
-    // Resolves the new access token; undefined (no refresh credential) or a rejection means refresh is impossible.
+    // Resolves the new access token; undefined means there is no refresh credential. Rejects with the
+    // request error; only a rejected refresh token (see isRefreshTokenRejected) ends the Session.
     refreshSession: () => Promise<string | undefined>;
 }
 
 type WasReplaced = (config: InternalAxiosRequestConfig) => boolean;
 
 type ReplayableConfig = InternalAxiosRequestConfig & { _sessionReplayed?: boolean };
+
+// A network failure, timeout or 5xx says nothing about the refresh token, so it must not end the Session.
+export function isRefreshTokenRejected(error: unknown): boolean {
+    return isAxiosError(error) && (error.response?.status === 400 || error.response?.status === 401);
+}
 
 const SESSION_MANAGEMENT_PATH = /^\/(auth\/token|Session)(\/|\?|$)/;
 
@@ -73,11 +79,18 @@ export function installSessionRejectionInterceptor(instance: AxiosInstance, deps
     const wasReplaced: WasReplaced = (config) =>
         [...replacedTokens].some((t) => getAuthorization(config) === `Bearer ${t}`);
 
-    // Never throws: a failed refresh is the same outcome as no refresh.
+    // Resolves undefined when refresh is impossible (no credential, or the token was rejected);
+    // any other failure is transient and propagates.
     function refreshSharedOnce(): Promise<string | undefined> {
         sharedRefresh ??= (async () => {
             const previousToken = deps.getToken();
-            const fresh = await deps.refreshSession().catch(() => undefined);
+            const fresh = await deps.refreshSession().catch((refreshError: unknown) => {
+                if (isRefreshTokenRejected(refreshError)) {
+                    return undefined;
+                }
+
+                throw refreshError;
+            });
             if (fresh && previousToken) {
                 replacedTokens.add(previousToken);
             }
@@ -103,7 +116,12 @@ export function installSessionRejectionInterceptor(instance: AxiosInstance, deps
             return Promise.reject(error);
         }
         const config = error.config as ReplayableConfig;
-        const fresh = await resolveFreshToken(config);
+        let fresh: string | undefined;
+        try {
+            fresh = await resolveFreshToken(config);
+        } catch {
+            return Promise.reject(error);
+        }
         if (!fresh) {
             void deps.endSession('expired');
 

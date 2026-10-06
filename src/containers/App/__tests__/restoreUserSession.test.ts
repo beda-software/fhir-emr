@@ -54,13 +54,25 @@ describe('restoreUserSession with a rejected access token', () => {
     });
 
     it('ends the Session as expired when the refresh fails', async () => {
-        sessionLifecycle.refreshSession.mockRejectedValue(new Error('rejected'));
+        sessionLifecycle.refreshSession.mockRejectedValue(
+            new AxiosError('rejected', undefined, undefined, undefined, { status: 400 } as never),
+        );
         const populate = vi.fn(rejectedWith(401));
 
         await expect(restore(populate)).resolves.toEqual(success(null));
 
         expect(populate).toHaveBeenCalledTimes(1);
         expect(sessionLifecycle.endSession).toHaveBeenCalledWith('expired');
+    });
+
+    it('keeps the Session when the refresh fails transiently', async () => {
+        sessionLifecycle.refreshSession.mockRejectedValue(new AxiosError('Network Error'));
+        const populate = vi.fn(rejectedWith(401));
+
+        await expect(restore(populate)).resolves.toEqual(success(null));
+
+        expect(populate).toHaveBeenCalledTimes(1);
+        expect(sessionLifecycle.endSession).not.toHaveBeenCalled();
     });
 
     it('ends the Session as expired when the retry is rejected too', async () => {

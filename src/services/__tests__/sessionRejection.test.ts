@@ -47,6 +47,9 @@ function setup({ token = 'live', refreshSession = async () => undefined }: Setup
     };
 }
 
+const refreshFailedWith = (status?: number) =>
+    new AxiosError('refresh failed', undefined, undefined, undefined, status ? ({ status } as never) : undefined);
+
 const bearer = (token: string) => ({ Authorization: `Bearer ${token}` });
 
 describe('session rejection interceptor', () => {
@@ -200,8 +203,23 @@ describe('session rejection interceptor', () => {
         });
 
         it.each([
+            ['a network failure', () => Promise.reject(refreshFailedWith())],
+            ['a server error', () => Promise.reject(refreshFailedWith(503))],
+        ])('keeps the Session and rejects the request on %s during refresh', async (_name, refreshSession) => {
+            t = setup({ refreshSession });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toMatchObject({
+                response: { status: 401 },
+            });
+
+            expect(t.endSession).not.toHaveBeenCalled();
+        });
+
+        it.each([
             ['there is no refresh credential', () => Promise.resolve(undefined)],
-            ['the refresh is rejected', () => Promise.reject(new Error('Invalid refresh_token'))],
+            ['the refresh token is rejected with 400', () => Promise.reject(refreshFailedWith(400))],
+            ['the refresh token is rejected with 401', () => Promise.reject(refreshFailedWith(401))],
         ])('ends as expired when %s', async (_name, refreshSession) => {
             t = setup({ refreshSession });
             t.respond.mockReturnValue({ status: 401 });

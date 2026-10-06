@@ -175,7 +175,7 @@ export function refreshSession(): Promise<string | undefined> {
         },
         clientId: config.clientId,
         baseURL: config.baseURL,
-        tokenPath: getAuthFlow().refreshTokenPath(),
+        tokenPath: config.authTokenPath,
     })().finally(() => {
         refreshInFlight = undefined;
     });
@@ -212,7 +212,7 @@ let endSessionInFlight: Promise<void> | undefined;
 
 // The one end-of-session path for Manual and Expired Sign-Out. Concurrent
 // calls share a single run, so the Session is only ever ended once.
-export function doLogout(reason: SignOutReason): Promise<void> {
+export function doLogout(reason: SignOutReason = 'manual'): Promise<void> {
     endSessionInFlight ??= endSession(reason).finally(() => {
         endSessionInFlight = undefined;
     });
@@ -317,7 +317,6 @@ async function getAuthToken(appleToken: string) {
 interface AuthFlow {
     getSignInUrl(state?: OAuthState): Promise<RemoteDataResult<string>>;
     exchangeCode(tokenEndpoint: string, data: Record<string, string>): Promise<RemoteDataResult<AuthTokenResponse>>;
-    refreshTokenPath(): string | undefined;
 }
 
 const implicitFlow: AuthFlow = {
@@ -331,7 +330,6 @@ const implicitFlow: AuthFlow = {
         );
     },
     exchangeCode: postAuthorizationCode,
-    refreshTokenPath: () => undefined,
 };
 
 const codeFlow: AuthFlow = {
@@ -373,7 +371,6 @@ const codeFlow: AuthFlow = {
             clearCodeVerifier();
         }
     },
-    refreshTokenPath: () => config.authTokenPath,
 };
 
 function getAuthFlow(): AuthFlow {

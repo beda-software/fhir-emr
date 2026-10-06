@@ -14,6 +14,7 @@ import {
     resetInstanceToken,
     setInstanceToken,
 } from 'src/services/fhir';
+import { isRefreshTokenRejected } from 'src/services/sessionRejection';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -135,7 +136,18 @@ export async function restoreUserSession(
     let { response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState);
 
     if (sessionLifecycle && isFailure(response) && rejected) {
-        const freshToken = await sessionLifecycle.refreshSession().catch(() => null);
+        let freshToken: string | undefined | null;
+        try {
+            freshToken = await sessionLifecycle.refreshSession();
+        } catch (refreshError) {
+            if (!isRefreshTokenRejected(refreshError)) {
+                // Transient: keep the stored credentials so the next load can retry.
+                resetInstanceToken();
+
+                return success(null);
+            }
+            freshToken = null;
+        }
         if (freshToken === undefined) {
             resetInstanceToken();
 
