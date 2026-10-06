@@ -21,7 +21,7 @@ interface SignInProps {
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
-    const { signOutReason, nextUrl } = useSignInLocationState();
+    const { signOutReason, signInFailure, nextUrl } = useSignInLocationState();
     const authorize = useSignIn(nextUrl ?? props.originPathName);
     const expiredSignOutMessage = useExpiredSignOutMessage();
 
@@ -32,6 +32,9 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
+                {signInFailure === 'code-exchange' ? (
+                    <S.Message>{t`Sign-in did not complete. Please try again.`}</S.Message>
+                ) : null}
                 {signOutReason === 'expired' ? <S.Message>{expiredSignOutMessage}</S.Message> : null}
                 <Segmented
                     value={signInService}

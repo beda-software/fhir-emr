@@ -187,8 +187,11 @@ export type SignOutReason = 'manual' | 'expired';
 
 const SIGN_IN_PATH = '/signin';
 
+export type SignInFailure = 'code-exchange';
+
 export interface SignInLocationState {
     nextUrl?: string;
+    signInFailure?: SignInFailure;
     signOutReason?: Exclude<SignOutReason, 'manual'>;
 }
 
@@ -199,6 +202,8 @@ export function parseSignInLocationState(state: unknown): SignInLocationState {
 
     return {
         nextUrl: 'nextUrl' in state && typeof state.nextUrl === 'string' ? state.nextUrl : undefined,
+        signInFailure:
+            'signInFailure' in state && state.signInFailure === 'code-exchange' ? 'code-exchange' : undefined,
         signOutReason: 'signOutReason' in state && state.signOutReason === 'expired' ? 'expired' : undefined,
     };
 }

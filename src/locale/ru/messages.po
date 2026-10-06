@@ -2213,6 +2213,10 @@ msgstr ""
 msgid "Your browser does not support the audio element"
 msgstr ""
 
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr "Вход не был завершён. Пожалуйста, попробуйте снова."
+
 #: src/components/SignOutTexts/index.tsx:16
 msgid "Your session has expired. Please sign in again."
 msgstr "Ваш сеанс истёк. Пожалуйста, войдите снова."

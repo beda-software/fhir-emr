@@ -2437,6 +2437,10 @@ msgstr "Actualmente no tienes acceso a los datos del paciente. Para obtenerlos, 
 msgid "Your browser does not support the audio element"
 msgstr "Tu navegador no sorporta reproducción de audio"
 
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr "La autenticación no se completó. Inténtelo de nuevo."
+
 #: src/components/SignOutTexts/index.tsx:16
 msgid "Your session has expired. Please sign in again."
 msgstr "Su sesión ha expirado. Inicie sesión de nuevo."

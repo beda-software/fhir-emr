@@ -19,7 +19,11 @@ interface CodeGrantQueryParams {
     state?: string;
 }
 
-export function CodeGrantAuth() {
+interface CodeGrantAuthProps {
+    renderFailure?: (error: FetchError) => React.ReactElement;
+}
+
+export function CodeGrantAuth(props: CodeGrantAuthProps) {
     const location = useLocation();
 
     const [response] = useService(async () => {
@@ -47,7 +51,11 @@ export function CodeGrantAuth() {
     });
 
     return (
-        <RenderRemoteData remoteData={response} renderLoading={() => <Spinner />}>
+        <RenderRemoteData
+            remoteData={response}
+            renderLoading={() => <Spinner />}
+            renderFailure={props.renderFailure ?? (() => <React.Fragment />)}
+        >
             {() => <React.Fragment />}
         </RenderRemoteData>
     );

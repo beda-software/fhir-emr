@@ -1,10 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Route } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 
 import config from '@beda.software/emr-config';
 
-import { formatOAuthState, getToken } from 'src/services/auth';
+import { SignIn } from 'src/containers/SignIn';
+import { formatOAuthState, getToken, parseOAuthState } from 'src/services/auth';
 import { saveCodeVerifier } from 'src/services/pkce';
 import { ThemeProvider } from 'src/theme';
 
@@ -135,5 +137,60 @@ describe('EMR auth callback route', () => {
 
         expect(await screen.findByText('custom callback')).toBeInTheDocument();
         expect(redirects).toEqual([]);
+    });
+
+    describe('when the code exchange fails', () => {
+        const signInRoute = <Route path="/signin" element={<SignIn />} />;
+        const failureMessage = 'Sign-in did not complete. Please try again.';
+
+        let consoleError: MockInstance;
+
+        beforeEach(() => {
+            consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        });
+
+        afterEach(() => {
+            consoleError.mockRestore();
+        });
+
+        it('returns to the sign-in screen with a generic message, hiding the provider error', async () => {
+            useCodeFlow();
+            saveCodeVerifier('verifier');
+            fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+                new Response(JSON.stringify({ error_description: 'secret provider detail' }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }),
+            );
+
+            renderEMRAt(`/auth?code=abc&state=${nextUrlState}`, signInRoute);
+
+            expect(await screen.findByText(failureMessage)).toBeInTheDocument();
+            expect(window.location.pathname).toBe('/signin');
+            expect(screen.queryByText(/secret provider detail/)).not.toBeInTheDocument();
+            expect(consoleError).toHaveBeenCalled();
+            expect(getToken()).toBeUndefined();
+        });
+
+        it('shows the same message when the PKCE verifier is missing', async () => {
+            useCodeFlow();
+
+            renderEMRAt(`/auth?code=abc&state=${nextUrlState}`, signInRoute);
+
+            expect(await screen.findByText(failureMessage)).toBeInTheDocument();
+            expect(window.location.pathname).toBe('/signin');
+        });
+
+        it('sends the provider back to the requested page on retry', async () => {
+            useCodeFlow();
+
+            renderEMRAt(`/auth?code=abc&state=${nextUrlState}`, signInRoute);
+            await screen.findByText(failureMessage);
+            await userEvent.click(screen.getByRole('button', { name: 'Log in' }));
+
+            await waitFor(() => expect(redirects).toHaveLength(1));
+            const state = new URL(redirects[0]!).searchParams.get('state');
+            expect(parseOAuthState(state ?? undefined).nextUrl).toBe('/patients');
+        });
     });
 });

@@ -2103,6 +2103,10 @@ msgstr "Sie haben derzeit keinen Zugriff auf die Patientendaten. Um Zugriff zu e
 msgid "Your browser does not support the audio element"
 msgstr "Ihr Browser unterstützt das Audio-Element nicht"
 
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr "Die Anmeldung wurde nicht abgeschlossen. Bitte versuchen Sie es erneut."
+
 #: src/components/SignOutTexts/index.tsx:16
 msgid "Your session has expired. Please sign in again."
 msgstr "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
