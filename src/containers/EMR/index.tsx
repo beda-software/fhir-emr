@@ -20,7 +20,14 @@ import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRole
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import { doLogout, getToken, parseOAuthState, refreshSession, setToken } from 'src/services/auth';
+import {
+    doLogout,
+    getToken,
+    parseOAuthState,
+    refreshSession,
+    setToken,
+    type SignInLocationState,
+} from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
 import { useSessionRejectionInterceptor } from './hooks';
@@ -95,19 +102,19 @@ export function EMR(props: EMRProps) {
     );
 }
 
+function RedirectToSignIn() {
+    const location = useLocation();
+    const state: SignInLocationState = { nextUrl: `${location.pathname}${location.search}${location.hash}` };
+
+    return <Navigate to="/signin" replace={true} state={state} />;
+}
+
 function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
     return (
         <Routes>
             {extra}
             <Route path="/auth" element={<Auth />} />
-            <Route
-                path="*"
-                element={
-                    <>
-                        <Navigate to="/signin" replace={true} />
-                    </>
-                }
-            />
+            <Route path="*" element={<RedirectToSignIn />} />
         </Routes>
     );
 }

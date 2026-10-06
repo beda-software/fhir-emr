@@ -188,6 +188,7 @@ export type SignOutReason = 'manual' | 'expired';
 const SIGN_IN_PATH = '/signin';
 
 export interface SignInLocationState {
+    nextUrl?: string;
     signOutReason?: Exclude<SignOutReason, 'manual'>;
 }
 
