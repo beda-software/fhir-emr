@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { User } from '@beda.software/aidbox-types';
 import { failure, success } from '@beda.software/remote-data';
 
-import { restoreUserSession, RestoreUserSessionDeps } from 'src/containers/App/utils';
+import { restoreUserSession, SessionLifecycle } from 'src/containers/App/utils';
 import { axiosInstance } from 'src/services/fhir';
 
 function rejectedWith(status: number | undefined) {
@@ -31,16 +31,16 @@ function rejectedWith(status: number | undefined) {
 const user = () => Promise.resolve(success({} as User));
 
 describe('restoreUserSession with a rejected access token', () => {
-    let deps: { [K in keyof RestoreUserSessionDeps]: ReturnType<typeof vi.fn> };
+    let sessionLifecycle: { [K in keyof SessionLifecycle]: ReturnType<typeof vi.fn> };
 
     beforeEach(() => {
-        deps = {
+        sessionLifecycle = {
             refreshSession: vi.fn(async () => 'fresh'),
             endSession: vi.fn(async () => undefined),
         };
     });
 
-    const restore = (populate: () => Promise<any>) => restoreUserSession('stale', populate, deps as never);
+    const restore = (populate: () => Promise<any>) => restoreUserSession('stale', populate, sessionLifecycle as never);
 
     it('refreshes once and retries the restore once', async () => {
         const populate = vi.fn().mockImplementationOnce(rejectedWith(401)).mockImplementationOnce(user);
@@ -48,19 +48,19 @@ describe('restoreUserSession with a rejected access token', () => {
         const result = await restore(populate);
 
         expect(result).toEqual(success({}));
-        expect(deps.refreshSession).toHaveBeenCalledTimes(1);
+        expect(sessionLifecycle.refreshSession).toHaveBeenCalledTimes(1);
         expect(populate).toHaveBeenCalledTimes(2);
-        expect(deps.endSession).not.toHaveBeenCalled();
+        expect(sessionLifecycle.endSession).not.toHaveBeenCalled();
     });
 
     it('ends the Session as expired when the refresh fails', async () => {
-        deps.refreshSession.mockRejectedValue(new Error('rejected'));
+        sessionLifecycle.refreshSession.mockRejectedValue(new Error('rejected'));
         const populate = vi.fn(rejectedWith(401));
 
         await expect(restore(populate)).resolves.toEqual(success(null));
 
         expect(populate).toHaveBeenCalledTimes(1);
-        expect(deps.endSession).toHaveBeenCalledWith('expired');
+        expect(sessionLifecycle.endSession).toHaveBeenCalledWith('expired');
     });
 
     it('ends the Session as expired when the retry is rejected too', async () => {
@@ -68,31 +68,31 @@ describe('restoreUserSession with a rejected access token', () => {
 
         await expect(restore(populate)).resolves.toEqual(success(null));
 
-        expect(deps.refreshSession).toHaveBeenCalledTimes(1);
+        expect(sessionLifecycle.refreshSession).toHaveBeenCalledTimes(1);
         expect(populate).toHaveBeenCalledTimes(2);
-        expect(deps.endSession).toHaveBeenCalledWith('expired');
+        expect(sessionLifecycle.endSession).toHaveBeenCalledWith('expired');
     });
 
     it('behaves as before without a refresh credential', async () => {
-        deps.refreshSession.mockResolvedValue(undefined);
+        sessionLifecycle.refreshSession.mockResolvedValue(undefined);
 
         await expect(restore(vi.fn(rejectedWith(401)))).resolves.toEqual(success(null));
 
-        expect(deps.endSession).not.toHaveBeenCalled();
+        expect(sessionLifecycle.endSession).not.toHaveBeenCalled();
     });
 
     it('does not refresh or sign out on a network failure', async () => {
         const result = await restore(vi.fn(rejectedWith(undefined)));
 
         expect(result).toMatchObject({ status: 'Failure' });
-        expect(deps.refreshSession).not.toHaveBeenCalled();
-        expect(deps.endSession).not.toHaveBeenCalled();
+        expect(sessionLifecycle.refreshSession).not.toHaveBeenCalled();
+        expect(sessionLifecycle.endSession).not.toHaveBeenCalled();
     });
 
     it('does not refresh on a non-401 failure', async () => {
         await restore(vi.fn(rejectedWith(500)));
 
-        expect(deps.refreshSession).not.toHaveBeenCalled();
-        expect(deps.endSession).not.toHaveBeenCalled();
+        expect(sessionLifecycle.refreshSession).not.toHaveBeenCalled();
+        expect(sessionLifecycle.endSession).not.toHaveBeenCalled();
     });
 });

@@ -32,7 +32,7 @@ import {
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
 import { useSessionRejectionInterceptor } from './hooks';
 
-const restoreDeps = {
+const sessionLifecycle = {
     refreshSession,
     endSession: doLogout,
 };
@@ -62,7 +62,7 @@ export function EMR(props: EMRProps) {
 
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, restoreDeps) : success(null);
+        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, sessionLifecycle) : success(null);
     });
 
     const renderRoutes = (user: User | null) => {

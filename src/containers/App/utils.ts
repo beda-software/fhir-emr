@@ -104,7 +104,7 @@ export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataRes
     return userResponse;
 }
 
-export interface RestoreUserSessionDeps {
+export interface SessionLifecycle {
     refreshSession: () => Promise<string | undefined>;
     endSession: (reason: SignOutReason) => void | Promise<void>;
 }
@@ -128,14 +128,14 @@ async function populateAndDetectRejection(populate: () => Promise<RemoteDataResu
 export async function restoreUserSession(
     token: string,
     populateUserInfoSharedState = aidboxPopulateUserInfoSharedState,
-    deps?: RestoreUserSessionDeps,
+    sessionLifecycle?: SessionLifecycle,
 ): Promise<RemoteDataResult> {
     setInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     let { response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState);
 
-    if (deps && isFailure(response) && rejected) {
-        const freshToken = await deps.refreshSession().catch(() => null);
+    if (sessionLifecycle && isFailure(response) && rejected) {
+        const freshToken = await sessionLifecycle.refreshSession().catch(() => null);
         if (freshToken === undefined) {
             resetInstanceToken();
 
@@ -145,7 +145,7 @@ export async function restoreUserSession(
             ({ response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState));
         }
         if (freshToken === null || (isFailure(response) && rejected)) {
-            await deps.endSession('expired');
+            await sessionLifecycle.endSession('expired');
 
             return success(null);
         }
