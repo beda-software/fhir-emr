@@ -1,10 +1,11 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { isFailure } from '@beda.software/remote-data';
 
-import { getSignInUrl, getSignOutReason, signinWithIdentityToken } from 'src/services/auth';
+import { getSignInUrl, signinWithIdentityToken, type SignInLocationState } from 'src/services/auth';
 
 declare const AppleID: any;
 
@@ -26,9 +27,9 @@ interface AppleAuthenticationResponse {
 }
 
 export function useSignOutReason() {
-    const [reason] = useState(getSignOutReason);
+    const location = useLocation();
 
-    return reason;
+    return (location.state as SignInLocationState | null)?.signOutReason;
 }
 
 export function useSignIn(originPathName?: string) {
