@@ -1010,21 +1010,15 @@ msgstr ""
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:16
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:29
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:53
-#: components/__tests__/questionnaire/custom-validation.test.ts:19
-#: components/__tests__/questionnaire/custom-validation.test.ts:32
-#: components/__tests__/questionnaire/custom-validation.test.ts:56
 #~ msgid "Has at least one lower case letter"
 #~ msgstr ""
 
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:75
-#: components/__tests__/questionnaire/custom-validation.test.ts:78
 #~ msgid "Has at least one number"
 #~ msgstr ""
 
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:40
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:64
-#: components/__tests__/questionnaire/custom-validation.test.ts:43
-#: components/__tests__/questionnaire/custom-validation.test.ts:67
 #~ msgid "Has at least one uppercase letter"
 #~ msgstr ""
 
@@ -1161,11 +1155,11 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:88
+#: src/containers/SignIn/index.tsx:91
 msgid "Log in"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:125
+#: src/containers/SignIn/index.tsx:128
 msgid "Log in as demo patient"
 msgstr ""
 
@@ -1229,7 +1223,6 @@ msgid "Monday"
 msgstr ""
 
 #: src/utils/questionnaire.ts:179
-#: components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm/utils.tsx:118
 #~ msgid "Must be a valid time (HH:mm:ss)"
 #~ msgstr ""
 
@@ -1324,8 +1317,8 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:46
-#: src/containers/SignIn/index.tsx:94
+#: src/containers/SignIn/index.tsx:49
+#: src/containers/SignIn/index.tsx:97
 msgid "On the next page, please, use one of the following credentials"
 msgstr ""
 
@@ -1399,8 +1392,8 @@ msgstr ""
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:77
-#: src/containers/SignIn/index.tsx:113
+#: src/containers/SignIn/index.tsx:80
+#: src/containers/SignIn/index.tsx:116
 msgid "Password"
 msgstr ""
 
@@ -1754,6 +1747,10 @@ msgstr ""
 msgid "Show results"
 msgstr ""
 
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
 msgid "Slider"
 msgstr ""
@@ -1906,11 +1903,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:108
+#: src/containers/App/index.tsx:100
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:107
+#: src/containers/App/index.tsx:99
 msgid "Thank you!"
 msgstr ""
 
@@ -1957,7 +1954,6 @@ msgid "Thursday"
 msgstr ""
 
 #: src/utils/questionnaire.ts:179
-#: components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm/utils.tsx:118
 #~ msgid "time"
 #~ msgstr ""
 
@@ -2056,8 +2052,8 @@ msgstr ""
 msgid "User with no roles in the system"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:49
-#: src/containers/SignIn/index.tsx:97
+#: src/containers/SignIn/index.tsx:52
+#: src/containers/SignIn/index.tsx:100
 msgid "Username"
 msgstr ""
 
@@ -2121,10 +2117,6 @@ msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
-msgstr ""
-
-#: src/containers/SignIn/index.tsx:36
-msgid "Sign-in did not complete. Please try again."
 msgstr ""
 
 #: src/components/SignOutTexts/hooks.ts:11

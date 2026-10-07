@@ -1220,11 +1220,11 @@ msgstr "Escuchar el audio"
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: src/containers/SignIn/index.tsx:88
+#: src/containers/SignIn/index.tsx:91
 msgid "Log in"
 msgstr "Iniciar sesión"
 
-#: src/containers/SignIn/index.tsx:125
+#: src/containers/SignIn/index.tsx:128
 msgid "Log in as demo patient"
 msgstr "Iniciar sesión como paciente demo"
 
@@ -1411,8 +1411,8 @@ msgstr "Resultados"
 msgid "On Hold"
 msgstr "Guardado"
 
-#: src/containers/SignIn/index.tsx:46
-#: src/containers/SignIn/index.tsx:94
+#: src/containers/SignIn/index.tsx:49
+#: src/containers/SignIn/index.tsx:97
 msgid "On the next page, please, use one of the following credentials"
 msgstr "En la siguiente página, por favor, utilice una de las siguientes credenciales"
 
@@ -1486,8 +1486,8 @@ msgstr ""
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:77
-#: src/containers/SignIn/index.tsx:113
+#: src/containers/SignIn/index.tsx:80
+#: src/containers/SignIn/index.tsx:116
 msgid "Password"
 msgstr "Contraseña"
 
@@ -1841,7 +1841,6 @@ msgstr "Selecciona hora"
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:26
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:56
 #: src/controls/Choice/index.tsx:NaN
-#: src/controls/Choice/index.tsx:25
 #~ msgid "Select..."
 #~ msgstr "Seleccionar..."
 
@@ -1880,6 +1879,10 @@ msgstr "Compartir enlace"
 #: src/components/SearchBar/SearchBarMobile/index.tsx:49
 msgid "Show results"
 msgstr "Mostrar resultados"
+
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr "La autenticación no se completó. Inténtelo de nuevo."
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
 msgid "Slider"
@@ -2044,11 +2047,11 @@ msgstr "Texto (por defecto)"
 msgid "Text with macro"
 msgstr "Texto con macro"
 
-#: src/containers/App/index.tsx:108
+#: src/containers/App/index.tsx:100
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Gracias por completar el cuestionario. Ahora puedes cerrar esta página."
 
-#: src/containers/App/index.tsx:107
+#: src/containers/App/index.tsx:99
 msgid "Thank you!"
 msgstr "¡Gracias!"
 
@@ -2199,8 +2202,8 @@ msgstr "URL:"
 msgid "User with no roles in the system"
 msgstr "Usuario sin rol en el sistema"
 
-#: src/containers/SignIn/index.tsx:49
-#: src/containers/SignIn/index.tsx:97
+#: src/containers/SignIn/index.tsx:52
+#: src/containers/SignIn/index.tsx:100
 msgid "Username"
 msgstr "Nombre de usuario"
 
@@ -2270,10 +2273,6 @@ msgstr "Actualmente no tienes acceso a los datos del paciente. Para obtenerlos, 
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr "Tu navegador no sorporta reproducción de audio"
-
-#: src/containers/SignIn/index.tsx:36
-msgid "Sign-in did not complete. Please try again."
-msgstr "La autenticación no se completó. Inténtelo de nuevo."
 
 #: src/components/SignOutTexts/hooks.ts:11
 msgid "Your session has expired. Please sign in again."

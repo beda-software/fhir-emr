@@ -1141,11 +1141,11 @@ msgstr "Audio anhören"
 msgid "Loading..."
 msgstr "Wird geladen..."
 
-#: src/containers/SignIn/index.tsx:88
+#: src/containers/SignIn/index.tsx:91
 msgid "Log in"
 msgstr "Anmelden"
 
-#: src/containers/SignIn/index.tsx:125
+#: src/containers/SignIn/index.tsx:128
 msgid "Log in as demo patient"
 msgstr "Als Demo-Patient anmelden"
 
@@ -1304,8 +1304,8 @@ msgstr "Beobachtungen"
 msgid "On Hold"
 msgstr "Zurückgestellt"
 
-#: src/containers/SignIn/index.tsx:46
-#: src/containers/SignIn/index.tsx:94
+#: src/containers/SignIn/index.tsx:49
+#: src/containers/SignIn/index.tsx:97
 msgid "On the next page, please, use one of the following credentials"
 msgstr "Bitte verwenden Sie auf der nächsten Seite eine der folgenden Anmeldedaten"
 
@@ -1379,8 +1379,8 @@ msgstr "Schmerzschwere"
 msgid "Passed assessment"
 msgstr "Bewertung bestanden"
 
-#: src/containers/SignIn/index.tsx:77
-#: src/containers/SignIn/index.tsx:113
+#: src/containers/SignIn/index.tsx:80
+#: src/containers/SignIn/index.tsx:116
 msgid "Password"
 msgstr "Passwort"
 
@@ -1734,6 +1734,10 @@ msgstr "Link teilen"
 msgid "Show results"
 msgstr "Ergebnisse anzeigen"
 
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr "Die Anmeldung wurde nicht abgeschlossen. Bitte versuchen Sie es erneut."
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
 msgid "Slider"
 msgstr "Schieberegler"
@@ -1886,11 +1890,11 @@ msgstr "Text (Standard)"
 msgid "Text with macro"
 msgstr "Text mit Makro"
 
-#: src/containers/App/index.tsx:108
+#: src/containers/App/index.tsx:100
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Vielen Dank für das Ausfüllen des Fragebogens. Sie können diese Seite jetzt schließen."
 
-#: src/containers/App/index.tsx:107
+#: src/containers/App/index.tsx:99
 msgid "Thank you!"
 msgstr "Vielen Dank!"
 
@@ -2036,8 +2040,8 @@ msgstr "URL:"
 msgid "User with no roles in the system"
 msgstr "Benutzer ohne Rollen im System"
 
-#: src/containers/SignIn/index.tsx:49
-#: src/containers/SignIn/index.tsx:97
+#: src/containers/SignIn/index.tsx:52
+#: src/containers/SignIn/index.tsx:100
 msgid "Username"
 msgstr "Benutzername"
 
@@ -2102,10 +2106,6 @@ msgstr "Sie haben derzeit keinen Zugriff auf die Patientendaten. Um Zugriff zu e
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr "Ihr Browser unterstützt das Audio-Element nicht"
-
-#: src/containers/SignIn/index.tsx:36
-msgid "Sign-in did not complete. Please try again."
-msgstr "Die Anmeldung wurde nicht abgeschlossen. Bitte versuchen Sie es erneut."
 
 #: src/components/SignOutTexts/hooks.ts:11
 msgid "Your session has expired. Please sign in again."
