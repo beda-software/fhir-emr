@@ -132,6 +132,7 @@ describe('EMR session restore', () => {
         expect(signInStateAtReload).toEqual({ path: '/signin', state: { signOutReason: 'expired' } });
         expect(getToken()).toBeUndefined();
         expect(window.localStorage.getItem('refresh_token')).toBeNull();
+        expect(refreshPost).toHaveBeenCalledTimes(1);
         expect(requests).toContainEqual(expect.objectContaining({ method: 'delete', path: '/Session' }));
         expect(screen.queryByText('authenticated app')).not.toBeInTheDocument();
     });

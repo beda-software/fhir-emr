@@ -21,22 +21,10 @@ import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRole
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import {
-    doLogout,
-    getToken,
-    parseOAuthState,
-    refreshSession,
-    setToken,
-    type SignInLocationState,
-} from 'src/services/auth';
+import { getToken, parseOAuthState, setToken, type SignInLocationState } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
 import { useSessionRejectionInterceptor } from './hooks';
-
-const sessionLifecycle = {
-    refreshSession,
-    endSession: doLogout,
-};
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -65,7 +53,7 @@ export function EMR(props: EMRProps) {
 
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, sessionLifecycle) : success(null);
+        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
     });
 
     const renderRoutes = (user: User | null) => {

@@ -5,16 +5,8 @@ import config from '@beda.software/emr-config';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
 import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
-import type { SignOutReason } from 'src/services/auth';
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
-import {
-    axiosInstance,
-    getFHIRResource,
-    getFHIRResources,
-    resetInstanceToken,
-    setInstanceToken,
-} from 'src/services/fhir';
-import { isRefreshTokenRejected } from 'src/services/sessionRejection';
+import { getFHIRResource, getFHIRResources, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -105,63 +97,13 @@ export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataRes
     return userResponse;
 }
 
-export interface SessionLifecycle {
-    refreshSession: () => Promise<string | undefined>;
-    endSession: (reason: SignOutReason) => void | Promise<void>;
-}
-
-// The failure result drops the HTTP status, so a 401 is observed on the shared client instead.
-async function populateAndDetectRejection(populate: () => Promise<RemoteDataResult<User>>) {
-    let rejected = false;
-    const id = axiosInstance.interceptors.response.use(undefined, (error) => {
-        rejected ||= error?.response?.status === 401;
-
-        return Promise.reject(error);
-    });
-
-    try {
-        return { response: await populate(), rejected };
-    } finally {
-        axiosInstance.interceptors.response.eject(id);
-    }
-}
-
 export async function restoreUserSession(
     token: string,
     populateUserInfoSharedState = aidboxPopulateUserInfoSharedState,
-    sessionLifecycle?: SessionLifecycle,
 ): Promise<RemoteDataResult> {
     setInstanceToken({ access_token: token, token_type: 'Bearer' });
 
-    let { response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState);
-
-    if (sessionLifecycle && isFailure(response) && rejected) {
-        let freshToken: string | undefined | null;
-        try {
-            freshToken = await sessionLifecycle.refreshSession();
-        } catch (refreshError) {
-            if (!isRefreshTokenRejected(refreshError)) {
-                // Transient: keep the stored credentials so the next load can retry.
-                resetInstanceToken();
-
-                return success(null);
-            }
-            freshToken = null;
-        }
-        if (freshToken === undefined) {
-            resetInstanceToken();
-
-            return success(null);
-        }
-        if (freshToken !== null) {
-            ({ response, rejected } = await populateAndDetectRejection(populateUserInfoSharedState));
-        }
-        if (freshToken === null || (isFailure(response) && rejected)) {
-            await sessionLifecycle.endSession('expired');
-
-            return success(null);
-        }
-    }
+    const response = await populateUserInfoSharedState();
 
     if (isSuccess(response)) {
         if (config.jitsiMeetServer) {
