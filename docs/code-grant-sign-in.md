@@ -13,6 +13,6 @@ const config = {
 
 - `authTokenPath` and `authClientRedirectURL` are required in code mode. If either is missing, the sign-in page shows an error and does not redirect.
 - The built-in callback route follows `authFlow`, so there is nothing to mount. A callback route you declare in `anonymousRoutes` takes precedence.
-- The login `Client` must allow the authorization code grant with PKCE and no client secret. `resources/init-seeds/Client/web-code.yaml` is a working example with short lifetimes.
+- The login `Client` must allow the authorization code grant with PKCE and no client secret. `resources/demo-seeds/Client/web-code.yaml` is a working example with short lifetimes.
 - The one-time verifier is kept in `sessionStorage` across the redirect and removed after the exchange, whether it succeeded or failed.
 - Token Refresh works for a code-grant Session; see `docs/session-token-refresh.md`.

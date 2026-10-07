@@ -22,7 +22,7 @@ auth:
         refresh_token_expiration: 86400 # seconds
 ```
 
-`access_token_expiration`, `refresh_token_expiration` and `refresh_token: true` are all needed. The repo's `resources/init-seeds/Client/web-code.yaml` (60 s / 300 s lifetimes) and `resources/init-seeds/Client/testAuthRefresh.yaml` (4 s / 10 s) are working examples meant for tests.
+`access_token_expiration`, `refresh_token_expiration` and `refresh_token: true` are all needed. Working examples: `resources/demo-seeds/Client/web-code.yaml` (60 s / 300 s lifetimes) for the demo stack, and the test-only `resources/test-seeds/Client/testAuthRefresh.yaml` (4 s / 10 s).
 
 Pick `refresh_token_expiration` no shorter than the longest gap between two refreshes you want to survive (the longest stretch with no request at all, since the access token must also have expired for a refresh to happen): once it passes without a refresh, refresh is rejected and the provider is signed out. The window restarts at every successful refresh.
 
