@@ -72,7 +72,7 @@ A Client without the attributes above (for example the default `testAuth`) issue
 
 ### Reloading the page
 
-The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out. Without a refresh credential, or on a network failure, nothing changes: the sign-in screen, or the existing network-error handling.
+The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out. Without a refresh credential, a rejected token on reload also ends in an Expired Sign-Out. If the refresh fails because of a network error (or a 5xx), the stored credentials are kept, so the next load can retry.
 
 ## What refresh does not do
 

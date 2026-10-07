@@ -59,6 +59,10 @@ export function EMR(props: EMRProps) {
         getAuthenticatedClinicalContext,
     } = props;
 
+    // Must stay above the restore hook: effects run in declaration order, and a 401 on the
+    // user-info request has to meet the interceptor.
+    useSessionRejectionInterceptor();
+
     const [userResponse] = useService(async () => {
         const appToken = getToken();
         return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, sessionLifecycle) : success(null);
@@ -123,8 +127,6 @@ interface RouteProps {
 }
 
 function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
-    useSessionRejectionInterceptor();
-
     return (
         <AuthenticatedClinicalContext getAuthenticatedClinicalContext={getAuthenticatedClinicalContext}>
             <Routes>

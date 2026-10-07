@@ -13,7 +13,7 @@ function activeResponseInterceptors() {
 }
 
 describe('useSessionRejectionInterceptor', () => {
-    it('is active only while the authenticated app is mounted', () => {
+    it('is active only while it is mounted', () => {
         const before = activeResponseInterceptors();
 
         const mounted = renderHook(() => useSessionRejectionInterceptor());
