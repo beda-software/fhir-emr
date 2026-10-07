@@ -51,11 +51,7 @@ export function CodeGrantAuth(props: CodeGrantAuthProps) {
     });
 
     return (
-        <RenderRemoteData
-            remoteData={response}
-            renderLoading={() => <Spinner />}
-            renderFailure={props.renderFailure ?? (() => <React.Fragment />)}
-        >
+        <RenderRemoteData remoteData={response} renderLoading={() => <Spinner />} renderFailure={props.renderFailure}>
             {() => <React.Fragment />}
         </RenderRemoteData>
     );
