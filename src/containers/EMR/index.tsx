@@ -15,7 +15,6 @@ import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
-import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
 import { CodeGrantAuth } from 'src/containers/App/auth';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
@@ -47,7 +46,6 @@ interface EMRProps {
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
-    signOutTexts?: SignOutTexts;
 }
 
 export function EMR(props: EMRProps) {
@@ -59,7 +57,6 @@ export function EMR(props: EMRProps) {
         menuLayout,
         footer,
         getAuthenticatedClinicalContext,
-        signOutTexts,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -93,11 +90,9 @@ export function EMR(props: EMRProps) {
         <div data-testid="emr-container">
             <MenuLayout.Provider value={menuLayout}>
                 <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
-                    <SignOutTextsContext.Provider value={signOutTexts}>
-                        <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                            {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-                        </RenderRemoteData>
-                    </SignOutTextsContext.Provider>
+                    <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                        {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
+                    </RenderRemoteData>
                 </FooterLayout.Provider>
             </MenuLayout.Provider>
         </div>

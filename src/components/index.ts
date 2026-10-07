@@ -35,6 +35,7 @@ export * from './Report';
 export * from './ResourceTable';
 export * from './SearchBar';
 export * from './SearchBar/hooks';
+export * from './SignOutTexts';
 export * from './Select';
 export * from './Spinner';
 export * from './Table';

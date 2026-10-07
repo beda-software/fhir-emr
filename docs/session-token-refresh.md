@@ -107,14 +107,18 @@ Checked against Aidbox 2607.5. Replace the host, client id and credentials with 
 
 ## Overriding the sign-out texts
 
-Every Session-ending text is overridden from one place: the `signOutTexts` prop of `EMR` (or of `App`, which forwards it). Any field left out keeps its default, translated text.
+Every Session-ending text is overridden from one place: wrap `App` (or `EMR`) in `SignOutTextsContext.Provider`. Any field left out keeps its default, translated text.
 
 ```tsx
-<App
-    signOutTexts={{
+import { SignOutTextsContext } from '@beda.software/emr/components';
+
+<SignOutTextsContext.Provider
+    value={{
         expiredSignOutMessage: 'Your session is no longer valid. Please sign in again.',
     }}
-/>
+>
+    <App />
+</SignOutTextsContext.Provider>;
 ```
 
 The message is shown on the sign-in screen after an Expired Sign-Out; the sign-in page itself takes no props for it.
