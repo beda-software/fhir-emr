@@ -72,9 +72,11 @@ jobs:
       - name: Check formatting
         run: yarn prettier -c "src/**/*.ts?"
       - name: Run aidbox
-        run: make up
+        run: |
+          docker compose -f docker-compose.tests.yaml pull --quiet
+          docker compose -f docker-compose.tests.yaml up -d
       - name: Show logs
         if: ${{ failure() }}
-        run: docker compose logs
+        run: docker compose -f docker-compose.tests.yaml logs
       - name: Run tests
         run: yarn test --silent
