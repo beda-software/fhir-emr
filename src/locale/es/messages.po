@@ -2441,6 +2441,6 @@ msgstr "Tu navegador no sorporta reproducción de audio"
 msgid "Sign-in did not complete. Please try again."
 msgstr "La autenticación no se completó. Inténtelo de nuevo."
 
-#: src/components/SignOutTexts/index.tsx:16
+#: src/components/SignOutTexts/hooks.ts:11
 msgid "Your session has expired. Please sign in again."
 msgstr "Su sesión ha expirado. Inicie sesión de nuevo."

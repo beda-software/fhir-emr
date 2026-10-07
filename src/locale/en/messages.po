@@ -2280,6 +2280,6 @@ msgstr ""
 msgid "Sign-in did not complete. Please try again."
 msgstr ""
 
-#: src/components/SignOutTexts/index.tsx:16
+#: src/components/SignOutTexts/hooks.ts:11
 msgid "Your session has expired. Please sign in again."
 msgstr ""

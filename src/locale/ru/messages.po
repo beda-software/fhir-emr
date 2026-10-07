@@ -2217,6 +2217,6 @@ msgstr ""
 msgid "Sign-in did not complete. Please try again."
 msgstr "Вход не был завершён. Пожалуйста, попробуйте снова."
 
-#: src/components/SignOutTexts/index.tsx:16
+#: src/components/SignOutTexts/hooks.ts:11
 msgid "Your session has expired. Please sign in again."
 msgstr "Ваш сеанс истёк. Пожалуйста, войдите снова."

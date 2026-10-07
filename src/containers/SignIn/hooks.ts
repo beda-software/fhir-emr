@@ -44,8 +44,7 @@ export function useSignIn(originPathName?: string) {
             }
 
             window.location.href = result.data;
-        } catch (error) {
-            console.error('Failed to build the sign-in URL', error);
+        } catch {
             notification.error({
                 message: t`Can not sign in: secure browser cryptography is unavailable. Use HTTPS and try again.`,
             });

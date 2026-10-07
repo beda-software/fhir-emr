@@ -23,7 +23,6 @@ describe('SignIn when the PKCE challenge cannot be built', () => {
             configurable: true,
             value: { href: 'http://localhost:3000/signin' },
         });
-        vi.spyOn(console, 'error').mockImplementation(() => undefined);
     });
 
     afterEach(() => {

@@ -9,7 +9,7 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { ClinicalContext } from '@beda.software/fhir-questionnaire';
-import { FetchError, RemoteDataResult, success } from '@beda.software/remote-data';
+import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
@@ -21,10 +21,10 @@ import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRole
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import { getToken, parseOAuthState, setToken, type SignInLocationState } from 'src/services/auth';
+import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
-import { useSessionRejectionInterceptor } from './hooks';
+import { useCodeGrantFailureSignInState, useRedirectToSignInState, useSessionRejectionInterceptor } from './hooks';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -92,8 +92,7 @@ export function EMR(props: EMRProps) {
 }
 
 function RedirectToSignIn() {
-    const location = useLocation();
-    const state: SignInLocationState = { nextUrl: `${location.pathname}${location.search}${location.hash}` };
+    const state = useRedirectToSignInState();
 
     return <Navigate to="/signin" replace={true} state={state} />;
 }
@@ -161,22 +160,11 @@ function AuthenticatedClinicalContext({
 }
 
 function AuthCallback() {
-    return config.authFlow === 'code' ? (
-        <CodeGrantAuth renderFailure={(error) => <CodeGrantFailure error={error} />} />
-    ) : (
-        <Auth />
-    );
+    return config.authFlow === 'code' ? <CodeGrantAuth renderFailure={() => <CodeGrantFailure />} /> : <Auth />;
 }
 
-function CodeGrantFailure({ error }: { error: FetchError }) {
-    const location = useLocation();
-    const { state } = queryString.parse(location.search);
-    const nextUrl = parseOAuthState(typeof state === 'string' ? state : undefined).nextUrl;
-    const signInState: SignInLocationState = { signInFailure: 'code-exchange', nextUrl };
-
-    useEffect(() => {
-        console.error('Code exchange failed', error);
-    }, [error]);
+function CodeGrantFailure() {
+    const signInState = useCodeGrantFailureSignInState();
 
     return <Navigate to="/signin" replace={true} state={signInState} />;
 }

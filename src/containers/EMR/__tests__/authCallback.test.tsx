@@ -143,16 +143,6 @@ describe('EMR auth callback route', () => {
         const signInRoute = <Route path="/signin" element={<SignIn />} />;
         const failureMessage = 'Sign-in did not complete. Please try again.';
 
-        let consoleError: MockInstance;
-
-        beforeEach(() => {
-            consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-        });
-
-        afterEach(() => {
-            consoleError.mockRestore();
-        });
-
         it('returns to the sign-in screen with a generic message, hiding the provider error', async () => {
             useCodeFlow();
             saveCodeVerifier('verifier');
@@ -168,7 +158,6 @@ describe('EMR auth callback route', () => {
             expect(await screen.findByText(failureMessage)).toBeInTheDocument();
             expect(window.location.pathname).toBe('/signin');
             expect(screen.queryByText(/secret provider detail/)).not.toBeInTheDocument();
-            expect(consoleError).toHaveBeenCalled();
             expect(getToken()).toBeUndefined();
         });
 

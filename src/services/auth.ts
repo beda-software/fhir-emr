@@ -165,7 +165,7 @@ export function createRefreshSession(deps: RefreshSessionDeps): () => Promise<st
 
 let refreshInFlight: Promise<string | undefined> | undefined;
 
-// Concurrent callers (Session restore, interceptor 401s) share one request.
+// Concurrent callers share one request.
 export function refreshSession(): Promise<string | undefined> {
     refreshInFlight ??= createRefreshSession({
         getRefreshToken: () => window.localStorage.getItem('refresh_token'),

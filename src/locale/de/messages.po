@@ -2107,6 +2107,6 @@ msgstr "Ihr Browser unterstützt das Audio-Element nicht"
 msgid "Sign-in did not complete. Please try again."
 msgstr "Die Anmeldung wurde nicht abgeschlossen. Bitte versuchen Sie es erneut."
 
-#: src/components/SignOutTexts/index.tsx:16
+#: src/components/SignOutTexts/hooks.ts:11
 msgid "Your session has expired. Please sign in again."
 msgstr "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
