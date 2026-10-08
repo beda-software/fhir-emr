@@ -331,6 +331,12 @@ msgstr "Modificar"
 msgid "Amount"
 msgstr "Cantidad"
 
+#: src/controls/ImageAnnotation/AnnotationImage.tsx:45
+#: src/controls/ImageAnnotation/index.tsx:51
+#: src/readonly-controls/ImageAnnotation/index.tsx:39
+#~ msgid "Annotation"
+#~ msgstr ""
+
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:105
 msgid "Appointment"
 msgstr "Cita"
@@ -437,6 +443,10 @@ msgstr "por"
 msgid "Calories"
 msgstr "Calorías"
 
+#: src/containers/SignIn/hooks.ts:49
+msgid "Can not sign in: secure browser cryptography is unavailable. Use HTTPS and try again."
+msgstr "No se puede iniciar sesión: la criptografía segura del navegador no está disponible. Use HTTPS e inténtelo de nuevo."
+
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:89
 #: src/containers/InvoiceList/index.tsx:108
@@ -498,6 +508,10 @@ msgstr "Borrar borrador del almacenamiento local y restablecer formulario"
 #: src/components/SearchBar/SearchBarMobile/index.tsx:52
 msgid "Clear filters"
 msgstr "Limpiar filtros"
+
+#: src/controls/ImageAnnotation/index.tsx:121
+#~ msgid "Click on the diagram to place a marker"
+#~ msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/UploadFileControl/index.tsx:32
 #: src/controls/UploadFileControl/index.tsx:32
@@ -1206,11 +1220,11 @@ msgstr "Escuchar el audio"
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: src/containers/SignIn/index.tsx:98
+#: src/containers/SignIn/index.tsx:91
 msgid "Log in"
 msgstr "Iniciar sesión"
 
-#: src/containers/SignIn/index.tsx:139
+#: src/containers/SignIn/index.tsx:128
 msgid "Log in as demo patient"
 msgstr "Iniciar sesión como paciente demo"
 
@@ -1335,6 +1349,11 @@ msgstr "Nuevo agendamiento"
 msgid "No"
 msgstr "No"
 
+#: src/controls/ImageAnnotation/index.tsx:145
+#: src/readonly-controls/ImageAnnotation/index.tsx:48
+#~ msgid "No annotations"
+#~ msgstr ""
+
 #: src/components/ResourceTable/index.tsx:65
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
@@ -1392,8 +1411,8 @@ msgstr "Resultados"
 msgid "On Hold"
 msgstr "Guardado"
 
-#: src/containers/SignIn/index.tsx:52
-#: src/containers/SignIn/index.tsx:104
+#: src/containers/SignIn/index.tsx:49
+#: src/containers/SignIn/index.tsx:97
 msgid "On the next page, please, use one of the following credentials"
 msgstr "En la siguiente página, por favor, utilice una de las siguientes credenciales"
 
@@ -1467,8 +1486,8 @@ msgstr ""
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:83
-#: src/containers/SignIn/index.tsx:123
+#: src/containers/SignIn/index.tsx:80
+#: src/containers/SignIn/index.tsx:116
 msgid "Password"
 msgstr "Contraseña"
 
@@ -1530,10 +1549,6 @@ msgstr ""
 msgid "PCT"
 msgstr "PCT"
 
-#: src/containers/PatientDetails/HMBDiagnostic/config.tsx:112
-#~ msgid "Period Pain Score"
-#~ msgstr ""
-
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:114
 msgid "Period Pain Severity & Score"
 msgstr ""
@@ -1546,6 +1561,10 @@ msgstr "Número telefónico"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:42
 msgid "Phone widget"
 msgstr "Widget de teléfono"
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#~ msgid "Place a marker on the diagram to add an annotation"
+#~ msgstr ""
 
 #: src/containers/App/DefaultUserWithNoRoles.tsx:21
 msgid "Please ask administrator to add a role for your user"
@@ -1648,6 +1667,10 @@ msgstr ""
 #: src/controls/Group/GroupCard/index.tsx:85
 #~ msgid "Remove"
 #~ msgstr "Eliminar"
+
+#: src/controls/ImageAnnotation/index.tsx:59
+#~ msgid "Remove annotation"
+#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:54
 msgid "Repeats"
@@ -1818,7 +1841,6 @@ msgstr "Selecciona hora"
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:26
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:56
 #: src/controls/Choice/index.tsx:NaN
-#: src/controls/Choice/index.tsx:55
 #~ msgid "Select..."
 #~ msgstr "Seleccionar..."
 
@@ -1857,6 +1879,10 @@ msgstr "Compartir enlace"
 #: src/components/SearchBar/SearchBarMobile/index.tsx:49
 msgid "Show results"
 msgstr "Mostrar resultados"
+
+#: src/containers/SignIn/index.tsx:36
+msgid "Sign-in did not complete. Please try again."
+msgstr "La autenticación no se completó. Inténtelo de nuevo."
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
 msgid "Slider"
@@ -2176,8 +2202,8 @@ msgstr "URL:"
 msgid "User with no roles in the system"
 msgstr "Usuario sin rol en el sistema"
 
-#: src/containers/SignIn/index.tsx:55
-#: src/containers/SignIn/index.tsx:107
+#: src/containers/SignIn/index.tsx:52
+#: src/containers/SignIn/index.tsx:100
 msgid "Username"
 msgstr "Nombre de usuario"
 
@@ -2225,7 +2251,7 @@ msgstr "Miércoles"
 msgid "Week"
 msgstr "Semana"
 
-#: src/containers/SignIn/index.tsx:39
+#: src/containers/SignIn/index.tsx:32
 msgid "Welcome to"
 msgstr "Bienvenido a"
 
@@ -2247,3 +2273,7 @@ msgstr "Actualmente no tienes acceso a los datos del paciente. Para obtenerlos, 
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr "Tu navegador no sorporta reproducción de audio"
+
+#: src/components/SignOutTexts/hooks.ts:11
+msgid "Your session has expired. Please sign in again."
+msgstr "Su sesión ha expirado. Inicie sesión de nuevo."
