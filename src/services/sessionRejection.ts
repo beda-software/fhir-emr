@@ -15,6 +15,13 @@ type WasReplaced = (config: InternalAxiosRequestConfig) => boolean;
 
 type ReplayableConfig = InternalAxiosRequestConfig & { _sessionReplayed?: boolean };
 
+interface Installation {
+    eject: () => void;
+    holders: number;
+}
+
+const installations = new WeakMap<AxiosInstance, Installation>();
+
 // A network failure, timeout or 5xx says nothing about the refresh token, so it must not end the Session.
 export function isRefreshTokenRejected(error: unknown): boolean {
     return isAxiosError(error) && (error.response?.status === 400 || error.response?.status === 401);
@@ -71,9 +78,34 @@ function isSessionRejection(error: AxiosError, deps: SessionRejectionDeps, wasRe
     );
 }
 
-// Returns the eject function. The original rejection always reaches the caller, unless a
-// Token Refresh lets the request be replayed successfully.
+// Returns the release function. A client gets one interceptor however many callers install it:
+// a second copy would retry a failed refresh and end the Session twice. The first caller's deps
+// stay in effect until the last holder releases it.
 export function installSessionRejectionInterceptor(instance: AxiosInstance, deps: SessionRejectionDeps): () => void {
+    const installation = installations.get(instance) ?? createInstallation(instance, deps);
+    installation.holders += 1;
+    let released = false;
+
+    return () => {
+        if (released) {
+            return;
+        }
+
+        released = true;
+        releaseInstallation(instance, installation);
+    };
+}
+
+function createInstallation(instance: AxiosInstance, deps: SessionRejectionDeps): Installation {
+    const installation = { eject: addSessionRejectionInterceptor(instance, deps), holders: 0 };
+    installations.set(instance, installation);
+
+    return installation;
+}
+
+// The original rejection always reaches the caller, unless a Token Refresh lets the request be
+// replayed successfully.
+function addSessionRejectionInterceptor(instance: AxiosInstance, deps: SessionRejectionDeps): () => void {
     let sharedRefresh: Promise<string | undefined> | undefined;
     const replacedTokens = new Set<string>();
     const wasReplaced: WasReplaced = (config) =>
@@ -134,4 +166,14 @@ export function installSessionRejectionInterceptor(instance: AxiosInstance, deps
     });
 
     return () => instance.interceptors.response.eject(id);
+}
+
+function releaseInstallation(instance: AxiosInstance, installation: Installation): void {
+    installation.holders -= 1;
+    if (installation.holders > 0) {
+        return;
+    }
+
+    installation.eject();
+    installations.delete(instance);
 }
