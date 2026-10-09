@@ -74,6 +74,30 @@ A Client without the attributes above (for example the default `testAuth`) issue
 
 The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out. Without a refresh credential, a rejected token on reload also ends in an Expired Sign-Out. If the refresh fails because of a network error (or a 5xx), the stored credentials are kept, so the next load can retry.
 
+### Requests made before EMR mounts
+
+`EMR` installs the interceptor when it mounts, so a request the app sends before rendering `EMR` (for example its own `/auth/userinfo` load) is not covered. Such an app installs it first:
+
+```ts
+import config from '@beda.software/emr-config';
+import {
+    axiosInstance,
+    doLogout,
+    getToken,
+    installSessionRejectionInterceptor,
+    refreshSession,
+} from '@beda.software/emr/services';
+
+installSessionRejectionInterceptor(axiosInstance, {
+    baseURL: config.baseURL,
+    getToken,
+    endSession: doLogout,
+    refreshSession,
+});
+```
+
+A client gets one interceptor however many times it is installed; `EMR` reuses the earlier one, and the first installation's options apply. Install it at startup or before `EMR` renders, not in an effect of a component that already renders `EMR`: React runs `EMR`'s effects first, so `EMR` would install it with its own options.
+
 ## What refresh does not do
 
 -   **Reactive only.** Refresh runs only in response to a 401 on a request (including the Session restore on page load). There is no timer and no proactive renewal.
