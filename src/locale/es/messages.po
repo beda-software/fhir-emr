@@ -1880,7 +1880,7 @@ msgstr "Compartir enlace"
 msgid "Show results"
 msgstr "Mostrar resultados"
 
-#: src/components/IdleTimeout/hooks.ts:187
+#: src/components/IdleTimeout/hooks.ts:171
 msgid "Sign out now"
 msgstr "Cerrar sesión ahora"
 
@@ -1963,7 +1963,7 @@ msgstr "Iniciar videollamada"
 msgid "Status"
 msgstr "Estado"
 
-#: src/components/IdleTimeout/hooks.ts:186
+#: src/components/IdleTimeout/hooks.ts:170
 msgid "Stay signed in"
 msgstr "Mantener la sesión iniciada"
 
@@ -2282,7 +2282,7 @@ msgstr "Actualmente no tienes acceso a los datos del paciente. Para obtenerlos, 
 msgid "You were signed out because there was no activity for a while."
 msgstr "Se cerró su sesión porque no hubo actividad durante un tiempo."
 
-#: src/components/IdleTimeout/hooks.ts:185
+#: src/components/IdleTimeout/hooks.ts:169
 msgid "You've been inactive for a while. For your security, your session will end soon unless you stay signed in."
 msgstr "Ha estado inactivo por un tiempo. Por su seguridad, su sesión finalizará pronto a menos que permanezca conectado."
 
@@ -2294,6 +2294,6 @@ msgstr "Tu navegador no sorporta reproducción de audio"
 msgid "Your session has expired. Please sign in again."
 msgstr "Su sesión ha expirado. Inicie sesión de nuevo."
 
-#: src/components/IdleTimeout/hooks.ts:182
+#: src/components/IdleTimeout/hooks.ts:166
 msgid "Your session is about to end"
 msgstr "Su sesión está a punto de finalizar"

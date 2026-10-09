@@ -1747,7 +1747,7 @@ msgstr ""
 msgid "Show results"
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:187
+#: src/components/IdleTimeout/hooks.ts:171
 msgid "Sign out now"
 msgstr ""
 
@@ -1830,7 +1830,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:186
+#: src/components/IdleTimeout/hooks.ts:170
 msgid "Stay signed in"
 msgstr ""
 
@@ -2127,7 +2127,7 @@ msgstr ""
 msgid "You were signed out because there was no activity for a while."
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:185
+#: src/components/IdleTimeout/hooks.ts:169
 msgid "You've been inactive for a while. For your security, your session will end soon unless you stay signed in."
 msgstr ""
 
@@ -2139,6 +2139,6 @@ msgstr ""
 msgid "Your session has expired. Please sign in again."
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:182
+#: src/components/IdleTimeout/hooks.ts:166
 msgid "Your session is about to end"
 msgstr ""
