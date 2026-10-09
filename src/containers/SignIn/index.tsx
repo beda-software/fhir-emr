@@ -6,7 +6,7 @@ import { AppFooter } from 'src/components/BaseLayout/Footer';
 import { useExpiredSignOutMessage, useForcedSignOutMessage } from 'src/components/SignOutTexts';
 import logo from 'src/images/logo.svg';
 
-import { useAppleAuthentication, useSignIn, useSignOutReason } from './hooks';
+import { useAppleAuthentication, useSignIn, useSignInLocationState } from './hooks';
 import s from './SignIn.module.scss';
 import { S } from './SignIn.styles';
 
@@ -21,8 +21,8 @@ interface SignInProps {
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
-    const signOutReason = useSignOutReason();
-    const authorize = useSignIn(props.originPathName);
+    const { signOutReason, signInFailure, nextUrl } = useSignInLocationState();
+    const authorize = useSignIn(nextUrl ?? props.originPathName);
     const forcedSignOutMessage = useForcedSignOutMessage();
     const expiredSignOutMessage = useExpiredSignOutMessage();
 
@@ -33,6 +33,9 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
+                {signInFailure === 'code-exchange' ? (
+                    <S.Message>{t`Sign-in did not complete. Please try again.`}</S.Message>
+                ) : null}
                 {signOutReason === 'forced' ? <S.Message>{forcedSignOutMessage}</S.Message> : null}
                 {signOutReason === 'expired' ? <S.Message>{expiredSignOutMessage}</S.Message> : null}
                 <Segmented

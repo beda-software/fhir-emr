@@ -1,57 +1,5 @@
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# #-#-#-#-#  1.po  #-#-#-#-#
-# , fuzzy
-# , fuzzy
-# , fuzzy
-# , fuzzy
-# , fuzzy
-# , fuzzy
-# , fuzzy
-# , fuzzy
-#, fuzzy
 msgid ""
 msgstr ""
-"#-#-#-#-#  1.po  #-#-#-#-#\n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  1.po  #-#-#-#-#: \n"
-"#-#-#-#-#  messages.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  messages.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  messages.po  #-#-#-#-#: \n"
 "POT-Creation-Date: 2026-04-09 19:12+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -142,136 +90,11 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
-"#-#-#-#-#  2.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  3.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  2.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  3.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  2.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  3.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  2.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  3.po  #-#-#-#-#: \n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  2.po  #-#-#-#-#\n"
-"POT-Creation-Date: 2022-02-04 15:23+0300\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-"#-#-#-#-#  3.po  #-#-#-#-#\n"
-"POT-Creation-Date: 2026-04-09 19:12+0400\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/containers/QuestionnaireList/index.tsx:22
+#~ msgid "msg.QuestionnaireName"
+#~ msgstr "Name"
 
 #: src/uberComponents/ResourceListPage/BatchActions.tsx:57
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
@@ -318,9 +141,7 @@ msgid "{path} is invalid"
 msgstr ""
 
 #: src/utils/yup-locale.ts:14
-msgid ""
-"{path} must be a `{type}` type, but the final value was: `{0}` (cast from "
-"the value `{1}`)."
+msgid "{path} must be a `{type}` type, but the final value was: `{0}` (cast from the value `{1}`)."
 msgstr ""
 
 #: src/utils/yup-locale.ts:19
@@ -356,9 +177,7 @@ msgid "{path} must be a valid ISO date-time"
 msgstr ""
 
 #: src/utils/yup-locale.ts:40
-msgid ""
-"{path} must be a valid ISO date-time with a sub-second precision of exactly "
-"{precision} digits"
+msgid "{path} must be a valid ISO date-time with a sub-second precision of exactly {precision} digits"
 msgstr ""
 
 #: src/utils/yup-locale.ts:41
@@ -418,9 +237,7 @@ msgid "{path} must have {length} items"
 msgstr ""
 
 #: src/utils/yup-locale.ts:22
-msgid ""
-"{path} must match the configured type. The validated value was: `{0}` (cast "
-"from the value `{1}`)."
+msgid "{path} must match the configured type. The validated value was: `{0}` (cast from the value `{1}`)."
 msgstr ""
 
 #: src/utils/yup-locale.ts:27
@@ -440,15 +257,11 @@ msgid "{path} object contains unknown properties: {properties}"
 msgstr ""
 
 #: src/utils/yup-locale.ts:77
-msgid ""
-"{path} tuple value has too few items, expected a length of {typeLen} but got "
-"{0} for value: `{1}`"
+msgid "{path} tuple value has too few items, expected a length of {typeLen} but got {0} for value: `{1}`"
 msgstr ""
 
 #: src/utils/yup-locale.ts:82
-msgid ""
-"{path} tuple value has too many items, expected a length of {typeLen} but "
-"got {0} for value: `{1}`"
+msgid "{path} tuple value has too many items, expected a length of {typeLen} but got {0} for value: `{1}`"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
@@ -483,6 +296,14 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
+#: src/controls/Group/RepeatableGroups/index.tsx:87
+#~ msgid "Add {text}"
+#~ msgstr ""
+
+#: src/controls/Group/RepeatableGroups/index.tsx:87
+#~ msgid "Add another answer"
+#~ msgstr ""
+
 #: src/containers/MedicationManagementDetail/index.tsx:77
 msgid "Add batch"
 msgstr ""
@@ -490,6 +311,10 @@ msgstr ""
 #: src/containers/Scheduling/Availability/index.tsx:119
 msgid "Add break"
 msgstr ""
+
+#: src/controls/GroupTable/index.tsx:68
+#~ msgid "Add entry"
+#~ msgstr ""
 
 #: src/containers/HealthcareServiceList/index.tsx:78
 msgid "Add healthcare service"
@@ -570,6 +395,12 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
+#: src/controls/ImageAnnotation/AnnotationImage.tsx:45
+#: src/controls/ImageAnnotation/index.tsx:51
+#: src/readonly-controls/ImageAnnotation/index.tsx:39
+#~ msgid "Annotation"
+#~ msgstr ""
+
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:105
 msgid "Appointment"
 msgstr ""
@@ -601,7 +432,6 @@ msgid "Are you sure you want to delete the document?"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
-#: src/controls/GroupTable/hooks.tsx:615
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
@@ -650,7 +480,6 @@ msgstr ""
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:37
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:59
-#: src/controls/QuestionDateTime/QuestionDateTime.stories.tsx:36
 msgid "Birth date"
 msgstr ""
 
@@ -675,9 +504,7 @@ msgid "Calories"
 msgstr ""
 
 #: src/containers/SignIn/hooks.ts:49
-msgid ""
-"Can not sign in: secure browser cryptography is unavailable. Use HTTPS and "
-"try again."
+msgid "Can not sign in: secure browser cryptography is unavailable. Use HTTPS and try again."
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
@@ -699,7 +526,6 @@ msgstr ""
 #: src/components/Assistant/index.tsx:93
 #: src/components/AudioRecorder/index.tsx:41
 #: src/containers/EncounterDetails/AIScribe/index.tsx:112
-#: src/components/AudioRecorder/index.tsx:40
 msgid "Capture in progress"
 msgstr ""
 
@@ -723,6 +549,14 @@ msgstr ""
 msgid "Clear filters"
 msgstr ""
 
+#: src/controls/ImageAnnotation/index.tsx:121
+#~ msgid "Click on the diagram to place a marker"
+#~ msgstr ""
+
+#: src/controls/UploadFileControl/index.tsx:32
+#~ msgid "Click or drag file to this area to upload"
+#~ msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:125
 msgid "Clinician successfully updated"
 msgstr ""
@@ -740,6 +574,10 @@ msgstr ""
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:61
 msgid "Col (default)"
 msgstr ""
+
+#: src/controls/GroupTable/index.tsx:65
+#~ msgid "Collapse all"
+#~ msgstr ""
 
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:16
 msgid "Common"
@@ -803,6 +641,10 @@ msgstr ""
 #: src/containers/MedicationManagementDetail/index.tsx:66
 msgid "Cost"
 msgstr ""
+
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:604
+#~ msgid "Could not find image source in markdown"
+#~ msgstr ""
 
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:121
 msgid "Create"
@@ -905,7 +747,6 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:243
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
-#: src/controls/GroupTable/hooks.tsx:618
 msgid "Delete"
 msgstr ""
 
@@ -948,7 +789,6 @@ msgid "Dose form"
 msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:127
-#: src/components/AudioRecorder/index.tsx:126
 msgid "Download audio"
 msgstr ""
 
@@ -994,7 +834,6 @@ msgstr ""
 #: src/containers/PatientList/index.tsx:133
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:71
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:87
-#: src/controls/GroupTable/hooks.tsx:613
 msgid "Edit"
 msgstr ""
 
@@ -1065,6 +904,10 @@ msgstr ""
 msgid "Error while amending the document"
 msgstr ""
 
+#: src/controls/GroupTable/index.tsx:65
+#~ msgid "Expand all"
+#~ msgstr ""
+
 #: src/containers/MedicationManagementDetail/index.tsx:85
 msgid "Expiration date"
 msgstr ""
@@ -1081,8 +924,11 @@ msgstr ""
 msgid "Extract medical documents"
 msgstr ""
 
+#: src/readonly-controls/Boolean/index.tsx:21
+#~ msgid "False"
+#~ msgstr ""
+
 #: src/components/TextWithMacroFill/index.tsx:38
-#: src/controls/TextWithMacroFill/index.tsx:38
 msgid "Fill"
 msgstr ""
 
@@ -1156,6 +1002,26 @@ msgstr ""
 msgid "GP"
 msgstr ""
 
+#: src/controls/Group/GroupCard/index.tsx:67
+#: src/controls/Group/GroupCard/index.tsx:97
+#~ msgid "Group"
+#~ msgstr ""
+
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:16
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:29
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:53
+#~ msgid "Has at least one lower case letter"
+#~ msgstr ""
+
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:75
+#~ msgid "Has at least one number"
+#~ msgstr ""
+
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:40
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:64
+#~ msgid "Has at least one uppercase letter"
+#~ msgstr ""
+
 #: src/containers/HealthcareServiceList/index.tsx:90
 msgid "Healthcare Services"
 msgstr ""
@@ -1191,6 +1057,19 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOrders/index.tsx:155
 msgid "IL-6"
 msgstr ""
+
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:247
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:303
+#~ msgid "Image upload failed"
+#~ msgstr ""
+
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:360
+#~ msgid "Image upload is not supported"
+#~ msgstr ""
+
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:278
+#~ msgid "Image uploaded"
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:214
 #: src/containers/PatientDetails/PatientResources/utils.tsx:152
@@ -1244,6 +1123,10 @@ msgstr ""
 msgid "Issued"
 msgstr ""
 
+#: src/controls/Group/RepeatableGroups/RepeatableGroupCard/index.tsx:19
+#~ msgid "Item"
+#~ msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:100
 msgid "Item Control"
 msgstr ""
@@ -1260,8 +1143,11 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
+#: src/controls/GroupTable/index.tsx:98
+#~ msgid "linkIdX or linkIdY not defined"
+#~ msgstr ""
+
 #: src/components/AudioRecorder/index.tsx:70
-#: src/components/AudioRecorder/index.tsx:69
 msgid "Listen to the audio"
 msgstr ""
 
@@ -1269,11 +1155,11 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:88
+#: src/containers/SignIn/index.tsx:93
 msgid "Log in"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:125
+#: src/containers/SignIn/index.tsx:130
 msgid "Log in as demo patient"
 msgstr ""
 
@@ -1336,6 +1222,10 @@ msgstr ""
 msgid "Monday"
 msgstr ""
 
+#: src/utils/questionnaire.ts:179
+#~ msgid "Must be a valid time (HH:mm:ss)"
+#~ msgstr ""
+
 #: src/containers/FormList/index.tsx:27
 #: src/containers/HealthcareServiceList/index.tsx:31
 #: src/containers/InvoiceDetails/index.tsx:56
@@ -1365,9 +1255,14 @@ msgstr ""
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:212
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:240
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:137
-#: src/utils/questionnaire.ts:54 src/utils/questionnaire.ts:63
+#: src/utils/questionnaire.ts:54
 msgid "No"
 msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#: src/readonly-controls/ImageAnnotation/index.tsx:48
+#~ msgid "No annotations"
+#~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
@@ -1386,7 +1281,6 @@ msgid "No Pain"
 msgstr ""
 
 #: src/components/TextWithMacroFill/index.tsx:28
-#: src/controls/TextWithMacroFill/index.tsx:28
 msgid "No prepared text"
 msgstr ""
 
@@ -1423,7 +1317,8 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:46 src/containers/SignIn/index.tsx:94
+#: src/containers/SignIn/index.tsx:51
+#: src/containers/SignIn/index.tsx:99
 msgid "On the next page, please, use one of the following credentials"
 msgstr ""
 
@@ -1489,11 +1384,16 @@ msgstr ""
 msgid "Pain Severity"
 msgstr ""
 
+#: src/controls/Group/GridGroup/index.tsx:27
+#~ msgid "Parameter"
+#~ msgstr ""
+
 #: src/containers/PatientList/utils.ts:22
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:77 src/containers/SignIn/index.tsx:113
+#: src/containers/SignIn/index.tsx:82
+#: src/containers/SignIn/index.tsx:118
 msgid "Password"
 msgstr ""
 
@@ -1558,6 +1458,10 @@ msgstr ""
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:42
 msgid "Phone widget"
 msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:145
+#~ msgid "Place a marker on the diagram to add an annotation"
+#~ msgstr ""
 
 #: src/containers/App/DefaultUserWithNoRoles.tsx:21
 msgid "Please ask administrator to add a role for your user"
@@ -1651,6 +1555,14 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:66
 msgid "Reaction"
 msgstr ""
+
+#: src/controls/Group/GroupCard/index.tsx:85
+#~ msgid "Remove"
+#~ msgstr ""
+
+#: src/controls/ImageAnnotation/index.tsx:59
+#~ msgid "Remove annotation"
+#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:54
 msgid "Repeats"
@@ -1792,15 +1704,16 @@ msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:23
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:80
-#: src/controls/QuestionDateTime/QuestionDateTime.stories.tsx:22
-#: src/controls/QuestionDateTime/QuestionDateTime.stories.tsx:79
 msgid "Select date"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:51
-#: src/controls/QuestionDateTime/QuestionDateTime.stories.tsx:50
 msgid "Select time"
 msgstr ""
+
+#: src/controls/Choice/index.tsx:NaN
+#~ msgid "Select..."
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:139
 msgid "Serum creatinin"
@@ -1834,8 +1747,12 @@ msgstr ""
 msgid "Show results"
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:194
+#: src/components/IdleTimeout/hooks.ts:187
 msgid "Sign out now"
+msgstr ""
+
+#: src/containers/SignIn/index.tsx:37
+msgid "Sign-in did not complete. Please try again."
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
@@ -1868,7 +1785,8 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: src/components/Assistant/index.tsx:61 src/components/Assistant/index.tsx:71
+#: src/components/Assistant/index.tsx:61
+#: src/components/Assistant/index.tsx:71
 #: src/components/Assistant/index.tsx:125
 #: src/components/Assistant/index.tsx:191
 msgid "Start Assistant"
@@ -1879,7 +1797,6 @@ msgid "Start date"
 msgstr ""
 
 #: src/containers/EncounterDetails/index.tsx:114
-#: src/controls/AudioRecorderUploader/index.tsx:80
 msgid "Start scribe"
 msgstr ""
 
@@ -1913,7 +1830,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:193
+#: src/components/IdleTimeout/hooks.ts:186
 msgid "Stay signed in"
 msgstr ""
 
@@ -1973,6 +1890,10 @@ msgstr ""
 msgid "System"
 msgstr ""
 
+#: src/controls/GroupTable/index.tsx:56
+#~ msgid "Table View"
+#~ msgstr ""
+
 #: src/containers/InvoiceDetails/index.tsx:76
 msgid "Tax"
 msgstr ""
@@ -1990,12 +1911,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:108
-msgid ""
-"Thank you for filling out the questionnaire. Now you can close this page."
+#: src/containers/App/index.tsx:100
+msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:107
+#: src/containers/App/index.tsx:99
 msgid "Thank you!"
 msgstr ""
 
@@ -2014,9 +1934,7 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/Builder/index.tsx:50
 #: src/containers/QuestionnaireBuilder/Builder/index.tsx:67
-msgid ""
-"The process of generating or updating a questionnaire may require some time "
-"to complete"
+msgid "The process of generating or updating a questionnaire may require some time to complete"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/hooks.ts:75
@@ -2028,15 +1946,24 @@ msgid "There are no documents yet"
 msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:96
-#: src/components/AudioRecorder/index.tsx:95
-msgid ""
-"This audio cannot be played in Safari, please download the audio or use the "
-"Chrome browser"
+msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr ""
+
+#: src/controls/EditableGroup/index.tsx:52
+#~ msgid "This itemControl is designed for non-repeatable groups"
+#~ msgstr ""
+
+#: src/controls/GroupTable/index.tsx:103
+#~ msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
+#~ msgstr ""
 
 #: src/containers/Scheduling/available-time.ts:16
 msgid "Thursday"
 msgstr ""
+
+#: src/utils/questionnaire.ts:179
+#~ msgid "time"
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:333
 #: src/containers/Scheduling/Availability/index.tsx:129
@@ -2044,7 +1971,6 @@ msgid "Time"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:65
-#: src/controls/QuestionDateTime/QuestionDateTime.stories.tsx:64
 msgid "Time with no seconds"
 msgstr ""
 
@@ -2059,9 +1985,7 @@ msgid "Title"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientWearables/index.tsx:110
-msgid ""
-"To obtain this information, you need to authorize your account in the mobile "
-"application and link it with your health data providers."
+msgid "To obtain this information, you need to authorize your account in the mobile application and link it with your health data providers."
 msgstr ""
 
 #: src/components/Calendar/index.tsx:30
@@ -2075,6 +1999,10 @@ msgstr ""
 #: src/components/DashboardCard/creatinine.tsx:100
 msgid "Total {0}"
 msgstr ""
+
+#: src/readonly-controls/Boolean/index.tsx:21
+#~ msgid "True"
+#~ msgstr ""
 
 #: src/containers/Scheduling/available-time.ts:14
 msgid "Tuesday"
@@ -2099,9 +2027,17 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:290
+#~ msgid "Unknown error"
+#~ msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard/index.tsx:20
 msgid "Upcoming appointment"
 msgstr ""
+
+#: src/controls/EditableGroup/index.tsx:36
+#~ msgid "Update"
+#~ msgstr ""
 
 #: src/components/ChangesDiff/index.tsx:31
 msgid "Updated"
@@ -2111,6 +2047,11 @@ msgstr ""
 msgid "Upload file"
 msgstr ""
 
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:265
+#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:327
+#~ msgid "Uploading image"
+#~ msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:484
 msgid "Url:"
 msgstr ""
@@ -2119,7 +2060,8 @@ msgstr ""
 msgid "User with no roles in the system"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:49 src/containers/SignIn/index.tsx:97
+#: src/containers/SignIn/index.tsx:54
+#: src/containers/SignIn/index.tsx:102
 msgid "Username"
 msgstr ""
 
@@ -2162,7 +2104,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:32
+#: src/containers/SignIn/index.tsx:33
 msgid "Welcome to"
 msgstr ""
 
@@ -2173,194 +2115,30 @@ msgstr ""
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:211
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:239
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:136
-#: src/utils/questionnaire.ts:54 src/utils/questionnaire.ts:63
+#: src/utils/questionnaire.ts:54
 msgid "Yes"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientWearables/index.tsx:109
-msgid ""
-"You currently lack access to the patient's data. To obtain it, you must "
-"secure the patient's signed consent authorizing the release of their "
-"activity data."
+msgid "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data."
 msgstr ""
 
-#: src/components/SignOutTexts/index.tsx:20
+#: src/components/SignOutTexts/hooks.ts:11
 msgid "You were signed out because there was no activity for a while."
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:192
+#: src/components/IdleTimeout/hooks.ts:185
 msgid "You've been inactive for a while. For your security, your session will end soon unless you stay signed in."
 msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:105
-#: src/components/AudioRecorder/index.tsx:104
 msgid "Your browser does not support the audio element"
 msgstr ""
 
-#: src/components/SignOutTexts/index.tsx:24
+#: src/components/SignOutTexts/hooks.ts:15
 msgid "Your session has expired. Please sign in again."
 msgstr ""
 
-#: src/components/IdleTimeout/hooks.ts:189
+#: src/components/IdleTimeout/hooks.ts:182
 msgid "Your session is about to end"
 msgstr ""
-
-#: src/controls/Group/RepeatableGroups/index.tsx:87
-msgid "Add {text}"
-msgstr ""
-
-#: src/controls/Group/RepeatableGroups/index.tsx:87
-msgid "Add another answer"
-msgstr ""
-
-#: src/controls/GroupTable/index.tsx:68
-msgid "Add entry"
-msgstr ""
-
-#: src/controls/ImageAnnotation/AnnotationImage.tsx:45
-#: src/controls/ImageAnnotation/index.tsx:51
-#: src/readonly-controls/ImageAnnotation/index.tsx:39
-msgid "Annotation"
-msgstr ""
-
-#: src/controls/ImageAnnotation/index.tsx:121
-msgid "Click on the diagram to place a marker"
-msgstr ""
-
-#: src/controls/UploadFileControl/index.tsx:32
-msgid "Click or drag file to this area to upload"
-msgstr ""
-
-#: src/controls/GroupTable/index.tsx:65
-msgid "Collapse all"
-msgstr ""
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:604
-msgid "Could not find image source in markdown"
-msgstr ""
-
-#: src/controls/GroupTable/index.tsx:65
-msgid "Expand all"
-msgstr ""
-
-#: src/readonly-controls/Boolean/index.tsx:21
-msgid "False"
-msgstr ""
-
-#: src/controls/Group/GroupCard/index.tsx:67
-#: src/controls/Group/GroupCard/index.tsx:97
-msgid "Group"
-msgstr ""
-
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:16
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:29
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:53
-#: components/__tests__/questionnaire/custom-validation.test.ts:19
-#: components/__tests__/questionnaire/custom-validation.test.ts:32
-#: components/__tests__/questionnaire/custom-validation.test.ts:56
-msgid "Has at least one lower case letter"
-msgstr ""
-
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:75
-#: components/__tests__/questionnaire/custom-validation.test.ts:78
-msgid "Has at least one number"
-msgstr ""
-
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:40
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:64
-#: components/__tests__/questionnaire/custom-validation.test.ts:43
-#: components/__tests__/questionnaire/custom-validation.test.ts:67
-msgid "Has at least one uppercase letter"
-msgstr ""
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:247
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:303
-msgid "Image upload failed"
-msgstr ""
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:360
-msgid "Image upload is not supported"
-msgstr ""
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:278
-msgid "Image uploaded"
-msgstr ""
-
-#: src/controls/Group/RepeatableGroups/RepeatableGroupCard/index.tsx:19
-msgid "Item"
-msgstr ""
-
-#: src/controls/GroupTable/index.tsx:98
-msgid "linkIdX or linkIdY not defined"
-msgstr ""
-
-#: src/utils/questionnaire.ts:179
-#: components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm/utils.tsx:118
-msgid "Must be a valid time (HH:mm:ss)"
-msgstr ""
-
-#: src/controls/ImageAnnotation/index.tsx:145
-#: src/readonly-controls/ImageAnnotation/index.tsx:48
-msgid "No annotations"
-msgstr ""
-
-#: src/controls/Group/GridGroup/index.tsx:27
-msgid "Parameter"
-msgstr ""
-
-#: src/controls/ImageAnnotation/index.tsx:145
-msgid "Place a marker on the diagram to add an annotation"
-msgstr ""
-
-#: src/controls/Group/GroupCard/index.tsx:85
-msgid "Remove"
-msgstr ""
-
-#: src/controls/ImageAnnotation/index.tsx:59
-msgid "Remove annotation"
-msgstr ""
-
-#: src/controls/Choice/index.tsx:25 src/controls/Choice/index.tsx:55
-msgid "Select..."
-msgstr ""
-
-#: src/controls/GroupTable/index.tsx:56
-msgid "Table View"
-msgstr ""
-
-#: src/controls/EditableGroup/index.tsx:52
-msgid "This itemControl is designed for non-repeatable groups"
-msgstr ""
-
-#: src/controls/GroupTable/index.tsx:103
-msgid ""
-"This itemControl is designed for repeatable groups, but this group is not "
-"repeatable"
-msgstr ""
-
-#: src/utils/questionnaire.ts:179
-#: components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm/utils.tsx:118
-msgid "time"
-msgstr ""
-
-#: src/readonly-controls/Boolean/index.tsx:21
-msgid "True"
-msgstr ""
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:290
-msgid "Unknown error"
-msgstr ""
-
-#: src/controls/EditableGroup/index.tsx:36
-msgid "Update"
-msgstr ""
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:265
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:327
-msgid "Uploading image"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/containers/QuestionnaireList/index.tsx:22
-#~ msgid "msg.QuestionnaireName"
-#~ msgstr "Name"

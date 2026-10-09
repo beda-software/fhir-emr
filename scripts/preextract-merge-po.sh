@@ -57,7 +57,7 @@ for locale in $LOCALES; do
     continue
   fi
 
-  if msgcat "$@" -o "$tmp_dir/merged.po"; then
+  if msgcat --use-first "$@" -o "$tmp_dir/merged.po"; then
     mv "$tmp_dir/merged.po" "$target_file"
     rm -rf "$tmp_dir"
     echo "[preextract] $locale: merged $count files into $target_file"

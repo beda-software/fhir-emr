@@ -1,4 +1,3 @@
-import { Patient } from 'fhir/r4b';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { success } from '@beda.software/remote-data';
@@ -6,7 +5,7 @@ import { success } from '@beda.software/remote-data';
 import { aiService } from 'src/services/ai';
 import { createNewPatientSummary, getLatestPatientSummary } from 'src/services/ai-summary';
 import { service } from 'src/services/fhir';
-import { loginAdminUser } from 'src/setupTests';
+import { createPatient, loginAdminUser } from 'src/setupTests';
 
 vi.mock('src/services/ai', async () => {
     const actual = await vi.importActual<typeof import('src/services/ai')>('src/services/ai');
@@ -24,9 +23,6 @@ vi.mock('src/services/fhir', async () => {
     };
 });
 
-
-const patient: Patient = { resourceType: 'Patient', id: 'patient1' };
-
 describe('AI Summary Module', () => {
     beforeEach(async () => {
         vi.clearAllMocks();
@@ -34,6 +30,8 @@ describe('AI Summary Module', () => {
     });
 
     it('Should create a new patient summary and get it after', async () => {
+        const patient = await createPatient();
+
         vi.mocked(service).mockResolvedValueOnce(
             success({
                 entry: [

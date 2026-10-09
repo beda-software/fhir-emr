@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
-import { installSessionRejectionInterceptor } from 'src/services/sessionRejection';
+import { installSessionRejectionInterceptor, type SessionRejectionDeps } from 'src/services/sessionRejection';
 
 const BASE_URL = 'https://aidbox.test';
 
@@ -48,6 +48,9 @@ function setup({ token = 'live', idleElapsed = false, refreshSession = async () 
         clearToken: () => (currentToken = undefined),
     };
 }
+
+const refreshFailedWith = (status?: number) =>
+    new AxiosError('refresh failed', undefined, undefined, undefined, status ? ({ status } as never) : undefined);
 
 const bearer = (token: string) => ({ Authorization: `Bearer ${token}` });
 
@@ -212,8 +215,23 @@ describe('session rejection interceptor', () => {
         });
 
         it.each([
+            ['a network failure', () => Promise.reject(refreshFailedWith())],
+            ['a server error', () => Promise.reject(refreshFailedWith(503))],
+        ])('keeps the Session and rejects the request on %s during refresh', async (_name, refreshSession) => {
+            t = setup({ refreshSession });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toMatchObject({
+                response: { status: 401 },
+            });
+
+            expect(t.endSession).not.toHaveBeenCalled();
+        });
+
+        it.each([
             ['there is no refresh credential', () => Promise.resolve(undefined)],
-            ['the refresh is rejected', () => Promise.reject(new Error('Invalid refresh_token'))],
+            ['the refresh token is rejected with 400', () => Promise.reject(refreshFailedWith(400))],
+            ['the refresh token is rejected with 401', () => Promise.reject(refreshFailedWith(401))],
         ])('ends as expired when %s', async (_name, refreshSession) => {
             t = setup({ refreshSession });
             t.respond.mockReturnValue({ status: 401 });
@@ -287,5 +305,99 @@ describe('session rejection interceptor', () => {
 
             expect(endSession).toHaveBeenCalledWith('forced');
         });
+    });
+});
+
+describe('installing the session rejection interceptor more than once', () => {
+    type SpiedDeps = SessionRejectionDeps & {
+        endSession: Mock;
+        refreshSession: Mock<[], Promise<string | undefined>>;
+    };
+
+    function createRejectingClient(): AxiosInstance {
+        return axios.create({
+            baseURL: BASE_URL,
+            adapter: async (config) => {
+                const response = { status: 401, data: {}, statusText: '', headers: {}, config };
+                throw new AxiosError('failed', 'ERR_BAD_REQUEST', config, {}, response);
+            },
+        });
+    }
+
+    function createDeps(refreshSession: () => Promise<string | undefined> = async () => undefined): SpiedDeps {
+        return {
+            baseURL: BASE_URL,
+            getToken: () => 'live',
+            isIdleTimeoutElapsed: () => false,
+            endSession: vi.fn(),
+            refreshSession: vi.fn(refreshSession),
+        };
+    }
+
+    const requestAsSession = (instance: AxiosInstance): Promise<unknown> =>
+        instance.get('/Patient', { headers: bearer('live') }).catch(() => undefined);
+
+    it('handles a 401 once, so a failed refresh is not retried by a second copy', async () => {
+        const instance = createRejectingClient();
+        const app = createDeps(() => Promise.reject(refreshFailedWith(503)));
+        const emr = createDeps(() => Promise.reject(refreshFailedWith(503)));
+        installSessionRejectionInterceptor(instance, app);
+        installSessionRejectionInterceptor(instance, emr);
+
+        await requestAsSession(instance);
+        expect(app.refreshSession).toHaveBeenCalledTimes(1);
+        expect(emr.refreshSession).not.toHaveBeenCalled();
+        expect(app.endSession).not.toHaveBeenCalled();
+    });
+
+    it("keeps the first installer's deps", async () => {
+        const instance = createRejectingClient();
+        const app = createDeps();
+        const emr = createDeps();
+        installSessionRejectionInterceptor(instance, app);
+        installSessionRejectionInterceptor(instance, emr);
+
+        await requestAsSession(instance);
+        expect(app.endSession).toHaveBeenCalledWith('expired');
+        expect(emr.endSession).not.toHaveBeenCalled();
+    });
+
+    it('stays active until the last installer releases it', async () => {
+        const instance = createRejectingClient();
+        const app = createDeps();
+        const releaseApp = installSessionRejectionInterceptor(instance, app);
+        const releaseEmr = installSessionRejectionInterceptor(instance, createDeps());
+
+        releaseEmr();
+        await requestAsSession(instance);
+        expect(app.endSession).toHaveBeenCalledTimes(1);
+
+        releaseApp();
+        await requestAsSession(instance);
+        expect(app.endSession).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not drop another installer's hold when one release runs twice", async () => {
+        const instance = createRejectingClient();
+        const app = createDeps();
+        installSessionRejectionInterceptor(instance, app);
+        const releaseEmr = installSessionRejectionInterceptor(instance, createDeps());
+
+        releaseEmr();
+        releaseEmr();
+        await requestAsSession(instance);
+        expect(app.endSession).toHaveBeenCalledTimes(1);
+    });
+
+    it('installs with new deps once every earlier installer has released it', async () => {
+        const instance = createRejectingClient();
+        const first = createDeps();
+        const second = createDeps();
+        installSessionRejectionInterceptor(instance, first)();
+        installSessionRejectionInterceptor(instance, second);
+
+        await requestAsSession(instance);
+        expect(first.endSession).not.toHaveBeenCalled();
+        expect(second.endSession).toHaveBeenCalledWith('expired');
     });
 });

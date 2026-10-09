@@ -1,3 +1,5 @@
+import { createHash, randomBytes } from 'node:crypto';
+
 import axios from 'axios';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -45,14 +47,52 @@ const ACCESS_TOKEN_LIFETIME_MS = 4_000;
 const REFRESH_TOKEN_LIFETIME_MS = 10_000;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const REFRESH_CLIENT_REDIRECT_URI = 'http://localhost:3000/auth';
+
 async function signInWithRefreshClient() {
-    const { data } = await axios.post<{ access_token: string; refresh_token: string }>(`${config.baseURL}/auth/token`, {
-        grant_type: 'password',
+    const verifier = randomBytes(32).toString('base64url');
+    const challenge = createHash('sha256').update(verifier).digest('base64url');
+
+    const authorizeParams = {
         client_id: 'testAuthRefresh',
-        client_secret: '123456',
-        username: 'admin',
-        password: 'password',
+        response_type: 'code',
+        redirect_uri: REFRESH_CLIENT_REDIRECT_URI,
+        code_challenge: challenge,
+        code_challenge_method: 'S256',
+    };
+    const noRedirects = { adapter: 'http' as const, maxRedirects: 0, validateStatus: () => true };
+    const toCookie = (response: { headers: Record<string, unknown> }) =>
+        ((response.headers['set-cookie'] as string[] | undefined) ?? []).map((c) => c.split(';')[0]).join('; ');
+
+    const loginPage = await axios.get<string>(`${config.baseURL}/auth/login`, {
+        params: authorizeParams,
+        ...noRedirects,
     });
+    const csrf = /name="_csrf"[^>]*value="([^"]*)"/.exec(loginPage.data)?.[1] ?? '';
+    const loginResponse = await axios.post(
+        `${config.baseURL}/auth/login`,
+        new URLSearchParams({ _csrf: csrf, username: 'admin', password: 'password' }),
+        { params: authorizeParams, headers: { Cookie: toCookie(loginPage) }, ...noRedirects },
+    );
+    const cookie = [toCookie(loginPage), toCookie(loginResponse)].join('; ');
+
+    const authorizeResponse = await axios.get(`${config.baseURL}/auth/authorize`, {
+        params: authorizeParams,
+        headers: { Cookie: cookie },
+        ...noRedirects,
+    });
+    const code = new URL(authorizeResponse.headers.location).searchParams.get('code');
+
+    const { data } = await axios.post<{ access_token: string; refresh_token: string }>(
+        `${config.baseURL}/auth/token`,
+        new URLSearchParams({
+            grant_type: 'authorization_code',
+            client_id: 'testAuthRefresh',
+            code: code!,
+            redirect_uri: REFRESH_CLIENT_REDIRECT_URI,
+            code_verifier: verifier,
+        }),
+    );
     setToken(data.access_token);
     setRefreshToken(data.refresh_token);
     setInstanceToken({ access_token: data.access_token, token_type: 'Bearer' });
@@ -70,16 +110,22 @@ describe('token refresh against a real Aidbox', () => {
             endSession,
             refreshSession,
         });
-    const originalClientId = config.clientId;
+    const originalConfig = {
+        clientId: config.clientId,
+        authFlow: config.authFlow,
+        authTokenPath: config.authTokenPath,
+    };
     let uninstall: () => void = () => undefined;
 
     beforeEach(() => {
         installFakeLocalStorage();
         config.clientId = 'testAuthRefresh';
+        config.authFlow = 'code';
+        config.authTokenPath = 'auth/token';
     });
 
     afterEach(() => {
-        config.clientId = originalClientId;
+        Object.assign(config, originalConfig);
         uninstall();
         endSession.mockReset();
         resetInstanceToken();

@@ -1,10 +1,11 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { isFailure } from '@beda.software/remote-data';
 
-import { getSignInUrl, getSignOutReason, signinWithIdentityToken } from 'src/services/auth';
+import { getSignInUrl, parseSignInLocationState, signinWithIdentityToken } from 'src/services/auth';
 
 declare const AppleID: any;
 
@@ -25,10 +26,10 @@ interface AppleAuthenticationResponse {
     };
 }
 
-export function useSignOutReason() {
-    const [reason] = useState(getSignOutReason);
+export function useSignInLocationState() {
+    const location = useLocation();
 
-    return reason;
+    return parseSignInLocationState(location.state);
 }
 
 export function useSignIn(originPathName?: string) {
@@ -43,8 +44,7 @@ export function useSignIn(originPathName?: string) {
             }
 
             window.location.href = result.data;
-        } catch (error) {
-            console.error('Failed to build the sign-in URL', error);
+        } catch {
             notification.error({
                 message: t`Can not sign in: secure browser cryptography is unavailable. Use HTTPS and try again.`,
             });

@@ -37,7 +37,7 @@ services:
     depends_on:
       devbox-db:
         condition: service_started
-      build-seeds-init:
+      build-seeds:
         condition: service_completed_successfully
     links:
       - "devbox-db:database"
@@ -68,82 +68,45 @@ services:
       interval: 5s
       timeout: 30s
       retries: 100
-  build-seeds-init:
+  build-seeds:
     image: bedasoftware/fhirsnake:latest
     command:
       - export
+      - --input
+      - /app/resources/init-seeds
+      - --input
+      - /app/resources/demo-seeds
       - --output
-      - /app/init-bundles/initBundle.json
+      - /app/resources/init-bundles/initBundle.json
       - --external-questionnaire-fce-fhir-converter-url
       - http://questionnaire-fce-fhir-converter:3000/to-fhir
     env_file:
       - ./env/build-seeds
-    depends_on:
-      questionnaire-fce-fhir-converter:
-        condition: service_healthy
-    volumes:
-      - ./resources/init-seeds:/app/resources
-      - ./resources/init-bundles:/app/init-bundles
-
-  build-seeds-demo:
-    image: bedasoftware/fhirsnake:latest
-    command:
-      - export
-      - --output
-      - /app/init-bundles/demoBundle.json
-      - --external-questionnaire-fce-fhir-converter-url
-      - http://questionnaire-fce-fhir-converter:3000/to-fhir
-    env_file:
       - ./env/build-seeds-demo
     depends_on:
       questionnaire-fce-fhir-converter:
         condition: service_healthy
     volumes:
-      - ./resources/demo-seeds:/app/resources
-      - ./resources/demo-bundles:/app/init-bundles
+      - ./resources:/app/resources
+      - ./resources/init-bundles:/app/resources/init-bundles
 
-  watch-seeds-init:
+  watch-seeds:
     image: bedasoftware/fhirsnake:latest
     command:
       - watch
+      - --input
+      - /app/resources/init-seeds
+      - --input
+      - /app/resources/demo-seeds
       - --external-fhir-server-url
       - http://root:secret@devbox:8080
       - --external-questionnaire-fce-fhir-converter-url
       - http://questionnaire-fce-fhir-converter:3000/to-fhir
     env_file:
       - ./env/build-seeds
-    volumes:
-      - ./resources/init-seeds:/app/resources
-
-  watch-seeds-demo:
-    image: bedasoftware/fhirsnake:latest
-    command:
-      - watch
-      - --external-fhir-server-url
-      - http://root:secret@devbox:8080
-      - --external-questionnaire-fce-fhir-converter-url
-      - http://questionnaire-fce-fhir-converter:3000/to-fhir
-    env_file:
       - ./env/build-seeds-demo
     volumes:
-      - ./resources/demo-seeds:/app/resources
-
-  upload-demo-bundle:
-    image: curlimages/curl
-    links:
-      - devbox
-    depends_on:
-      devbox-healthcheck:
-        condition: service_healthy
-      build-seeds-demo:
-        condition: service_completed_successfully
-    working_dir: /app/resources/demo-bundles
-    command:
-      - "sh"
-      - "-c"
-      - "curl -X POST 'http://root:secret@devbox:8080/fhir' -H 'Content-Type: application/json' -d @demoBundle.json"
-    volumes:
-      - ./resources/demo-bundles/:/app/resources/demo-bundles
+      - ./resources:/app/resources
 
   scheduling:
     image: bedasoftware/aidbox-scheduling-node-app:develop

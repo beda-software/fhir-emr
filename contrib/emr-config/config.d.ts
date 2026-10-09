@@ -13,8 +13,7 @@ declare const config: {
     clientId: string;
     /**
      * Sign-in flow. `'implicit'` (default) or `'code'`, the authorization code flow with PKCE.
-     * `'code'` requires `authTokenPath` and `authClientRedirectURL`, and a route that mounts
-     * `CodeGrantAuth` at the redirect URL.
+     * `'code'` requires `authTokenPath` and `authClientRedirectURL`.
      */
     authFlow?: 'implicit' | 'code';
     authTokenPath?: string;

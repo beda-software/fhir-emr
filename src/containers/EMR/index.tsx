@@ -7,6 +7,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 
 import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
@@ -14,24 +15,17 @@ import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { IdleTimeout } from 'src/components/IdleTimeout';
-import { isIdleTimeoutElapsedNow } from 'src/components/IdleTimeout/utils';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
-import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
 import { Spinner } from 'src/components/Spinner';
+import { CodeGrantAuth } from 'src/containers/App/auth';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
-import { doLogout, getToken, parseOAuthState, refreshSession, setToken } from 'src/services/auth';
+import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
-import { useSessionRejectionInterceptor } from './hooks';
-
-const restoreDeps = {
-    isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
-    refreshSession,
-    endSession: doLogout,
-};
+import { useCodeGrantFailureSignInState, useRedirectToSignInState, useSessionRejectionInterceptor } from './hooks';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -41,7 +35,6 @@ interface EMRProps {
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
     getAuthenticatedClinicalContext?: () => ParametersParameter[];
-    signOutTexts?: SignOutTexts;
 }
 
 export function EMR(props: EMRProps) {
@@ -53,12 +46,15 @@ export function EMR(props: EMRProps) {
         menuLayout,
         footer,
         getAuthenticatedClinicalContext,
-        signOutTexts,
     } = props;
+
+    // Must stay above the restore hook: effects run in declaration order, and a 401 on the
+    // user-info request has to meet the interceptor.
+    useSessionRejectionInterceptor();
 
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState, restoreDeps) : success(null);
+        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
     });
 
     const renderRoutes = (user: User | null) => {
@@ -87,30 +83,27 @@ export function EMR(props: EMRProps) {
         <div data-testid="emr-container">
             <MenuLayout.Provider value={menuLayout}>
                 <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
-                    <SignOutTextsContext.Provider value={signOutTexts}>
-                        <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                            {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-                        </RenderRemoteData>
-                    </SignOutTextsContext.Provider>
+                    <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                        {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
+                    </RenderRemoteData>
                 </FooterLayout.Provider>
             </MenuLayout.Provider>
         </div>
     );
 }
 
+function RedirectToSignIn() {
+    const state = useRedirectToSignInState();
+
+    return <Navigate to="/signin" replace={true} state={state} />;
+}
+
 function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
     return (
         <Routes>
             {extra}
-            <Route path="/auth" element={<Auth />} />
-            <Route
-                path="*"
-                element={
-                    <>
-                        <Navigate to="/signin" replace={true} />
-                    </>
-                }
-            />
+            <Route path="/auth" element={<AuthCallback />} />
+            <Route path="*" element={<RedirectToSignIn />} />
         </Routes>
     );
 }
@@ -122,8 +115,6 @@ interface RouteProps {
 }
 
 function AuthenticatedUserEMR({ defaultRoute, extra, getAuthenticatedClinicalContext }: RouteProps) {
-    useSessionRejectionInterceptor();
-
     return (
         <>
             <IdleTimeout />
@@ -170,6 +161,16 @@ function AuthenticatedClinicalContext({
         : getAuthenticatedClinicalContextDefault();
 
     return <ClinicalContext context={context}>{children}</ClinicalContext>;
+}
+
+function AuthCallback() {
+    return config.authFlow === 'code' ? <CodeGrantAuth renderFailure={() => <CodeGrantFailure />} /> : <Auth />;
+}
+
+function CodeGrantFailure() {
+    const signInState = useCodeGrantFailureSignInState();
+
+    return <Navigate to="/signin" replace={true} state={signInState} />;
 }
 
 export function Auth() {

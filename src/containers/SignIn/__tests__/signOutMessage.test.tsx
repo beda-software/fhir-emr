@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { useLocation } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SignOutTexts, SignOutTextsContext } from 'src/components/SignOutTexts';
@@ -6,20 +7,19 @@ import { ThemeProvider } from 'src/theme';
 
 import { SignIn } from '../index';
 
-vi.mock('src/services/auth', async () => {
-    const actual = await vi.importActual<typeof import('src/services/auth')>('src/services/auth');
-
-    return { ...actual, getSignOutReason: vi.fn() };
-});
-
 vi.mock('src/components/BaseLayout/Footer', () => ({ AppFooter: () => null }));
 
 const FORCED = 'You were signed out because there was no activity for a while.';
 const EXPIRED = 'Your session has expired. Please sign in again.';
 
 async function renderWithReason(reason: 'forced' | 'expired' | undefined, signOutTexts?: SignOutTexts) {
-    const { getSignOutReason } = await import('src/services/auth');
-    vi.mocked(getSignOutReason).mockReturnValue(reason);
+    vi.mocked(useLocation).mockReturnValue({
+        pathname: '/signin',
+        search: '',
+        hash: '',
+        key: 'default',
+        state: reason ? { signOutReason: reason } : null,
+    });
     render(
         <SignOutTextsContext.Provider value={signOutTexts}>
             <ThemeProvider>

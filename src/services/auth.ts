@@ -62,11 +62,8 @@ export function getToken() {
     return window.localStorage.getItem('token') || undefined;
 }
 
-const SIGNOUT_REASON_STORAGE_KEY = 'signout_reason';
-
 export function setToken(token: string) {
     window.localStorage.setItem('token', token);
-    window.localStorage.removeItem(SIGNOUT_REASON_STORAGE_KEY);
 }
 
 export function removeToken() {
@@ -168,7 +165,7 @@ export function createRefreshSession(deps: RefreshSessionDeps): () => Promise<st
 
 let refreshInFlight: Promise<string | undefined> | undefined;
 
-// Concurrent callers (Session restore, interceptor 401s) share one request.
+// Concurrent callers share one request.
 export function refreshSession(): Promise<string | undefined> {
     refreshInFlight ??= createRefreshSession({
         getRefreshToken: () => window.localStorage.getItem('refresh_token'),
@@ -178,7 +175,7 @@ export function refreshSession(): Promise<string | undefined> {
         },
         clientId: config.clientId,
         baseURL: config.baseURL,
-        tokenPath: getAuthFlow().refreshTokenPath(),
+        tokenPath: config.authTokenPath,
     })().finally(() => {
         refreshInFlight = undefined;
     });
@@ -188,11 +185,37 @@ export function refreshSession(): Promise<string | undefined> {
 
 export type SignOutReason = 'manual' | 'forced' | 'expired';
 
+const SIGN_IN_PATH = '/signin';
+
+export type SignInFailure = 'code-exchange';
+
+export interface SignInLocationState {
+    nextUrl?: string;
+    signInFailure?: SignInFailure;
+    signOutReason?: Exclude<SignOutReason, 'manual'>;
+}
+
+export function parseSignInLocationState(state: unknown): SignInLocationState {
+    if (typeof state !== 'object' || state === null) {
+        return {};
+    }
+
+    return {
+        nextUrl: 'nextUrl' in state && typeof state.nextUrl === 'string' ? state.nextUrl : undefined,
+        signInFailure:
+            'signInFailure' in state && state.signInFailure === 'code-exchange' ? 'code-exchange' : undefined,
+        signOutReason:
+            'signOutReason' in state && (state.signOutReason === 'forced' || state.signOutReason === 'expired')
+                ? state.signOutReason
+                : undefined,
+    };
+}
+
 let endSessionInFlight: Promise<void> | undefined;
 
 // The one end-of-session path for Manual, Forced and Expired Sign-Out. Concurrent
 // calls share a single run, so the Session is only ever ended once.
-export function doLogout(reason: SignOutReason): Promise<void> {
+export function doLogout(reason: SignOutReason = 'manual'): Promise<void> {
     endSessionInFlight ??= endSession(reason).finally(() => {
         endSessionInFlight = undefined;
     });
@@ -208,18 +231,16 @@ async function endSession(reason: SignOutReason) {
     }
     resetInstanceToken();
     localStorage.clear();
-    if (reason !== 'manual') {
-        localStorage.setItem(SIGNOUT_REASON_STORAGE_KEY, reason);
+    if (reason === 'manual') {
+        window.location.href = '/';
+
+        return;
     }
-    window.location.href = '/';
-}
-
-// Not cleared on read: every tab redirected by the same Forced or Expired Sign-Out must see it.
-// setToken() clears it, so the next sign-in never re-shows the message.
-export function getSignOutReason(): Exclude<SignOutReason, 'manual'> | undefined {
-    const reason = localStorage.getItem(SIGNOUT_REASON_STORAGE_KEY);
-
-    return reason === 'forced' || reason === 'expired' ? reason : undefined;
+    // Router location state lives in history.state, which survives the reload that
+    // resets the in-memory user and lets the router render the anonymous routes.
+    const state: SignInLocationState = { signOutReason: reason };
+    window.history.replaceState({ usr: state }, '', SIGN_IN_PATH);
+    window.location.reload();
 }
 
 export function getUserInfo() {
@@ -299,7 +320,6 @@ async function getAuthToken(appleToken: string) {
 interface AuthFlow {
     getSignInUrl(state?: OAuthState): Promise<RemoteDataResult<string>>;
     exchangeCode(tokenEndpoint: string, data: Record<string, string>): Promise<RemoteDataResult<AuthTokenResponse>>;
-    refreshTokenPath(): string | undefined;
 }
 
 const implicitFlow: AuthFlow = {
@@ -313,7 +333,6 @@ const implicitFlow: AuthFlow = {
         );
     },
     exchangeCode: postAuthorizationCode,
-    refreshTokenPath: () => undefined,
 };
 
 const codeFlow: AuthFlow = {
@@ -355,7 +374,6 @@ const codeFlow: AuthFlow = {
             clearCodeVerifier();
         }
     },
-    refreshTokenPath: () => config.authTokenPath,
 };
 
 function getAuthFlow(): AuthFlow {
