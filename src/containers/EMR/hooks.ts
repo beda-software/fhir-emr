@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
 
+import { isIdleTimeoutElapsedNow } from 'src/components/IdleTimeout/utils';
 import { doLogout, getToken, parseOAuthState, refreshSession, type SignInLocationState } from 'src/services/auth';
 import { axiosInstance } from 'src/services/fhir';
 import { installSessionRejectionInterceptor } from 'src/services/sessionRejection';
@@ -17,6 +18,7 @@ export function useSessionRejectionInterceptor() {
             installSessionRejectionInterceptor(axiosInstance, {
                 baseURL: config.baseURL,
                 getToken,
+                isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
                 endSession: doLogout,
                 refreshSession,
             }),

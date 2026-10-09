@@ -22,6 +22,7 @@ describe('session rejection against a real Aidbox', () => {
         const eject = installSessionRejectionInterceptor(axiosInstance, {
             baseURL: config.baseURL,
             getToken: () => token.access_token,
+            isIdleTimeoutElapsed: () => false,
             endSession,
             refreshSession: async () => undefined,
         });
@@ -105,6 +106,7 @@ describe('token refresh against a real Aidbox', () => {
         installSessionRejectionInterceptor(axiosInstance, {
             baseURL: config.baseURL,
             getToken,
+            isIdleTimeoutElapsed: () => false,
             endSession,
             refreshSession,
         });

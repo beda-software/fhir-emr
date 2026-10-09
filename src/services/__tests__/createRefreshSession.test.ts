@@ -96,6 +96,7 @@ describe('createRefreshSession', () => {
         installSessionRejectionInterceptor(client, {
             baseURL: 'https://emr.test',
             getToken: () => token,
+            isIdleTimeoutElapsed: () => false,
             endSession,
             refreshSession: refresh,
         });

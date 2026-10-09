@@ -53,11 +53,11 @@ describe('doLogout', () => {
     it('revokes the Session, clears storage and reloads onto the sign-in route carrying the reason', async () => {
         window.localStorage.setItem('token', 't');
 
-        await doLogout('expired');
+        await doLogout('forced');
 
         expect(aidboxService).toHaveBeenCalledWith(expect.objectContaining({ method: 'DELETE', url: '/Session' }));
         expect(window.localStorage.getItem('token')).toBeNull();
-        expect(window.history.replaceState).toHaveBeenCalledWith({ usr: { signOutReason: 'expired' } }, '', '/signin');
+        expect(window.history.replaceState).toHaveBeenCalledWith({ usr: { signOutReason: 'forced' } }, '', '/signin');
         expect(window.location.reload).toHaveBeenCalled();
     });
 
@@ -79,7 +79,7 @@ describe('doLogout', () => {
     });
 
     it('ends the Session exactly once when invoked concurrently', async () => {
-        await Promise.all([doLogout('expired'), doLogout('expired'), doLogout('manual')]);
+        await Promise.all([doLogout('forced'), doLogout('forced'), doLogout('manual')]);
 
         expect(aidboxService).toHaveBeenCalledTimes(1);
         expect(resetInstanceToken).toHaveBeenCalledTimes(1);
@@ -89,10 +89,10 @@ describe('doLogout', () => {
         vi.mocked(aidboxService).mockRejectedValue(new Error('401'));
         window.localStorage.setItem('token', 't');
 
-        await doLogout('expired');
+        await doLogout('forced');
 
         expect(window.localStorage.getItem('token')).toBeNull();
-        expect(window.history.replaceState).toHaveBeenCalledWith({ usr: { signOutReason: 'expired' } }, '', '/signin');
+        expect(window.history.replaceState).toHaveBeenCalledWith({ usr: { signOutReason: 'forced' } }, '', '/signin');
         expect(window.location.reload).toHaveBeenCalled();
     });
 });

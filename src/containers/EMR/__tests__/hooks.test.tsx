@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import config from '@beda.software/emr-config';
 
+import { isIdleTimeoutElapsedNow } from 'src/components/IdleTimeout/utils';
 import { doLogout, getToken, refreshSession } from 'src/services/auth';
 import { axiosInstance } from 'src/services/fhir';
 import { installSessionRejectionInterceptor } from 'src/services/sessionRejection';
@@ -42,6 +43,7 @@ describe('useSessionRejectionInterceptor', () => {
         const releaseApp = installSessionRejectionInterceptor(axiosInstance, {
             baseURL: config.baseURL,
             getToken,
+            isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
             endSession: doLogout,
             refreshSession,
         });

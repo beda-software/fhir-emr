@@ -31,7 +31,7 @@ Pick `refresh_token_expiration` no shorter than the longest gap between two refr
 1. Set `authFlow: 'code'` in the app config, with `clientId` naming the code-grant Client, `authTokenPath: 'auth/token'` and `authClientRedirectURL` (the redirect URI). Both paths are required; see `docs/code-grant-sign-in.md`.
 2. Nothing to mount: the built-in callback route exchanges the code when `authFlow` is `'code'`.
 
-The refresh request goes to `authTokenPath`. The refresh credential is stored at sign-in and replaces nothing on refresh. An expired refresh credential behaves as described below.
+The refresh request goes to `authTokenPath`. The refresh credential is stored at sign-in and replaces nothing on refresh. Expired refresh credential, Idle Timeout precedence and "refresh is not Provider Activity" behave as described below.
 
 ## Password grant alternative
 
@@ -64,15 +64,30 @@ Aidbox rejects `refresh_token` and `refresh_token_expiration` under the `auth` b
 
 | Client issues a refresh token | Server rejects the access token (401) | Result                                                                    |
 | ----------------------------- | ------------------------------------- | ------------------------------------------------------------------------- |
-| Yes                           | Refresh succeeds                      | Token Refresh, the request is replayed once, the provider notices nothing |
+| Yes                           | Idle Timeout not elapsed              | Token Refresh, the request is replayed once, the provider notices nothing |
 | Yes                           | Refresh rejected or unreachable       | Expired Sign-Out                                                          |
 | No (default login Client)     | any                                   | Expired Sign-Out, no refresh attempted                                    |
+| any                           | Idle Timeout already elapsed          | Forced Sign-Out; refresh is never attempted                               |
+
+The Idle Timeout is opt-in: neither `App` nor `EMR` mounts it. Mounting it is what turns it on. Render it once, next to (and before) `App` or `EMR`, with the durations in seconds:
+
+```tsx
+import { App } from '@beda.software/emr/containers';
+import { IdleTimeout } from '@beda.software/emr/components';
+
+<>
+    <IdleTimeout idleTimeoutSeconds={30 * 60} warningWindowSeconds={2 * 60} />
+    <App />
+</>;
+```
+
+`idleTimeoutSeconds` is required and must be a positive number, or the component throws. `warningWindowSeconds` defaults to 120, and is capped at half of `idleTimeoutSeconds` when it isn't shorter. Both are read once at mount; remount with a `key` to change them. It renders nothing when no one is signed in, and needs no router. While it is off, the "Idle Timeout already elapsed" row never applies.
 
 A Client without the attributes above (for example the default `testAuth`) issues no `refresh_token` and no `expires_in`, and its tokens never expire server-side. Upgrading fhir-emr therefore changes nothing for it.
 
 ### Reloading the page
 
-The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out. Without a refresh credential, a rejected token on reload also ends in an Expired Sign-Out. If the refresh fails because of a network error (or a 5xx), the stored credentials are kept, so the next load can retry.
+The same rules apply when the Session is restored on page load. If the stored access token is rejected with a 401 and the Client issued a refresh token, the app makes one Token Refresh and retries the restore once, so a reload (or a stale tab) after the access token expired keeps the provider signed in. If the refresh is rejected, or the retry is still rejected, the provider gets an Expired Sign-Out; if the Idle Timeout has already elapsed, a Forced Sign-Out with no refresh attempt. Without a refresh credential, a rejected token on reload also ends in an Expired Sign-Out. If the refresh fails because of a network error (or a 5xx), the stored credentials are kept, so the next load can retry. The refresh on reload is not Provider Activity.
 
 ### Requests made before EMR mounts
 
@@ -80,6 +95,7 @@ The same rules apply when the Session is restored on page load. If the stored ac
 
 ```ts
 import config from '@beda.software/emr-config';
+import { isIdleTimeoutElapsedNow } from '@beda.software/emr/dist/components/IdleTimeout/utils';
 import {
     axiosInstance,
     doLogout,
@@ -91,6 +107,7 @@ import {
 installSessionRejectionInterceptor(axiosInstance, {
     baseURL: config.baseURL,
     getToken,
+    isIdleTimeoutElapsed: isIdleTimeoutElapsedNow,
     endSession: doLogout,
     refreshSession,
 });
@@ -101,6 +118,7 @@ A client gets one interceptor however many times it is installed; `EMR` reuses t
 ## What refresh does not do
 
 -   **Reactive only.** Refresh runs only in response to a 401 on a request (including the Session restore on page load). There is no timer and no proactive renewal.
+-   **Never extends an idle Session.** Refresh does not count as Provider Activity and does not touch the last-activity timestamp. The Idle Timeout stays the only authority for ending an idle Session.
 -   **The access token does not slide; the refresh token does.** Aidbox fixes the access token's expiry at issue time, and using it does not extend it. The refresh token's lifetime is counted from issue or from its last use (checked on Aidbox with a 20 s lifetime: an unused token was rejected after 24 s, a token used every 12 s kept working past 36 s, and was rejected after 22 s idle). A provider who keeps working is renewed each time the access token dies and the refresh window restarts; one who is away longer than `refresh_token_expiration` is signed out.
 -   Only the app's shared HTTP client is covered (not the fhir-react instance, value-set clients or raw `fetch` callers).
 
@@ -138,6 +156,8 @@ import { SignOutTextsContext } from '@beda.software/emr/components';
 
 <SignOutTextsContext.Provider
     value={{
+        warningWindow: { title: 'Still there?', stayLabel: 'Keep working' },
+        forcedSignOutMessage: 'You were signed out after a period of inactivity.',
         expiredSignOutMessage: 'Your session is no longer valid. Please sign in again.',
     }}
 >
@@ -145,4 +165,4 @@ import { SignOutTextsContext } from '@beda.software/emr/components';
 </SignOutTextsContext.Provider>;
 ```
 
-The message is shown on the sign-in screen after an Expired Sign-Out; the sign-in page itself takes no props for it.
+`warningWindow` takes `title`, `body`, `stayLabel` and `signOutLabel`. The two messages are shown on the sign-in screen after a Forced Sign-Out and an Expired Sign-Out respectively; the sign-in page itself takes no props for them.

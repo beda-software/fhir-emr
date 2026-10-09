@@ -1220,11 +1220,11 @@ msgstr "Escuchar el audio"
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: src/containers/SignIn/index.tsx:91
+#: src/containers/SignIn/index.tsx:93
 msgid "Log in"
 msgstr "Iniciar sesión"
 
-#: src/containers/SignIn/index.tsx:128
+#: src/containers/SignIn/index.tsx:130
 msgid "Log in as demo patient"
 msgstr "Iniciar sesión como paciente demo"
 
@@ -1411,8 +1411,8 @@ msgstr "Resultados"
 msgid "On Hold"
 msgstr "Guardado"
 
-#: src/containers/SignIn/index.tsx:49
-#: src/containers/SignIn/index.tsx:97
+#: src/containers/SignIn/index.tsx:51
+#: src/containers/SignIn/index.tsx:99
 msgid "On the next page, please, use one of the following credentials"
 msgstr "En la siguiente página, por favor, utilice una de las siguientes credenciales"
 
@@ -1486,8 +1486,8 @@ msgstr ""
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:80
-#: src/containers/SignIn/index.tsx:116
+#: src/containers/SignIn/index.tsx:82
+#: src/containers/SignIn/index.tsx:118
 msgid "Password"
 msgstr "Contraseña"
 
@@ -1880,7 +1880,11 @@ msgstr "Compartir enlace"
 msgid "Show results"
 msgstr "Mostrar resultados"
 
-#: src/containers/SignIn/index.tsx:36
+#: src/components/IdleTimeout/hooks.ts:171
+msgid "Sign out now"
+msgstr "Cerrar sesión ahora"
+
+#: src/containers/SignIn/index.tsx:37
 msgid "Sign-in did not complete. Please try again."
 msgstr "La autenticación no se completó. Inténtelo de nuevo."
 
@@ -1958,6 +1962,10 @@ msgstr "Iniciar videollamada"
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:85
 msgid "Status"
 msgstr "Estado"
+
+#: src/components/IdleTimeout/hooks.ts:170
+msgid "Stay signed in"
+msgstr "Mantener la sesión iniciada"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:125
 msgid "Step"
@@ -2202,8 +2210,8 @@ msgstr "URL:"
 msgid "User with no roles in the system"
 msgstr "Usuario sin rol en el sistema"
 
-#: src/containers/SignIn/index.tsx:52
-#: src/containers/SignIn/index.tsx:100
+#: src/containers/SignIn/index.tsx:54
+#: src/containers/SignIn/index.tsx:102
 msgid "Username"
 msgstr "Nombre de usuario"
 
@@ -2251,7 +2259,7 @@ msgstr "Miércoles"
 msgid "Week"
 msgstr "Semana"
 
-#: src/containers/SignIn/index.tsx:32
+#: src/containers/SignIn/index.tsx:33
 msgid "Welcome to"
 msgstr "Bienvenido a"
 
@@ -2270,10 +2278,22 @@ msgstr "Sí"
 msgid "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data."
 msgstr "Actualmente no tienes acceso a los datos del paciente. Para obtenerlos, debes conseguir el consentimiento firmado del paciente que autorice la liberación de sus datos de actividad."
 
+#: src/components/SignOutTexts/hooks.ts:11
+msgid "You were signed out because there was no activity for a while."
+msgstr "Se cerró su sesión porque no hubo actividad durante un tiempo."
+
+#: src/components/IdleTimeout/hooks.ts:169
+msgid "You've been inactive for a while. For your security, your session will end soon unless you stay signed in."
+msgstr "Ha estado inactivo por un tiempo. Por su seguridad, su sesión finalizará pronto a menos que permanezca conectado."
+
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr "Tu navegador no sorporta reproducción de audio"
 
-#: src/components/SignOutTexts/hooks.ts:11
+#: src/components/SignOutTexts/hooks.ts:15
 msgid "Your session has expired. Please sign in again."
 msgstr "Su sesión ha expirado. Inicie sesión de nuevo."
+
+#: src/components/IdleTimeout/hooks.ts:166
+msgid "Your session is about to end"
+msgstr "Su sesión está a punto de finalizar"

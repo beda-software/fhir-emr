@@ -183,7 +183,7 @@ export function refreshSession(): Promise<string | undefined> {
     return refreshInFlight;
 }
 
-export type SignOutReason = 'manual' | 'expired';
+export type SignOutReason = 'manual' | 'forced' | 'expired';
 
 const SIGN_IN_PATH = '/signin';
 
@@ -204,13 +204,16 @@ export function parseSignInLocationState(state: unknown): SignInLocationState {
         nextUrl: 'nextUrl' in state && typeof state.nextUrl === 'string' ? state.nextUrl : undefined,
         signInFailure:
             'signInFailure' in state && state.signInFailure === 'code-exchange' ? 'code-exchange' : undefined,
-        signOutReason: 'signOutReason' in state && state.signOutReason === 'expired' ? 'expired' : undefined,
+        signOutReason:
+            'signOutReason' in state && (state.signOutReason === 'forced' || state.signOutReason === 'expired')
+                ? state.signOutReason
+                : undefined,
     };
 }
 
 let endSessionInFlight: Promise<void> | undefined;
 
-// The one end-of-session path for Manual and Expired Sign-Out. Concurrent
+// The one end-of-session path for Manual, Forced and Expired Sign-Out. Concurrent
 // calls share a single run, so the Session is only ever ended once.
 export function doLogout(reason: SignOutReason = 'manual'): Promise<void> {
     endSessionInFlight ??= endSession(reason).finally(() => {

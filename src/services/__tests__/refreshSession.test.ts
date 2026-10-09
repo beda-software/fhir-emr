@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import config from '@beda.software/emr-config';
 
+import { LAST_PROVIDER_ACTIVITY_STORAGE_KEY } from 'src/components/IdleTimeout/utils';
 import { refreshSession } from 'src/services/auth';
 
 import { installFakeLocalStorage } from './fakeLocalStorage';
@@ -28,7 +29,7 @@ describe('refreshSession', () => {
         expect(post).not.toHaveBeenCalled();
     });
 
-    it('replaces only the access token and leaves other stored values alone', async () => {
+    it('replaces only the access token and leaves activity and other stored values alone', async () => {
         localStorage.setItem('refresh_token', 'refresh');
         const post = vi.spyOn(axios, 'post').mockResolvedValue({ data: { access_token: 'new', expires_in: 4 } });
 
@@ -41,6 +42,7 @@ describe('refreshSession', () => {
         expect(localStorage.getItem('token')).toBe('new');
         expect(localStorage.getItem('refresh_token')).toBe('refresh');
         expect(localStorage.getItem('id_token')).toBe('id');
+        expect(localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBeNull();
     });
 
     it('posts to the configured token path in the default flow', async () => {

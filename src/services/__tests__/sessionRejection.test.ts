@@ -8,10 +8,11 @@ const BASE_URL = 'https://aidbox.test';
 
 interface Setup {
     token?: string;
+    idleElapsed?: boolean;
     refreshSession?: () => Promise<string | undefined>;
 }
 
-function setup({ token = 'live', refreshSession = async () => undefined }: Setup = {}) {
+function setup({ token = 'live', idleElapsed = false, refreshSession = async () => undefined }: Setup = {}) {
     const endSession = vi.fn();
     let currentToken: string | undefined = token;
     const respond = vi.fn<[InternalAxiosRequestConfig], { status: number; data?: unknown }>();
@@ -29,6 +30,7 @@ function setup({ token = 'live', refreshSession = async () => undefined }: Setup
     const eject = installSessionRejectionInterceptor(instance, {
         baseURL: BASE_URL,
         getToken: () => currentToken,
+        isIdleTimeoutElapsed: () => idleElapsed,
         endSession,
         refreshSession: async () => {
             const next = await refreshSession();
@@ -67,6 +69,15 @@ describe('session rejection interceptor', () => {
 
         expect(t.endSession).toHaveBeenCalledTimes(1);
         expect(t.endSession).toHaveBeenCalledWith('expired');
+    });
+
+    it('ends as forced instead when the Idle Timeout has already elapsed', async () => {
+        t = setup({ idleElapsed: true });
+        t.respond.mockReturnValue({ status: 401 });
+
+        await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toBeDefined();
+
+        expect(t.endSession).toHaveBeenCalledWith('forced');
     });
 
     it('hands several concurrent 401s to the end-of-session action, which collapses them', async () => {
@@ -122,6 +133,7 @@ describe('session rejection interceptor', () => {
         installSessionRejectionInterceptor(failing, {
             baseURL: BASE_URL,
             getToken: () => 'live',
+            isIdleTimeoutElapsed: () => false,
             endSession: t.endSession,
             refreshSession: async () => undefined,
         });
@@ -231,6 +243,17 @@ describe('session rejection interceptor', () => {
             expect(t.endSession).toHaveBeenCalledWith('expired');
         });
 
+        it('skips the refresh and ends as forced when the Idle Timeout has elapsed', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession, idleElapsed: true });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/Patient', { headers: bearer('live') })).rejects.toBeDefined();
+
+            expect(refreshSession).not.toHaveBeenCalled();
+            expect(t.endSession).toHaveBeenCalledWith('forced');
+        });
+
         it('allows a later refresh once the previous one has settled', async () => {
             const refreshSession = vi.fn().mockResolvedValueOnce('fresh').mockResolvedValueOnce('fresher');
             t = setup({ refreshSession });
@@ -242,6 +265,45 @@ describe('session rejection interceptor', () => {
 
             expect(response.data).toEqual({ ok: true });
             expect(refreshSession).toHaveBeenCalledTimes(2);
+        });
+
+        it('ends as forced when the Idle Timeout elapses while the refresh is in flight', async () => {
+            let idleElapsed = false;
+            const refreshSession = vi.fn(async () => {
+                idleElapsed = true;
+
+                return 'fresh';
+            });
+            const endSession = vi.fn();
+            const instance = axios.create({
+                baseURL: BASE_URL,
+                adapter: async (config) => {
+                    throw new AxiosError(
+                        'failed',
+                        'ERR_BAD_REQUEST',
+                        config,
+                        {},
+                        {
+                            status: 401,
+                            data: undefined,
+                            statusText: '',
+                            headers: {},
+                            config,
+                        },
+                    );
+                },
+            });
+            installSessionRejectionInterceptor(instance, {
+                baseURL: BASE_URL,
+                getToken: () => 'live',
+                isIdleTimeoutElapsed: () => idleElapsed,
+                endSession,
+                refreshSession,
+            });
+
+            await expect(instance.get('/Patient', { headers: bearer('live') })).rejects.toBeDefined();
+
+            expect(endSession).toHaveBeenCalledWith('forced');
         });
     });
 });
@@ -266,6 +328,7 @@ describe('installing the session rejection interceptor more than once', () => {
         return {
             baseURL: BASE_URL,
             getToken: () => 'live',
+            isIdleTimeoutElapsed: () => false,
             endSession: vi.fn(),
             refreshSession: vi.fn(refreshSession),
         };

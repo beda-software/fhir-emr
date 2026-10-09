@@ -1155,11 +1155,11 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:91
+#: src/containers/SignIn/index.tsx:93
 msgid "Log in"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:128
+#: src/containers/SignIn/index.tsx:130
 msgid "Log in as demo patient"
 msgstr ""
 
@@ -1317,8 +1317,8 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:49
-#: src/containers/SignIn/index.tsx:97
+#: src/containers/SignIn/index.tsx:51
+#: src/containers/SignIn/index.tsx:99
 msgid "On the next page, please, use one of the following credentials"
 msgstr ""
 
@@ -1392,8 +1392,8 @@ msgstr ""
 msgid "Passed assessment"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:80
-#: src/containers/SignIn/index.tsx:116
+#: src/containers/SignIn/index.tsx:82
+#: src/containers/SignIn/index.tsx:118
 msgid "Password"
 msgstr ""
 
@@ -1747,7 +1747,11 @@ msgstr ""
 msgid "Show results"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:36
+#: src/components/IdleTimeout/hooks.ts:171
+msgid "Sign out now"
+msgstr ""
+
+#: src/containers/SignIn/index.tsx:37
 msgid "Sign-in did not complete. Please try again."
 msgstr ""
 
@@ -1824,6 +1828,10 @@ msgstr ""
 #: src/containers/Prescriptions/index.tsx:124
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:85
 msgid "Status"
+msgstr ""
+
+#: src/components/IdleTimeout/hooks.ts:170
+msgid "Stay signed in"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:125
@@ -2052,8 +2060,8 @@ msgstr ""
 msgid "User with no roles in the system"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:52
-#: src/containers/SignIn/index.tsx:100
+#: src/containers/SignIn/index.tsx:54
+#: src/containers/SignIn/index.tsx:102
 msgid "Username"
 msgstr ""
 
@@ -2096,7 +2104,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:32
+#: src/containers/SignIn/index.tsx:33
 msgid "Welcome to"
 msgstr ""
 
@@ -2115,10 +2123,22 @@ msgstr ""
 msgid "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data."
 msgstr ""
 
+#: src/components/SignOutTexts/hooks.ts:11
+msgid "You were signed out because there was no activity for a while."
+msgstr ""
+
+#: src/components/IdleTimeout/hooks.ts:169
+msgid "You've been inactive for a while. For your security, your session will end soon unless you stay signed in."
+msgstr ""
+
 #: src/components/AudioRecorder/index.tsx:105
 msgid "Your browser does not support the audio element"
 msgstr ""
 
-#: src/components/SignOutTexts/hooks.ts:11
+#: src/components/SignOutTexts/hooks.ts:15
 msgid "Your session has expired. Please sign in again."
+msgstr ""
+
+#: src/components/IdleTimeout/hooks.ts:166
+msgid "Your session is about to end"
 msgstr ""
