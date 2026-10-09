@@ -1,6 +1,4 @@
 import { renderHook } from '@testing-library/react';
-import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { doLogout } from 'src/services/auth';
@@ -31,10 +29,6 @@ function requireConfig() {
     }
 
     return IDLE_TIMEOUT_CONFIG;
-}
-
-function wrapper({ children }: { children: ReactNode }) {
-    return <MemoryRouter>{children}</MemoryRouter>;
 }
 
 // setupTests.ts stubs window.localStorage with no-op vi.fn()s; this suite needs a
@@ -69,7 +63,7 @@ describe('useIdleTimeout reading configured durations from deployment config', (
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0 - WARNING_START_MS));
         vi.setSystemTime(t0);
 
-        const { result } = renderHook(() => useIdleTimeout(requireConfig()), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(requireConfig()));
 
         expect(result.current.state).toBe('warning');
         expect(doLogout).not.toHaveBeenCalled();
@@ -81,7 +75,7 @@ describe('useIdleTimeout reading configured durations from deployment config', (
         window.localStorage.setItem('token', 'still-here');
         vi.setSystemTime(t0);
 
-        const { result } = renderHook(() => useIdleTimeout(requireConfig()), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(requireConfig()));
 
         expect(result.current.state).toBe('expired');
         expect(doLogout).toHaveBeenCalledWith('forced');
@@ -92,7 +86,7 @@ describe('useIdleTimeout reading configured durations from deployment config', (
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0 - (WARNING_START_MS - 1)));
         vi.setSystemTime(t0);
 
-        const { result } = renderHook(() => useIdleTimeout(requireConfig()), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(requireConfig()));
 
         expect(result.current.state).toBe('active');
     });

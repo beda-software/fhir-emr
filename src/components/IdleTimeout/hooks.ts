@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { doLogout, getToken } from 'src/services/auth';
 
@@ -37,19 +36,6 @@ function readOrInitLastProviderActivityAt(): number {
     persistLastProviderActivityAt(now);
 
     return now;
-}
-
-function useRecordNavigationAsProviderActivity(recordProviderActivity: () => void) {
-    const location = useLocation();
-    const isFirstLocationRender = useRef(true);
-
-    useEffect(() => {
-        if (isFirstLocationRender.current) {
-            isFirstLocationRender.current = false;
-            return;
-        }
-        recordProviderActivity();
-    }, [location.pathname, recordProviderActivity]);
 }
 
 export function useIdleTimeout(config: IdleTimeoutConfig): UseIdleTimeoutResult {
@@ -117,10 +103,10 @@ export function useIdleTimeout(config: IdleTimeoutConfig): UseIdleTimeoutResult 
         return () => window.removeEventListener('storage', onStorage);
     }, [applyEvaluation, controller]);
 
-    // Provider Activity: click, keydown, touchstart. Mouse movement and scrolling
-    // never count, so they are deliberately not listened for here.
+    // Provider Activity: click, keydown, touchstart, and back/forward (popstate). Mouse
+    // movement, scrolling and navigation made by code never count.
     useEffect(() => {
-        const providerActivityEvents = ['click', 'keydown', 'touchstart'] as const;
+        const providerActivityEvents = ['click', 'keydown', 'touchstart', 'popstate'] as const;
         providerActivityEvents.forEach((eventName) => window.addEventListener(eventName, recordProviderActivity));
 
         return () => {
@@ -129,8 +115,6 @@ export function useIdleTimeout(config: IdleTimeoutConfig): UseIdleTimeoutResult 
             );
         };
     }, [recordProviderActivity]);
-
-    useRecordNavigationAsProviderActivity(recordProviderActivity);
 
     // Mobile browsers throttle or suspend `setInterval` in a backgrounded tab, so an
     // immediate recheck on regained visibility/focus catches what the interval missed.

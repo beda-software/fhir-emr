@@ -1,6 +1,4 @@
 import { act, renderHook } from '@testing-library/react';
-import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { doLogout } from 'src/services/auth';
@@ -17,10 +15,6 @@ vi.mock('src/services/auth', () => ({
 const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 const WARNING_WINDOW_MS = 2 * 60 * 1000;
 const WARNING_START_MS = IDLE_TIMEOUT_MS - WARNING_WINDOW_MS;
-
-function wrapper({ children }: { children: ReactNode }) {
-    return <MemoryRouter>{children}</MemoryRouter>;
-}
 
 function dispatchStorageEvent(key: string | null, newValue: string | null) {
     act(() => {
@@ -63,7 +57,7 @@ describe('useIdleTimeout multi-tab coordination', () => {
         vi.setSystemTime(t0);
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
         expect(result.current.state).toBe('active');
 
         vi.setSystemTime(t0 + WARNING_START_MS + 1000);
@@ -79,7 +73,7 @@ describe('useIdleTimeout multi-tab coordination', () => {
         vi.setSystemTime(t0);
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
         expect(result.current.state).toBe('active');
 
         // No local recheck has run yet (fake timers never advanced), so only the
@@ -96,7 +90,7 @@ describe('useIdleTimeout multi-tab coordination', () => {
         vi.setSystemTime(t0);
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         vi.setSystemTime(t0 + IDLE_TIMEOUT_MS + 1000);
         dispatchStorageEvent(STATE_BROADCAST_STORAGE_KEY, String(Date.now()));
@@ -110,7 +104,7 @@ describe('useIdleTimeout multi-tab coordination', () => {
         vi.setSystemTime(t0);
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
 
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         const hrefSpy = vi.fn();
         // jsdom's Location#href is a non-configurable accessor; replace `window.location`
@@ -143,7 +137,7 @@ describe('useIdleTimeout multi-tab coordination', () => {
         window.localStorage.setItem('token', 'still-here');
         vi.setSystemTime(t0);
 
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         expect(doLogout).toHaveBeenCalledWith('forced');
     });
@@ -153,9 +147,37 @@ describe('useIdleTimeout multi-tab coordination', () => {
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0 - IDLE_TIMEOUT_MS));
         vi.setSystemTime(t0);
 
-        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        const { result } = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         expect(result.current.state).toBe('expired');
         expect(doLogout).not.toHaveBeenCalled();
+    });
+
+    it('counts back/forward navigation (popstate) as Provider Activity', () => {
+        const t0 = 1_700_000_000_000;
+        vi.setSystemTime(t0);
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
+
+        vi.setSystemTime(t0 + 1000);
+        act(() => {
+            window.dispatchEvent(new PopStateEvent('popstate'));
+        });
+
+        expect(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBe(String(t0 + 1000));
+    });
+
+    it('does not count navigation made by code as Provider Activity', () => {
+        const t0 = 1_700_000_000_000;
+        vi.setSystemTime(t0);
+        window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(t0));
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
+
+        vi.setSystemTime(t0 + 1000);
+        act(() => {
+            window.history.pushState({}, '', '/patients');
+        });
+
+        expect(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBe(String(t0));
     });
 });

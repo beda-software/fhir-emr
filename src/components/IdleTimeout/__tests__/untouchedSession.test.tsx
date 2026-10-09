@@ -1,7 +1,5 @@
 import { renderHook } from '@testing-library/react';
 import axios, { AxiosError } from 'axios';
-import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { installFakeLocalStorage } from 'src/services/__tests__/fakeLocalStorage';
@@ -20,10 +18,6 @@ vi.mock('src/services/auth', () => ({
     getToken: () => window.localStorage.getItem('token') || undefined,
 }));
 
-function wrapper({ children }: { children: ReactNode }) {
-    return <MemoryRouter>{children}</MemoryRouter>;
-}
-
 const T0 = 1_700_000_000_000;
 
 describe('an untouched Session (no Provider Activity since sign-in)', () => {
@@ -38,7 +32,7 @@ describe('an untouched Session (no Provider Activity since sign-in)', () => {
     });
 
     it('persists the last-Provider-Activity timestamp when the Idle Timeout mounts', () => {
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         expect(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBe(String(T0));
     });
@@ -46,24 +40,24 @@ describe('an untouched Session (no Provider Activity since sign-in)', () => {
     it('does not overwrite a timestamp already stored, so other tabs activity is respected', () => {
         window.localStorage.setItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY, String(T0 - 1000));
 
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         expect(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBe(String(T0 - 1000));
     });
 
     it('does not restart the idle clock on reload', () => {
-        const first = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        const first = renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
         first.unmount();
 
         vi.setSystemTime(T0 + TEST_IDLE_TIMEOUT_CONFIG.idleTimeoutMs + 1000);
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
 
         expect(window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY)).toBe(String(T0));
     });
 
     it('ends the Session on a 401 after the Idle Timeout elapsed, without a refresh attempt', async () => {
         window.localStorage.setItem('token', 'live');
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG), { wrapper });
+        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
         vi.setSystemTime(T0 + TEST_IDLE_TIMEOUT_CONFIG.idleTimeoutMs + 1000);
 
         const endSession = vi.fn();
