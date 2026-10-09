@@ -1,11 +1,9 @@
-import emrConfig from '@beda.software/emr-config';
-
 import {
     IdleTimeoutConfig,
     IdleTimeoutEvaluation,
+    IdleTimeoutProps,
     IdleTimeoutState,
     MultiTabSyncSignal,
-    RawIdleTimeoutConfig,
     StorageEventLike,
 } from './types';
 
@@ -17,14 +15,17 @@ function isPositiveFiniteNumber(value: unknown): value is number {
 
 // A Warning Window not shorter than the Idle Timeout would show from sign-in, so it
 // falls back to the default, capped at half the Idle Timeout.
-export function resolveIdleTimeoutConfig(raw: RawIdleTimeoutConfig): IdleTimeoutConfig | undefined {
-    const idleTimeoutMs = raw.idleTimeoutMs;
-    if (!isPositiveFiniteNumber(idleTimeoutMs)) {
-        return undefined;
+export function resolveIdleTimeoutConfig({
+    idleTimeoutSeconds,
+    warningWindowSeconds,
+}: IdleTimeoutProps): IdleTimeoutConfig {
+    if (!isPositiveFiniteNumber(idleTimeoutSeconds)) {
+        throw new Error(`IdleTimeout: idleTimeoutSeconds must be a positive number, got ${idleTimeoutSeconds}`);
     }
 
-    const requestedWarningWindowMs = isPositiveFiniteNumber(raw.warningWindowBeforeIdleTimeoutMs)
-        ? raw.warningWindowBeforeIdleTimeoutMs
+    const idleTimeoutMs = idleTimeoutSeconds * 1000;
+    const requestedWarningWindowMs = isPositiveFiniteNumber(warningWindowSeconds)
+        ? warningWindowSeconds * 1000
         : DEFAULT_WARNING_WINDOW_MS;
 
     if (requestedWarningWindowMs < idleTimeoutMs) {
@@ -34,10 +35,15 @@ export function resolveIdleTimeoutConfig(raw: RawIdleTimeoutConfig): IdleTimeout
     return { idleTimeoutMs, warningWindowBeforeIdleTimeoutMs: Math.min(DEFAULT_WARNING_WINDOW_MS, idleTimeoutMs / 2) };
 }
 
-export const IDLE_TIMEOUT_CONFIG = resolveIdleTimeoutConfig({
-    idleTimeoutMs: emrConfig.idleTimeoutMs,
-    warningWindowBeforeIdleTimeoutMs: emrConfig.warningWindowBeforeIdleTimeoutMs,
-});
+let mountedIdleTimeoutConfig: IdleTimeoutConfig | undefined;
+
+export function registerMountedIdleTimeout(config: IdleTimeoutConfig) {
+    mountedIdleTimeoutConfig = config;
+
+    return () => {
+        mountedIdleTimeoutConfig = undefined;
+    };
+}
 
 export function deriveIdleTimeoutState(elapsedMs: number, config: IdleTimeoutConfig): IdleTimeoutState {
     if (elapsedMs >= config.idleTimeoutMs) {
@@ -123,14 +129,16 @@ export function isIdleTimeoutElapsed(now: number, persistedLastActivityAt: strin
     return lastActivityAt !== undefined && deriveIdleTimeoutState(now - lastActivityAt, config) === 'expired';
 }
 
+// False while no IdleTimeout is mounted, so a timestamp left by an earlier Session
+// can't force a sign-out in an app that doesn't use the Idle Timeout.
 export function isIdleTimeoutElapsedNow(): boolean {
-    if (!IDLE_TIMEOUT_CONFIG) {
+    if (!mountedIdleTimeoutConfig) {
         return false;
     }
 
     return isIdleTimeoutElapsed(
         Date.now(),
         window.localStorage.getItem(LAST_PROVIDER_ACTIVITY_STORAGE_KEY),
-        IDLE_TIMEOUT_CONFIG,
+        mountedIdleTimeoutConfig,
     );
 }

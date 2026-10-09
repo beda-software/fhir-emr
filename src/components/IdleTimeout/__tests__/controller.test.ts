@@ -111,42 +111,35 @@ describe('IdleTimeoutController', () => {
 });
 
 describe('resolveIdleTimeoutConfig', () => {
-    it('is disabled when the idle timeout is omitted', () => {
-        expect(resolveIdleTimeoutConfig({})).toBeUndefined();
+    it.each([NaN, Infinity, -1, 0])('throws for an invalid Idle Timeout of %p seconds', (invalid) => {
+        expect(() => resolveIdleTimeoutConfig({ idleTimeoutSeconds: invalid })).toThrow(/idleTimeoutSeconds/);
     });
 
-    it('is disabled when the idle timeout is null, even with a Warning Window', () => {
-        expect(
-            resolveIdleTimeoutConfig({ idleTimeoutMs: null, warningWindowBeforeIdleTimeoutMs: 60 * 1000 }),
-        ).toBeUndefined();
-    });
-
-    it.each([NaN, Infinity, -1, 0])('is disabled for an invalid idle timeout of %p', (invalid) => {
-        expect(resolveIdleTimeoutConfig({ idleTimeoutMs: invalid })).toBeUndefined();
-    });
-
-    it('uses the configured values when both are valid', () => {
-        expect(
-            resolveIdleTimeoutConfig({ idleTimeoutMs: 10 * 60 * 1000, warningWindowBeforeIdleTimeoutMs: 60 * 1000 }),
-        ).toEqual({
+    it('converts both durations from seconds', () => {
+        expect(resolveIdleTimeoutConfig({ idleTimeoutSeconds: 600, warningWindowSeconds: 60 })).toEqual({
             idleTimeoutMs: 10 * 60 * 1000,
             warningWindowBeforeIdleTimeoutMs: 60 * 1000,
         });
     });
 
-    it('falls back to the default Warning Window when only the idle timeout is configured', () => {
-        expect(resolveIdleTimeoutConfig({ idleTimeoutMs: 10 * 60 * 1000 })).toEqual({
+    it('accepts fractional seconds', () => {
+        expect(resolveIdleTimeoutConfig({ idleTimeoutSeconds: 0.5, warningWindowSeconds: 0.1 })).toEqual({
+            idleTimeoutMs: 500,
+            warningWindowBeforeIdleTimeoutMs: 100,
+        });
+    });
+
+    it('falls back to the default Warning Window when only the Idle Timeout is given', () => {
+        expect(resolveIdleTimeoutConfig({ idleTimeoutSeconds: 600 })).toEqual({
             idleTimeoutMs: 10 * 60 * 1000,
             warningWindowBeforeIdleTimeoutMs: DEFAULT_WARNING_WINDOW_MS,
         });
     });
 
-    it.each([5 * 60 * 1000, 10 * 60 * 1000])(
-        'falls back to the default Warning Window when a configured %p is not shorter than the Idle Timeout',
-        (warningWindowBeforeIdleTimeoutMs) => {
-            expect(
-                resolveIdleTimeoutConfig({ idleTimeoutMs: 5 * 60 * 1000, warningWindowBeforeIdleTimeoutMs }),
-            ).toEqual({
+    it.each([300, 600])(
+        'falls back to the default Warning Window when a given %p seconds is not shorter than the Idle Timeout',
+        (warningWindowSeconds) => {
+            expect(resolveIdleTimeoutConfig({ idleTimeoutSeconds: 300, warningWindowSeconds })).toEqual({
                 idleTimeoutMs: 5 * 60 * 1000,
                 warningWindowBeforeIdleTimeoutMs: DEFAULT_WARNING_WINDOW_MS,
             });
@@ -154,20 +147,14 @@ describe('resolveIdleTimeoutConfig', () => {
     );
 
     it('caps the fallback Warning Window at half the Idle Timeout when the default would not fit', () => {
-        expect(resolveIdleTimeoutConfig({ idleTimeoutMs: 60 * 1000 })).toEqual({
+        expect(resolveIdleTimeoutConfig({ idleTimeoutSeconds: 60 })).toEqual({
             idleTimeoutMs: 60 * 1000,
             warningWindowBeforeIdleTimeoutMs: 30 * 1000,
         });
     });
 
-    it('never starts in the Warning Window, whatever the configured Warning Window', () => {
-        const resolved = resolveIdleTimeoutConfig({
-            idleTimeoutMs: 5 * 60 * 1000,
-            warningWindowBeforeIdleTimeoutMs: 10 * 60 * 1000,
-        });
-        if (!resolved) {
-            throw new Error('Expected an enabled config');
-        }
+    it('never starts in the Warning Window, whatever the given Warning Window', () => {
+        const resolved = resolveIdleTimeoutConfig({ idleTimeoutSeconds: 300, warningWindowSeconds: 600 });
 
         expect(deriveIdleTimeoutState(0, resolved)).toBe('active');
         expect(deriveIdleTimeoutState(3 * 60 * 1000, resolved)).toBe('warning');

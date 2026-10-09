@@ -5,9 +5,9 @@ export interface IdleTimeoutConfig {
     warningWindowBeforeIdleTimeoutMs: number;
 }
 
-export interface RawIdleTimeoutConfig {
-    idleTimeoutMs?: number | null;
-    warningWindowBeforeIdleTimeoutMs?: number | null;
+export interface IdleTimeoutProps {
+    idleTimeoutSeconds: number;
+    warningWindowSeconds?: number;
 }
 
 export interface IdleTimeoutEvaluation {

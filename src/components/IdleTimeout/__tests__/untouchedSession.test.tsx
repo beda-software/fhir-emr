@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { render, renderHook } from '@testing-library/react';
 import axios, { AxiosError } from 'axios';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -6,12 +6,9 @@ import { installFakeLocalStorage } from 'src/services/__tests__/fakeLocalStorage
 import { installSessionRejectionInterceptor } from 'src/services/sessionRejection';
 
 import { useIdleTimeout } from '../hooks';
+import { IdleTimeout } from '../index';
 import { TEST_IDLE_TIMEOUT_CONFIG } from './testConfig';
 import { LAST_PROVIDER_ACTIVITY_STORAGE_KEY, isIdleTimeoutElapsedNow } from '../utils';
-
-vi.mock('@beda.software/emr-config', () => ({
-    default: { idleTimeoutMs: 30 * 60 * 1000, warningWindowBeforeIdleTimeoutMs: 2 * 60 * 1000 },
-}));
 
 vi.mock('src/services/auth', () => ({
     doLogout: vi.fn().mockResolvedValue(undefined),
@@ -57,7 +54,7 @@ describe('an untouched Session (no Provider Activity since sign-in)', () => {
 
     it('ends the Session on a 401 after the Idle Timeout elapsed, without a refresh attempt', async () => {
         window.localStorage.setItem('token', 'live');
-        renderHook(() => useIdleTimeout(TEST_IDLE_TIMEOUT_CONFIG));
+        render(<IdleTimeout idleTimeoutSeconds={TEST_IDLE_TIMEOUT_CONFIG.idleTimeoutMs / 1000} />);
         vi.setSystemTime(T0 + TEST_IDLE_TIMEOUT_CONFIG.idleTimeoutMs + 1000);
 
         const endSession = vi.fn();

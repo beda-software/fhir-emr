@@ -1,18 +1,25 @@
 import { Button, Modal } from 'antd';
+import { useEffect, useState } from 'react';
 
 import { useSignOutTexts } from 'src/components/SignOutTexts';
+import { getToken } from 'src/services/auth';
 
 import { useIdleTimeout, useWarningWindowTexts } from './hooks';
-import { IdleTimeoutConfig, WarningWindowTexts } from './types';
-import { IDLE_TIMEOUT_CONFIG } from './utils';
+import { IdleTimeoutConfig, IdleTimeoutProps, WarningWindowTexts } from './types';
+import { registerMountedIdleTimeout, resolveIdleTimeoutConfig } from './utils';
 
-export type { WarningWindowTexts };
+export type { IdleTimeoutProps, WarningWindowTexts };
 
-export function IdleTimeout() {
-    return IDLE_TIMEOUT_CONFIG ? <ActiveIdleTimeout config={IDLE_TIMEOUT_CONFIG} /> : null;
+// Every sign-in and sign-out reloads the page, so the token seen at mount holds for its lifetime.
+export function IdleTimeout(props: IdleTimeoutProps) {
+    const [config] = useState(() => resolveIdleTimeoutConfig(props));
+    const [isSignedIn] = useState(() => getToken() !== undefined);
+
+    return isSignedIn ? <ActiveIdleTimeout config={config} /> : null;
 }
 
 function ActiveIdleTimeout({ config }: { config: IdleTimeoutConfig }) {
+    useEffect(() => registerMountedIdleTimeout(config), [config]);
     const { state, recordProviderActivity, signOutNow } = useIdleTimeout(config);
     const { title, body, stayLabel, signOutLabel } = useWarningWindowTexts(useSignOutTexts()?.warningWindow);
 

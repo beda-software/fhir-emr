@@ -69,7 +69,19 @@ Aidbox rejects `refresh_token` and `refresh_token_expiration` under the `auth` b
 | No (default login Client)     | any                                   | Expired Sign-Out, no refresh attempted                                    |
 | any                           | Idle Timeout already elapsed          | Forced Sign-Out; refresh is never attempted                               |
 
-The Idle Timeout is opt-in: it is off unless the app config sets `idleTimeoutMs` to a positive number (omitted or `null` disables it, along with the Warning Window). While it is off, the "Idle Timeout already elapsed" row never applies.
+The Idle Timeout is opt-in: neither `App` nor `EMR` mounts it. Mounting it is what turns it on. Render it once, next to (and before) `App` or `EMR`, with the durations in seconds:
+
+```tsx
+import { App } from '@beda.software/emr/containers';
+import { IdleTimeout } from '@beda.software/emr/components';
+
+<>
+    <IdleTimeout idleTimeoutSeconds={30 * 60} warningWindowSeconds={2 * 60} />
+    <App />
+</>;
+```
+
+`idleTimeoutSeconds` is required and must be a positive number, or the component throws. `warningWindowSeconds` defaults to 120, and is capped at half of `idleTimeoutSeconds` when it isn't shorter. Both are read once at mount; remount with a `key` to change them. It renders nothing when no one is signed in, and needs no router. While it is off, the "Idle Timeout already elapsed" row never applies.
 
 A Client without the attributes above (for example the default `testAuth`) issues no `refresh_token` and no `expires_in`, and its tokens never expire server-side. Upgrading fhir-emr therefore changes nothing for it.
 

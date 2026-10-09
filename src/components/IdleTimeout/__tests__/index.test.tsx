@@ -5,8 +5,9 @@ import { SignOutTextsContext } from 'src/components/SignOutTexts';
 
 import { IdleTimeout } from '../index';
 
-vi.mock('@beda.software/emr-config', () => ({
-    default: { idleTimeoutMs: 30 * 60 * 1000, warningWindowBeforeIdleTimeoutMs: 2 * 60 * 1000 },
+vi.mock('src/services/auth', () => ({
+    doLogout: vi.fn(),
+    getToken: () => 'signed-in',
 }));
 
 vi.mock('../hooks', async () => {
@@ -24,7 +25,7 @@ vi.mock('../hooks', async () => {
 
 describe('IdleTimeout Warning Window texts', () => {
     it('falls back to the default, translated texts when none are given', () => {
-        render(<IdleTimeout />);
+        render(<IdleTimeout idleTimeoutSeconds={1800} />);
 
         expect(screen.getByText('Your session is about to end')).toBeInTheDocument();
         expect(
@@ -48,7 +49,7 @@ describe('IdleTimeout Warning Window texts', () => {
                     },
                 }}
             >
-                <IdleTimeout />
+                <IdleTimeout idleTimeoutSeconds={1800} />
             </SignOutTextsContext.Provider>,
         );
 
@@ -61,7 +62,7 @@ describe('IdleTimeout Warning Window texts', () => {
     it('falls back to individual defaults for texts left out', () => {
         render(
             <SignOutTextsContext.Provider value={{ warningWindow: { title: 'Custom title' } }}>
-                <IdleTimeout />
+                <IdleTimeout idleTimeoutSeconds={1800} />
             </SignOutTextsContext.Provider>,
         );
 
