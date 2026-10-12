@@ -1,0 +1,16 @@
+auth:
+  authorization_code:
+    redirect_uri: https://neonatal.beda.software/launch/callback
+    refresh_token: true
+    secret_required: false
+    access_token_expiration: 36000
+    token_format: jwt
+type: smart-on-fhir-practitioner
+smart:
+  name: Newborn Screening
+  launch_uri: https://neonatal.beda.software/launch
+  description: Neonatal screening of the patient's newborns, with her maternal history synchronised from the EMR
+grant_types:
+  - authorization_code
+id: newborn-screening
+resourceType: Client

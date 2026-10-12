@@ -1,0 +1,3675 @@
+resourceType: Questionnaire
+id: newborn-screening-maternal-history
+name: newborn-screening-maternal-history
+title: Maternal medical and family history (newborn screening)
+status: active
+description: >-
+  The mother's medical and family history that determines which newborn screening pathway her infants follow.
+  Extracted as the mother's Observations (computed risk flags and SNOMED CT coded findings) that the Newborn
+  Screening SMART app synchronises on launch, where they show as the newborns' maternal risk factors.
+subjectType:
+  - Patient
+url: https://emr.beda.software/Questionnaire/newborn-screening-maternal-history
+mapping:
+  - reference: urn:uuid:Mapping:newborn-screening-maternal-history-extract
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: paediatrics
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: patient-id
+    text: Patient ID
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - linkId: wizard
+    type: group
+    itemControl:
+      coding:
+        - code: wizard-vertical
+    item:
+      - linkId: sec-medical
+        text: Maternal medical history
+        type: group
+        extension:
+          - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+            valueString: Structure and item list derived from ACOG Antepartum Record Form A (33 numbered conditions)
+        item:
+          - linkId: grp-mh-endocrine
+            text: Endocrine and metabolic
+            type: group
+            item:
+              - linkId: MH-01
+                text: Thyroid disease
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Antepartum Record Form A, item 2 — Thyroid Dysfunction
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-01').answerOption.valueCoding.where(code='260413007')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+                      display: None
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "40930008"
+                      display: Hypothyroidism
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "353295004"
+                      display: Hyperthyroidism (Graves)
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "3716002"
+                      display: Thyroid nodule or goitre
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "428892006"
+                      display: Post-thyroidectomy
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "40539002"
+                      display: Post-radioiodine
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "74964007"
+                      display: Other
+              - linkId: MH-01-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-01
+                    operator: "!="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+              - linkId: MH-02
+                text: Thyroid receptor antibodies (TRAb / TSI) known positive
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Maternal TRAb crosses the placenta and causes neonatal thyrotoxicosis. It also means the newborn TSH screen needs specialist interpretation rather than a straight pass or fail
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-02').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-02r
+                text: TRAb / TSI result and date
+                type: string
+                enableWhen:
+                  - question: MH-02
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-03
+                text: On antithyroid drugs or thyroxine in pregnancy
+                type: boolean
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Can produce transient neonatal hypothyroidism and a misleading congenital hypothyroidism screen
+              - linkId: MH-03d
+                text: Drug, dose and trimesters exposed
+                type: string
+                enableWhen:
+                  - question: MH-03
+                    operator: "="
+                    answerBoolean: true
+              - linkId: MH-04
+                text: Diabetes
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-04').answerOption.valueCoding.where(code='260413007')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+                      display: None
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "46635009"
+                      display: Type 1
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "44054006"
+                      display: Type 2
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "11687002"
+                      display: Gestational
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "609563008"
+                      display: Pre-existing, unclassified
+              - linkId: MH-04-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-04
+                    operator: "!="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+              - linkId: MH-05
+                text: Known inborn error of metabolism in the mother
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Maternal PKU in particular — maternal PKU syndrome is a distinct fetal risk and dietary control in pregnancy matters
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-05').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-05-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-05
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-06
+                text: Obesity or bariatric surgery
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-06').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-06-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-06
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-07
+                text: Documented vitamin D or iodine deficiency
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-07').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-07-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-07
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+          - linkId: grp-mh-cardio
+            text: Cardiovascular
+            type: group
+            item:
+              - linkId: MH-08
+                text: Congenital heart disease in the mother
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Raises the infant's risk of congenital heart disease several-fold — feeds the CCHD pathway risk flag
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-08').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-08-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-08
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-09
+                text: Acquired heart disease (rheumatic, cardiomyopathy, arrhythmia)
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-09').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-09-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-09
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-10
+                text: Chronic hypertension (pre-pregnancy)
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 6; Queensland PHR; SESLHD booking form
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-10').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-11
+                text: Deep vein thrombosis or pulmonary embolism
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 13
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-11').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-12
+                text: Thrombophilia including antiphospholipid syndrome
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-12').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-12-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-12
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+          - linkId: grp-mh-haem
+            text: Haematological
+            type: group
+            item:
+              - linkId: MH-13
+                text: Haemoglobinopathy — mother
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                required: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-13').answerOption.valueCoding.where(code='260413007')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+                      display: None
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "269175006"
+                      display: Beta-thalassaemia trait
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "65959000"
+                      display: Beta-thalassaemia major or intermedia
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "68913001"
+                      display: Alpha-thalassaemia
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "16402000"
+                      display: Sickle cell trait
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "417357006"
+                      display: Sickle cell disease
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "46248003"
+                      display: Haemoglobin E
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "80141007"
+                      display: Other variant
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-14
+                text: Haemoglobinopathy — father
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Screening the father is what makes the maternal result actionable
+                required: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-14').answerOption.valueCoding.where(code='260413007')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+                      display: None
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "269175006"
+                      display: Beta-thalassaemia trait
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "65959000"
+                      display: Beta-thalassaemia major or intermedia
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "68913001"
+                      display: Alpha-thalassaemia
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "16402000"
+                      display: Sickle cell trait
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "417357006"
+                      display: Sickle cell disease
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "46248003"
+                      display: Haemoglobin E
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "80141007"
+                      display: Other variant
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-15
+                text: UAE premarital screening certificate available
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-requires-configuration
+                    valueString: Confirm with DHA whether the certificate is retrievable electronically. If it is, this subsection should autofill rather than be asked
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-15').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-15d
+                text: Premarital screening — date
+                type: date
+                enableWhen:
+                  - question: MH-15
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-15r
+                text: Premarital screening — result summary (thalassaemia, sickle cell, HIV, hepatitis B, hepatitis C)
+                type: text
+                enableWhen:
+                  - question: MH-15
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-16
+                text: G6PD deficiency — mother or known family carrier
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: X-linked; maternal carriers pass it to 50 percent of male infants. Pairs with infant sex to produce a pre-test probability
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-16').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-17
+                text: Anaemia in pregnancy
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-17').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-17v
+                text: Lowest haemoglobin in pregnancy
+                type: decimal
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-unit
+                    valueCoding:
+                      system: http://unitsofmeasure.org
+                      code: g/dL
+                      display: g/dL
+                  - url: http://hl7.org/fhir/StructureDefinition/minValue
+                    valueDecimal: 3
+                  - url: http://hl7.org/fhir/StructureDefinition/maxValue
+                    valueDecimal: 20
+                enableWhen:
+                  - question: MH-17
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-18
+                text: Bleeding or clotting disorder (von Willebrand, haemophilia carrier, ITP)
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-18').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-18-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-18
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-19
+                text: Red cell alloimmunisation or atypical antibodies
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Drives haemolysis and exchange transfusion risk, which is itself a hearing risk factor
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-19').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-19-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-19
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+          - linkId: grp-mh-other
+            text: Other systems
+            type: group
+            item:
+              - linkId: MH-20
+                text: Neurological disorder or epilepsy
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 1
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-20').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-20-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-20
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-20-a
+                text: Currently active
+                type: boolean
+                enableWhen:
+                  - question: MH-20
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-20-t
+                text: On treatment
+                type: boolean
+                enableWhen:
+                  - question: MH-20
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-20-s
+                text: Specialist involved
+                type: string
+                enableWhen:
+                  - question: MH-20
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-21
+                text: Respiratory — asthma, tuberculosis, cystic fibrosis
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 4 — Pulmonary (TB, Asthma)
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-21').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-21-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-21
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-22
+                text: Renal disease or recurrent urinary tract infection
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 12
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-22').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-23
+                text: Hepatic disease, hepatitis B or hepatitis C
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 11
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-23').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-23-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-23
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-24
+                text: Gastrointestinal disease, inflammatory bowel disease, coeliac
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 10
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-24').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-25
+                text: Autoimmune or connective tissue disease
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 16
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-25').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-25-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-25
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-25-a
+                text: Currently active
+                type: boolean
+                enableWhen:
+                  - question: MH-25
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-25-t
+                text: On treatment
+                type: boolean
+                enableWhen:
+                  - question: MH-25
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-25-s
+                text: Specialist involved
+                type: string
+                enableWhen:
+                  - question: MH-25
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-26
+                text: Anti-Ro/SSA or anti-La/SSB antibodies positive
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Risk of congenital heart block — the infant needs cardiac assessment independent of the pulse-oximetry screen
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-26').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-27
+                text: Cancer, past or present
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A item 7
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-27').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-27-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-27
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-28
+                text: Mental health history
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR — postnatal depression, depression/bipolar, other mental health issues
+                repeats: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-28').answerOption.valueCoding.where(code='260413007')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+                      display: None
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "35489007"
+                      display: Depression
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "197480006"
+                      display: Anxiety
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "13746004"
+                      display: Bipolar affective disorder
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "69322001"
+                      display: Psychosis
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "58703003"
+                      display: Previous postnatal depression
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "74964007"
+                      display: Other
+              - linkId: MH-28d
+                text: Mental health — detail and current treatment
+                type: text
+              - linkId: MH-29
+                text: Infertility or assisted conception
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A — Infertility; SESLHD booking form
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-29').answerOption.valueCoding.where(code='260413007')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "260413007"
+                      display: None
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "61285001"
+                      display: Ovulation induction
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "265064001"
+                      display: Intrauterine insemination
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "52637005"
+                      display: IVF
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "425901007"
+                      display: ICSI
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: donor
+                      display: Donor gamete
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "711544002"
+                      display: Surrogacy
+              - linkId: MH-30
+                text: Significant surgical history
+                type: choice
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-30').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-30-d
+                text: Detail
+                type: string
+                enableWhen:
+                  - question: MH-30
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: MH-31
+                text: Known allergies
+                type: choice
+                repeats: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-31').answerOption.valueCoding.where(code='716186003')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "716186003"
+                      display: None known
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "416098002"
+                      display: Drug
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "1003755004"
+                      display: Latex
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "414285001"
+                      display: Food
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "74964007"
+                      display: Other
+              - linkId: MH-31d
+                text: Allergies — specify agent and reaction
+                type: text
+              - linkId: MH-32
+                text: Blood transfusion history
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form A — Transfusions; SESLHD booking form
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='MH-32').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: MH-33
+                text: Other significant condition
+                type: text
+      - linkId: sec-family
+        text: Family history
+        type: group
+        extension:
+          - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+            valueString: Captured relative-by-relative following the structure of the US Surgeon General's 'My Family Health Portrait'. A flat yes/no checklist cannot distinguish a first-degree relative from a great-aunt, and the relationship is what carries the risk
+        item:
+          - linkId: grp-fh-consang
+            text: Consanguinity
+            type: group
+            item:
+              - linkId: FH-01
+                text: Are the baby's parents related by blood
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Absent from every US and Australian form reviewed, and the single highest-yield family history field in this population. The DoH panel is dominated by autosomal recessive conditions whose prevalence tracks consanguinity directly
+                required: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='FH-01').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: FH-02
+                text: Degree of relationship
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                enableWhen:
+                  - question: FH-01
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "4577005"
+                      display: First cousins
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "55538000"
+                      display: First cousins once removed
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "13443008"
+                      display: Second cousins
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: double-first-cousins
+                      display: Double first cousins
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: same-lineage
+                      display: Same tribe or lineage, precise relationship unknown
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "74964007"
+                      display: Other
+              - linkId: FH-03
+                text: Consanguinity in the previous generation (either set of grandparents related)
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='FH-03').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+          - linkId: grp-fh-panel
+            text: Conditions screened for by the newborn screening panel
+            type: group
+            item:
+              - linkId: FH-04
+                text: Previous child with a condition on the newborn screening panel
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: The highest-priority single answer in this form — the laboratory should know before the sample arrives
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='FH-04').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: FH-04c
+                text: Which condition
+                type: string
+                enableWhen:
+                  - question: FH-04
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: FH-04s
+                text: Which sibling
+                type: string
+                enableWhen:
+                  - question: FH-04
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: FH-05
+                text: Known parental carrier status for any screened disorder
+                type: choice
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                initialExpression:
+                  language: text/fhirpath
+                  expression: "%questionnaire.repeat(item).where(linkId='FH-05').answerOption.valueCoding.where(code='373067005')"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "373067005"
+                      display: "No"
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "261665006"
+                      display: Unknown
+              - linkId: FH-05c
+                text: Condition
+                type: string
+                enableWhen:
+                  - question: FH-05
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+              - linkId: FH-05w
+                text: Which parent
+                type: choice
+                enableWhen:
+                  - question: FH-05
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                answerOption:
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "72705000"
+                      display: Mother
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "66839005"
+                      display: Father
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: both
+                      display: Both
+              - linkId: FH-05h
+                text: How established
+                type: choice
+                enableWhen:
+                  - question: FH-05
+                    operator: "="
+                    answerCoding:
+                      system: http://snomed.info/sct
+                      code: "373066001"
+                answerOption:
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: premarital
+                      display: Premarital screening
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: cascade
+                      display: Cascade testing
+                  - valueCoding:
+                      system: https://nbs.dha.gov.ae/CodeSystem/nbs-mh-answers
+                      code: affected-child
+                      display: Prior affected child
+                  - valueCoding:
+                      system: http://snomed.info/sct
+                      code: "74964007"
+                      display: Other
+              - linkId: FH-06
+                text: Congenital hypothyroidism
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-06-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-06-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-06-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-06-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-06-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-06-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-07
+                text: Congenital adrenal hyperplasia
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Also prompt for a family history of ambiguous genitalia
+                item:
+                  - linkId: FH-07-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-07-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-07-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-07-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-07-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-07-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-09
+                text: Thalassaemia, sickle cell or other haemoglobinopathy
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-09-p
+                    text: Present in a family member other than the parents
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-09-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-09-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-09-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-09-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-09-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-10
+                text: Cystic fibrosis
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-10-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-10-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-10-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-10-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-10-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-10-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-11
+                text: Metabolic disorder — amino acid, organic acid or fatty acid oxidation
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Parents often know only that there was 'a metabolic problem'
+                item:
+                  - linkId: FH-11-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-11-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-11-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-11-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-11-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-11-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-12
+                text: Biotinidase deficiency or galactosaemia
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-12-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-12-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-12-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-12-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-12-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-12-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+          - linkId: grp-fh-screens
+            text: Conditions affecting the physical, hearing and CCHD screens
+            type: group
+            item:
+              - linkId: FH-13
+                text: Congenital heart defect in a first-degree relative
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: "ACOG Antepartum Record Form B — genetic screening: Congenital Heart Defect"
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: CCHD risk flag; consider fetal echocardiography
+                item:
+                  - linkId: FH-13-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-13-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-13-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-13-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-13-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-13-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-14
+                text: Childhood-onset hearing loss in a close relative
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: "NSW Blue Book, verbatim: 'Have any of your baby's close relatives been deaf or had a hearing problem from childhood?' — and DoH Appendix 2 hearing high-risk factor"
+                item:
+                  - linkId: FH-14-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-14-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-14-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-14-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-14-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-14-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-15
+                text: Developmental dysplasia of the hip
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: "NSW Blue Book, verbatim: 'Is there a family history of developmental dysplasia of the hips?' — absent from all four antenatal forms reviewed"
+                item:
+                  - linkId: FH-15-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-15-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-15-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-15-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-15-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-15-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-16
+                text: Childhood-onset vision loss or blindness
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: NSW Blue Book
+                item:
+                  - linkId: FH-16-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-16-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-16-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-16-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-16-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-16-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-17
+                text: Neural tube defect
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Antepartum Record Form B — genetic screening
+                item:
+                  - linkId: FH-17-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-17-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-17-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-17-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-17-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-17-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-18
+                text: Cleft lip or palate, or craniofacial anomaly
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Also a hearing risk factor
+                item:
+                  - linkId: FH-18-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-18-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-18-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-18-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-18-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-18-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-19
+                text: Skeletal dysplasia or limb anomaly
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-19-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-19-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-19-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-19-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-19-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-19-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-20
+                text: Other congenital abnormality
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR and SESLHD booking form
+                item:
+                  - linkId: FH-20-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-20-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-20-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-20-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-20-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-20-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+          - linkId: grp-fh-general
+            text: General family history
+            type: group
+            item:
+              - linkId: FH-21
+                text: Chromosomal abnormality (Down syndrome, other trisomy)
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: ACOG Form B
+                item:
+                  - linkId: FH-21-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-21-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-21-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-21-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-21-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-21-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-22
+                text: Known genetic syndrome or single-gene disorder
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-22-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-22-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-22-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-22-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-22-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-22-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-23
+                text: Intellectual disability of unknown cause
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                item:
+                  - linkId: FH-23-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-23-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-23-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-23-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-23-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-23-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-24
+                text: Thyroid disorder
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR
+                item:
+                  - linkId: FH-24-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-24-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-24-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-24-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-24-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-24-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-25
+                text: Diabetes
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR; SESLHD booking form
+                item:
+                  - linkId: FH-25-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-25-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-25-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-25-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-25-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-25-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-26
+                text: Hypertension
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR; SESLHD booking form
+                item:
+                  - linkId: FH-26-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-26-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-26-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-26-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-26-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-26-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-27
+                text: Bleeding disorder
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR
+                item:
+                  - linkId: FH-27-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-27-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-27-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-27-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-27-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-27-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-28
+                text: Multiple pregnancy or twins
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR; SESLHD booking form
+                item:
+                  - linkId: FH-28-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-28-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-28-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-28-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-28-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-28-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-29
+                text: Mental health condition or postnatal depression
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-source-reference
+                    valueString: Queensland PHR
+                item:
+                  - linkId: FH-29-p
+                    text: Present in a family member other than the mother
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-29-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-29-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-29-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-29-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-29-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+              - linkId: FH-30
+                text: Unexplained neonatal, infant or childhood death, or recurrent miscarriage
+                type: group
+                extension:
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-plan-driving
+                    valueBoolean: true
+                  - url: https://nbs.dha.gov.ae/StructureDefinition/nbs-critical-finding
+                    valueBoolean: true
+                  - url: http://hl7.org/fhir/StructureDefinition/entryFormat
+                    valueString: Often the only clue to an undiagnosed metabolic disorder in the family. Ask it plainly and give space for the story
+                item:
+                  - linkId: FH-30-p
+                    text: Present in the family
+                    type: choice
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - system: http://hl7.org/fhir/questionnaire-item-control
+                              code: radio-button
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%questionnaire.repeat(item).where(linkId='FH-30-p').answerOption.valueCoding.where(code='373067005')"
+                    answerOption:
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                          display: "Yes"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "373067005"
+                          display: "No"
+                      - valueCoding:
+                          system: http://snomed.info/sct
+                          code: "261665006"
+                          display: Unknown
+                  - linkId: FH-30-r
+                    text: Which relative(s)
+                    type: choice
+                    repeats: true
+                    enableWhen:
+                      - question: FH-30-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MTH
+                          display: Mother of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FTH
+                          display: Father of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: NSIB
+                          display: Sibling of baby
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MGRPRN
+                          display: Maternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PGRPRN
+                          display: Paternal grandparent
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MAUNT
+                          display: Maternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: MUNCLE
+                          display: Maternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PAUNT
+                          display: Paternal aunt
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: PUNCLE
+                          display: Paternal uncle
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: COUSN
+                          display: Cousin
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+                          code: FAMMEMB
+                          display: Other relative
+                  - linkId: FH-30-d
+                    text: Detail
+                    type: string
+                    enableWhen:
+                      - question: FH-30-p
+                        operator: "="
+                        answerCoding:
+                          system: http://snomed.info/sct
+                          code: "373066001"
