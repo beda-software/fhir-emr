@@ -7,6 +7,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 
 import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
@@ -15,6 +16,7 @@ import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Foo
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Spinner } from 'src/components/Spinner';
+import { CodeGrantAuth } from 'src/containers/App/auth';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
@@ -22,6 +24,7 @@ import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
 import { getAuthenticatedClinicalContextDefault } from './defaultAuthenticatedClinicalContext';
+import { useCodeGrantFailureSignInState, useRedirectToSignInState, useSessionRejectionInterceptor } from './hooks';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -43,6 +46,10 @@ export function EMR(props: EMRProps) {
         footer,
         getAuthenticatedClinicalContext,
     } = props;
+
+    // Must stay above the restore hook: effects run in declaration order, and a 401 on the
+    // user-info request has to meet the interceptor.
+    useSessionRejectionInterceptor();
 
     const [userResponse] = useService(async () => {
         const appToken = getToken();
@@ -84,19 +91,18 @@ export function EMR(props: EMRProps) {
     );
 }
 
+function RedirectToSignIn() {
+    const state = useRedirectToSignInState();
+
+    return <Navigate to="/signin" replace={true} state={state} />;
+}
+
 function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
     return (
         <Routes>
             {extra}
-            <Route path="/auth" element={<Auth />} />
-            <Route
-                path="*"
-                element={
-                    <>
-                        <Navigate to="/signin" replace={true} />
-                    </>
-                }
-            />
+            <Route path="/auth" element={<AuthCallback />} />
+            <Route path="*" element={<RedirectToSignIn />} />
         </Routes>
     );
 }
@@ -151,6 +157,16 @@ function AuthenticatedClinicalContext({
         : getAuthenticatedClinicalContextDefault();
 
     return <ClinicalContext context={context}>{children}</ClinicalContext>;
+}
+
+function AuthCallback() {
+    return config.authFlow === 'code' ? <CodeGrantAuth renderFailure={() => <CodeGrantFailure />} /> : <Auth />;
+}
+
+function CodeGrantFailure() {
+    const signInState = useCodeGrantFailureSignInState();
+
+    return <Navigate to="/signin" replace={true} state={signInState} />;
 }
 
 export function Auth() {

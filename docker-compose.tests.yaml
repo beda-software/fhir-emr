@@ -21,8 +21,10 @@ services:
   devbox:
     image: healthsamurai/aidboxone:stable
     depends_on:
-      - devbox-db_test
-      - build-seeds-init
+      devbox-db_test:
+        condition: service_started
+      build-seeds:
+        condition: service_completed_successfully
     links:
       - "devbox-db_test:database"
     ports:
@@ -51,12 +53,16 @@ services:
       interval: 5s
       timeout: 30s
       retries: 100
-  build-seeds-init:
+  build-seeds:
     image: bedasoftware/fhirsnake:latest
     command:
       - export
+      - --input
+      - /app/resources/init-seeds
+      - --input
+      - /app/resources/test-seeds
       - --output
-      - /app/init-bundles/initBundle.json
+      - /app/resources/init-bundles/initBundle.json
       - --external-questionnaire-fce-fhir-converter-url
       - http://questionnaire-fce-fhir-converter:3000/to-fhir
     env_file:
@@ -65,8 +71,8 @@ services:
       questionnaire-fce-fhir-converter:
         condition: service_healthy
     volumes:
-      - ./resources/init-seeds:/app/resources
-      - ./resources/init-bundles:/app/init-bundles
+      - ./resources:/app/resources
+      - ./resources/init-bundles:/app/resources/init-bundles
 
   questionnaire-fce-fhir-converter:
     image: bedasoftware/questionnaire-fce-fhir-converter:latest

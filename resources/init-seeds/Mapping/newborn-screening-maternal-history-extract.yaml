@@ -1,0 +1,241 @@
+id: newborn-screening-maternal-history-extract
+type: FHIRPath
+resourceType: Mapping
+# The mother's maternal and family history as her Observations, the same ones the Newborn Screening app extracts from
+# its own maternal history (nbs-maternal-history), so the app reads them unchanged after a SMART launch sync
+body:
+  "{% assign %}":
+    # The mother is the patient the form is filled for
+    - patientId: "{{ %QuestionnaireResponse.answers('patient-id') }}"
+    - motherRef: "{{ iif(%patientId.exists(), 'Patient/' + %patientId, %QuestionnaireResponse.subject.reference) }}"
+    # SNOMED CT answers that record the absence of a finding: No, None, Unknown, No known allergy
+    - NegativeAnswers: "{[ ('373067005' | '260413007' | '261665006' | '716186003') ]}"
+    # SNOMED CT answers whose finding is the question itself (see FindingConcepts): Yes, Other
+    - QuestionAnswers: "{[ ('373066001' | '74964007') ]}"
+    - ConfirmedDirectHistoryItems: >-
+        {[ %QuestionnaireResponse.repeat(item).where(
+        linkId in ('MH-01'|'MH-02'|'MH-03'|'MH-04'|'MH-05'|'MH-08'|'MH-13'|'MH-14'|'MH-15'|'MH-16'|'MH-19'|'FH-01'|'FH-03'|'FH-04'|'FH-05')
+        and ((answer.valueBoolean = true)
+        or answer.valueCoding.code.exclude(%NegativeAnswers).exists())
+        ) ]}
+    - ConfirmedFamilyConditionGroups: >-
+        {[ %QuestionnaireResponse.repeat(item).where(
+        linkId.startsWith('FH-') and linkId.endsWith('-p')
+        and answer.valueCoding.code = '373066001'
+        ) ]}
+    # Maternal medical and family history questions answered with a coded finding; the qualifier questions
+    # (degree of relationship, which parent, how established, which relatives) are components of their finding
+    - FindingItems: >-
+        {[ %QuestionnaireResponse.repeat(item).where(
+        linkId.matches('^(MH|FH)-') and linkId.matches('^FH-(02|05w|05h)$').not() and linkId.endsWith('-r').not()
+        and answer.valueCoding.exists()
+        ) ]}
+    # The finding of a "Yes" or "Other" answer, per question: linkId|system|code|display; a question with no
+    # SNOMED CT concept for its finding is coded by its linkId in the questionnaire
+    - FindingConcepts: >-
+        {[ (
+        'MH-01|http://snomed.info/sct|14304000|Disorder of thyroid gland' |
+        'MH-02|https://nbs.dha.gov.ae/Questionnaire/nbs-maternal-history|MH-02|Thyroid receptor antibodies (TRAb / TSI) known positive' |
+        'MH-05|http://snomed.info/sct|86095007|Inborn error of metabolism' |
+        'MH-06|http://snomed.info/sct|414916001|Obesity' |
+        'MH-07|http://snomed.info/sct|238111008|Deficiency of micronutrients' |
+        'MH-08|http://snomed.info/sct|13213009|Congenital heart disease' |
+        'MH-09|http://snomed.info/sct|56265001|Heart disease' |
+        'MH-10|http://snomed.info/sct|86041002|Pre-existing hypertension in obstetric context' |
+        'MH-11|http://snomed.info/sct|429098002|Thromboembolism of vein' |
+        'MH-12|http://snomed.info/sct|234467004|Thrombophilia' |
+        'MH-15|https://nbs.dha.gov.ae/Questionnaire/nbs-maternal-history|MH-15|UAE premarital screening certificate available' |
+        'MH-16|http://snomed.info/sct|124134002|Deficiency of glucose-6-phosphate dehydrogenase' |
+        'MH-17|http://snomed.info/sct|27342004|Anemia of pregnancy' |
+        'MH-18|http://snomed.info/sct|64779008|Blood coagulation disorder' |
+        'MH-19|http://snomed.info/sct|764444002|Erythrocyte alloimmunization' |
+        'MH-20|http://snomed.info/sct|118940003|Disorder of nervous system' |
+        'MH-21|http://snomed.info/sct|50043002|Disorder of respiratory system' |
+        'MH-22|http://snomed.info/sct|128606002|Disorder of urinary system' |
+        'MH-23|http://snomed.info/sct|235856003|Disease of liver' |
+        'MH-24|http://snomed.info/sct|53619000|Disorder of digestive system' |
+        'MH-25|http://snomed.info/sct|85828009|Autoimmune disease' |
+        'MH-26|http://snomed.info/sct|310258001|Ro antibody detected' |
+        'MH-27|http://snomed.info/sct|363346000|Malignant neoplastic disease' |
+        'MH-28|http://snomed.info/sct|74732009|Mental disorder' |
+        'MH-30|http://snomed.info/sct|161615003|History of surgery' |
+        'MH-31|http://snomed.info/sct|609328004|Allergic disposition' |
+        'MH-32|http://snomed.info/sct|161664006|History of blood transfusion' |
+        'FH-01|http://snomed.info/sct|842009|Consanguinity' |
+        'FH-03|http://snomed.info/sct|160475008|Family history of consanguinity' |
+        'FH-04|http://snomed.info/sct|429962007|Family history of hereditary disease' |
+        'FH-05|http://snomed.info/sct|430695000|Family history of genetic disorder carrier' |
+        'FH-06-p|http://snomed.info/sct|300934004|FH: Hypothyroidism' |
+        'FH-07-p|http://snomed.info/sct|160301004|Family history of endocrine disorders' |
+        'FH-09-p|http://snomed.info/sct|160316001|FH: Blood disorder' |
+        'FH-10-p|http://snomed.info/sct|160309002|Family history of cystic fibrosis' |
+        'FH-11-p|http://snomed.info/sct|160305008|Family history of metabolic disorder' |
+        'FH-12-p|http://snomed.info/sct|160305008|Family history of metabolic disorder' |
+        'FH-13-p|http://snomed.info/sct|160364005|FH: Congenital heart disease' |
+        'FH-14-p|http://snomed.info/sct|439750006|Family history of hearing loss' |
+        'FH-15-p|http://snomed.info/sct|700191004|Family history of congenital hip dysplasia' |
+        'FH-16-p|http://snomed.info/sct|266893006|FH: Blindness/low vision' |
+        'FH-17-p|http://snomed.info/sct|160419007|Family history of Spina bifida' |
+        'FH-18-p|http://snomed.info/sct|160417009|Family history of congenital disease' |
+        'FH-19-p|http://snomed.info/sct|160424005|FH: Cong. orthopedic anomaly' |
+        'FH-20-p|http://snomed.info/sct|160417009|Family history of congenital disease' |
+        'FH-21-p|http://snomed.info/sct|160425006|Family history of chromosomal anomaly' |
+        'FH-22-p|http://snomed.info/sct|429962007|Family history of hereditary disease' |
+        'FH-23-p|http://snomed.info/sct|763598005|Family history of intellectual disability' |
+        'FH-24-p|http://snomed.info/sct|160302006|FH: Thyroid disorder' |
+        'FH-25-p|http://snomed.info/sct|160303001|Family history of diabetes mellitus' |
+        'FH-26-p|http://snomed.info/sct|160357008|FH: Hypertension' |
+        'FH-27-p|http://snomed.info/sct|160316001|FH: Blood disorder' |
+        'FH-28-p|http://snomed.info/sct|266906006|FH: Multiple pregnancy' |
+        'FH-29-p|http://snomed.info/sct|160324006|Family history of mental disorder' |
+        'FH-30-p|http://snomed.info/sct|430289007|Family history of death of unknown cause'
+        ) ]}
+    # The qualifier questions of a finding: finding linkId|qualifier linkId|qualifier text
+    - QualifierQuestions: "{[ ('FH-01|FH-02|Degree of relationship' | 'FH-05|FH-05w|Which parent' | 'FH-05|FH-05h|How established') ]}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - "{% for confirmedItem in %ConfirmedDirectHistoryItems %}":
+        "{% assign %}":
+          - directItemDisplay: >-
+              {{ iif(%confirmedItem.linkId = 'MH-01', 'Thyroid disease',
+              iif(%confirmedItem.linkId = 'MH-02', 'Thyroid receptor antibodies (TRAb / TSI) known positive',
+              iif(%confirmedItem.linkId = 'MH-03', 'On antithyroid drugs or thyroxine in pregnancy',
+              iif(%confirmedItem.linkId = 'MH-04', 'Diabetes',
+              iif(%confirmedItem.linkId = 'MH-05', 'Known inborn error of metabolism in the mother',
+              iif(%confirmedItem.linkId = 'MH-08', 'Congenital heart disease in the mother',
+              iif(%confirmedItem.linkId = 'MH-13', 'Haemoglobinopathy — mother',
+              iif(%confirmedItem.linkId = 'MH-14', 'Haemoglobinopathy — father',
+              iif(%confirmedItem.linkId = 'MH-15', 'UAE premarital screening certificate available',
+              iif(%confirmedItem.linkId = 'MH-16', 'G6PD deficiency — mother or known family carrier',
+              iif(%confirmedItem.linkId = 'MH-19', 'Red cell alloimmunisation or atypical antibodies',
+              iif(%confirmedItem.linkId = 'FH-01', 'Are the baby\'s parents related by blood',
+              iif(%confirmedItem.linkId = 'FH-03', 'Consanguinity in the previous generation (either set of grandparents related)',
+              iif(%confirmedItem.linkId = 'FH-04', 'Previous child with a condition on the newborn screening panel',
+              iif(%confirmedItem.linkId = 'FH-05', 'Known parental carrier status for any screened disorder',
+              %confirmedItem.linkId))))))))))))))) }}
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - system: https://nbs.dha.gov.ae/CodeSystem/nbs-computed-flags
+                code: "{{ %confirmedItem.linkId }}"
+                display: "{{ %directItemDisplay }}"
+          subject:
+            reference: "{{ %motherRef }}"
+          effectiveDateTime: "{{ now() }}"
+          valueBoolean: true
+    - "{% for presentItem in %ConfirmedFamilyConditionGroups %}":
+        "{% assign %}":
+          - conditionLinkId: "{{ %presentItem.linkId.replace('-p', '') }}"
+          - conditionDisplay: >-
+              {{ iif(%conditionLinkId = 'FH-06', 'Congenital hypothyroidism',
+              iif(%conditionLinkId = 'FH-07', 'Congenital adrenal hyperplasia',
+              iif(%conditionLinkId = 'FH-08', 'G6PD deficiency',
+              iif(%conditionLinkId = 'FH-09', 'Thalassaemia, sickle cell or other haemoglobinopathy',
+              iif(%conditionLinkId = 'FH-10', 'Cystic fibrosis',
+              iif(%conditionLinkId = 'FH-11', 'Metabolic disorder — amino acid, organic acid or fatty acid oxidation',
+              iif(%conditionLinkId = 'FH-12', 'Biotinidase deficiency or galactosaemia',
+              iif(%conditionLinkId = 'FH-13', 'Congenital heart defect in a first-degree relative',
+              iif(%conditionLinkId = 'FH-14', 'Childhood-onset hearing loss in a close relative',
+              iif(%conditionLinkId = 'FH-15', 'Developmental dysplasia of the hip',
+              iif(%conditionLinkId = 'FH-16', 'Childhood-onset vision loss or blindness',
+              iif(%conditionLinkId = 'FH-17', 'Neural tube defect',
+              iif(%conditionLinkId = 'FH-18', 'Cleft lip or palate, or craniofacial anomaly',
+              iif(%conditionLinkId = 'FH-19', 'Skeletal dysplasia or limb anomaly',
+              iif(%conditionLinkId = 'FH-20', 'Other congenital abnormality',
+              iif(%conditionLinkId = 'FH-21', 'Chromosomal abnormality (Down syndrome, other trisomy)',
+              iif(%conditionLinkId = 'FH-22', 'Known genetic syndrome or single-gene disorder',
+              iif(%conditionLinkId = 'FH-23', 'Intellectual disability of unknown cause',
+              iif(%conditionLinkId = 'FH-24', 'Thyroid disorder',
+              iif(%conditionLinkId = 'FH-25', 'Diabetes',
+              iif(%conditionLinkId = 'FH-26', 'Hypertension',
+              iif(%conditionLinkId = 'FH-27', 'Bleeding disorder',
+              iif(%conditionLinkId = 'FH-28', 'Multiple pregnancy or twins',
+              iif(%conditionLinkId = 'FH-29', 'Mental health condition or postnatal depression',
+              iif(%conditionLinkId = 'FH-30', 'Unexplained neonatal, infant or childhood death, or recurrent miscarriage',
+              %conditionLinkId))))))))))))))))))))))))) }}
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - system: https://nbs.dha.gov.ae/CodeSystem/nbs-computed-flags
+                code: "{{ %conditionLinkId }}"
+                display: "{{ %conditionDisplay }}"
+          subject:
+            reference: "{{ %motherRef }}"
+          effectiveDateTime: "{{ now() }}"
+          valueBoolean: true
+    # One Observation per positive answer of the maternal medical and family history, coded with SNOMED CT
+    - "{% for findingItem in %FindingItems %}":
+        "{% for findingAnswer in %findingItem.answer.where((valueCoding.code in %NegativeAnswers).not()) %}":
+          "{% assign %}":
+            - fromQuestion: "{{ %findingAnswer.valueCoding.code in %QuestionAnswers }}"
+            - concept: "{{ %FindingConcepts.where(split('|')[0] = %findingItem.linkId).first() }}"
+            # Which relative(s) of a family history condition (FH-xx-p -> FH-xx-r)
+            - relatives: >-
+                {[ %QuestionnaireResponse.repeat(item).where(
+                %findingItem.linkId.endsWith('-p') and linkId = %findingItem.linkId.replace('-p', '-r')
+                ).answer.valueCoding ]}
+            # Its answered qualifier questions (FH-01 -> FH-02, FH-05 -> FH-05w / FH-05h)
+            - qualifierItems: >-
+                {[ %QuestionnaireResponse.repeat(item).where(answer.valueCoding.exists()
+                and linkId in %QualifierQuestions.where(split('|')[0] = %findingItem.linkId).select(split('|')[1])) ]}
+          request:
+            method: POST
+            url: /Observation
+          resource:
+            resourceType: Observation
+            status: final
+            category:
+              - coding:
+                  - system: http://terminology.hl7.org/CodeSystem/observation-category
+                    code: survey
+                    display: Survey
+            code:
+              coding:
+                - "{% if %fromQuestion %}":
+                    system: "{{ %concept.split('|')[1] }}"
+                    code: "{{ %concept.split('|')[2] }}"
+                    display: "{{ %concept.split('|')[3] }}"
+                - "{% if %fromQuestion.not() %}": "{{ %findingAnswer.valueCoding }}"
+              text: "{{ iif(%fromQuestion, %concept.split('|')[3], %findingAnswer.valueCoding.display) }}"
+            subject:
+              reference: "{{ %motherRef }}"
+            # The father's haemoglobinopathy is recorded on the mother's record, about the father of the baby
+            focus:
+              - "{% if %findingItem.linkId = 'MH-14' %}":
+                  type: RelatedPerson
+                  display: Father of baby
+            effectiveDateTime: "{{ iif(%QuestionnaireResponse.authored.exists(), %QuestionnaireResponse.authored, now()) }}"
+            valueBoolean: true
+            derivedFrom:
+              - reference: "QuestionnaireResponse/{{ %QuestionnaireResponse.id }}"
+            component:
+              - "{% for relative in %relatives %}":
+                  code:
+                    coding:
+                      - system: http://loinc.org
+                        code: 54136-7
+                        display: Relationship to patient Family member
+                  valueCodeableConcept:
+                    coding:
+                      - "{{ %relative }}"
+              - "{% for qualifierItem in %qualifierItems %}":
+                  code:
+                    coding:
+                      - system: https://nbs.dha.gov.ae/Questionnaire/nbs-maternal-history
+                        code: "{{ %qualifierItem.linkId }}"
+                        display: "{{ %QualifierQuestions.where(split('|')[1] = %qualifierItem.linkId).first().split('|')[2] }}"
+                  valueCodeableConcept:
+                    coding:
+                      - "{{ %qualifierItem.answer.valueCoding }}"

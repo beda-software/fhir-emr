@@ -2,13 +2,11 @@ import { t } from '@lingui/macro';
 import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
-import config from '@beda.software/emr-config';
-
 import { AppFooter } from 'src/components/BaseLayout/Footer';
+import { useExpiredSignOutMessage } from 'src/components/SignOutTexts';
 import logo from 'src/images/logo.svg';
-import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
-import { useAppleAuthentication } from './hooks';
+import { useAppleAuthentication, useSignIn, useSignInLocationState } from './hooks';
 import s from './SignIn.module.scss';
 import { S } from './SignIn.styles';
 
@@ -17,20 +15,15 @@ enum SignInService {
     PatientPortal = 'Patient Portal',
 }
 
-function authorize(state?: OAuthState) {
-    window.location.href = getAuthorizeUrl({
-        authPath: 'auth/authorize',
-        params: new URLSearchParams({ client_id: config.clientId, response_type: 'token' }),
-        state,
-    });
-}
-
 interface SignInProps {
     originPathName?: string;
 }
 
 export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
+    const { signOutReason, signInFailure, nextUrl } = useSignInLocationState();
+    const authorize = useSignIn(nextUrl ?? props.originPathName);
+    const expiredSignOutMessage = useExpiredSignOutMessage();
 
     return (
         <S.Container>
@@ -39,6 +32,10 @@ export function SignIn(props: SignInProps) {
                     <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
+                {signInFailure === 'code-exchange' ? (
+                    <S.Message>{t`Sign-in did not complete. Please try again.`}</S.Message>
+                ) : null}
+                {signOutReason === 'expired' ? <S.Message>{expiredSignOutMessage}</S.Message> : null}
                 <Segmented
                     value={signInService}
                     options={[SignInService.EMR, SignInService.PatientPortal]}
@@ -90,11 +87,7 @@ export function SignIn(props: SignInProps) {
                                 </S.CredentialsBlock>
                             </S.CredentialsWrapper>
                         </S.Message>
-                        <Button
-                            type="primary"
-                            onClick={() => authorize({ nextUrl: props.originPathName })}
-                            size="large"
-                        >
+                        <Button type="primary" onClick={authorize} size="large">
                             {t`Log in`}
                         </Button>
                     </>
@@ -131,11 +124,7 @@ export function SignIn(props: SignInProps) {
                             </S.CredentialsWrapper>
                         </S.Message>
                         <S.ButtonsWrapper>
-                            <Button
-                                type="primary"
-                                onClick={() => authorize({ nextUrl: props.originPathName })}
-                                size="large"
-                            >
+                            <Button type="primary" onClick={authorize} size="large">
                                 {t`Log in as demo patient`}
                             </Button>
                             {/*<AppleButton />*/}
