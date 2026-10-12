@@ -1,13 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
 import { Questionnaire } from 'fhir/r4b';
 
 import config from '@beda.software/emr-config';
 
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, customAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 
 import { S } from './styles';
 
@@ -23,12 +22,12 @@ const getFilters = (): SearchBarColumn[] => [
     },
 ];
 
-const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Questionnaire>> => [
+const getTableColumns = (_manager: TableManager): FhirPathTableColumn<Questionnaire>[] => [
     {
         title: <Trans>Name</Trans>,
         dataIndex: 'name',
         key: 'name',
-        render: (_text, record) => record.resource.title || record.resource.id,
+        getter: 'Questionnaire.title | Questionnaire.id',
     },
 ];
 

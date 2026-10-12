@@ -23,6 +23,17 @@ export interface TableManager {
     reload: () => void;
 }
 
+export interface FhirPathTableColumn<R extends Resource = Resource> {
+    title: React.ReactNode;
+    dataIndex: string;
+    key?: string;
+    width?: string | number;
+    getter?: string;
+    getterSource?: 'resource' | 'bundle';
+    getContext?: (record: RecordType<R>) => Record<string, unknown>;
+    format?: (value: unknown, record: RecordType<R>) => React.ReactNode;
+}
+
 // Extra is a platform specific option
 // For web it could be specific modal property
 export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string> {

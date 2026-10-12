@@ -1,12 +1,11 @@
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
 import { Invoice } from 'fhir/r4b';
 
 import { extractBundleResources } from '@beda.software/fhir-react';
 
 import { SearchBarColumn, SearchBarColumnType, SorterColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, questionnaireAction, navigationAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { formatHumanDateTime } from 'src/utils';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
@@ -50,13 +49,13 @@ export function InvoiceList() {
         },
     ];
 
-    const getTableColumns = (manager: TableManager): ColumnsType<RecordType<Invoice>> => [
+    const getTableColumns = (_manager: TableManager): FhirPathTableColumn<Invoice>[] => [
         {
             title: <Trans>Practitioner</Trans>,
             dataIndex: 'practitioner',
             key: 'practitioner',
             width: '15%',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const bundle = record.bundle;
                 const practitioners = extractBundleResources(bundle).Practitioner;
                 const practitionerRoles = extractBundleResources(bundle).PractitionerRole;
@@ -68,7 +67,7 @@ export function InvoiceList() {
             dataIndex: 'patient',
             key: 'patient',
             width: '15%',
-            render: (_text, record) => {
+            format: (_value, record) => {
                 const bundle = record.bundle;
                 const patients = extractBundleResources(bundle).Patient;
                 return getPatientName(getInvoicePatient(record.resource, patients));
@@ -79,21 +78,22 @@ export function InvoiceList() {
             dataIndex: 'date',
             key: 'date',
             width: '15%',
-            render: (_text, record) => formatHumanDateTime(record.resource.date),
+            getter: 'Invoice.date',
+            format: (value) => (value ? formatHumanDateTime(value as string) : null),
         },
         {
             title: <Trans>Status</Trans>,
             dataIndex: 'status',
             key: 'status',
             width: '10%',
-            render: (_text, record) => <InvoiceStatus invoice={record.resource} />,
+            format: (_value, record) => <InvoiceStatus invoice={record.resource} />,
         },
         {
             title: <Trans>Amount</Trans>,
             dataIndex: 'amount',
             key: 'amount',
             width: '10%',
-            render: (_text, record) => <InvoiceAmount invoice={record.resource} />,
+            format: (_value, record) => <InvoiceAmount invoice={record.resource} />,
         },
     ];
 
