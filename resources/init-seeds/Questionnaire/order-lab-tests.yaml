@@ -3,6 +3,7 @@ name: orderLabTests
 title: Order laboratory tests
 resourceType: Questionnaire
 status: active
+description: Orders one or more laboratory tests for the patient.
 subjectType:
   - Encounter
   - Patient

@@ -7,10 +7,11 @@ import { SearchBarColumnReferenceTypeProps } from '../types';
 export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, defaultOpen } = props;
 
-    const { debouncedLoadOptions, onOptionChange } = useReferenceColumn(props);
+    const { debouncedLoadOptions, onOptionChange, depsUrl } = useReferenceColumn(props);
 
     return (
         <AsyncSelect
+            key={depsUrl}
             onChange={onOptionChange}
             value={columnFilterValue.value}
             loadOptions={debouncedLoadOptions}

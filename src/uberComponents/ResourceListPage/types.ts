@@ -25,7 +25,7 @@ export interface TableManager {
 
 // Extra is a platform specific option
 // For web it could be specific modal property
-export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string> {
+export interface ResourceListBaseProps<R extends Resource, Extra = unknown, Link = string> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -57,7 +57,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     uniqueOrderSortSearchParam?: string | null;
 
     /* Filter that are displayed in the search bar and inside table columns */
-    getFilters?: () => SearchBarColumn[];
+    getFilters?: (values: Record<string, any>) => SearchBarColumn[];
     getSorters?: () => SorterColumn[];
 
     /**
@@ -90,6 +90,12 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     defaultLaunchContext?: ParametersParameter[];
 
     /**
+     * Per-line clinical context for record questionnaire actions.
+     * When omitted, defaults to the row's primary resource (PascalCase + lowercase names).
+     */
+    getClinicalContext?: (record: RecordType<R> | undefined) => ParametersParameter[];
+
+    /**
      * EXPERIMENTAL FEATURE. The interface might be changed
      * TODO: https://github.com/beda-software/fhir-emr/issues/414
      */
@@ -103,6 +109,28 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
 
     /* Page content max width */
     maxWidth?: number | string;
+}
+
+// Extra is a platform specific option
+// For web it could be specific modal property
+export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string>
+    extends ResourceListBaseProps<R, Extra, Link> {
+    /**
+     * Record actions list that is displayed in the table per record
+     * (for example, edit organization)
+     */
+    getRecordActions?: (
+        record: RecordType<R>,
+        manager: TableManager,
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
+
+    /**
+     * Batch actions that are available when rows are selected
+     * (for example, delete multiple organizations)
+     *
+     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
+     */
+    getBatchActions?: (bundle?: Bundle<R>) => Array<QuestionnaireActionType<Extra>>;
 }
 
 export interface NavigationActionType<Link = string> {

@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: edit-appointment
 status: active
 title: Edit appointment
+description: Edits the details of an existing appointment.
 mapping:
   - reference: urn:uuid:Mapping:edit-appointment-extract
 launchContext:

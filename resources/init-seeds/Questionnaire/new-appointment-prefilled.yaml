@@ -3,6 +3,7 @@ id: new-appointment-prefilled
 name: new-appointment-prefilled
 title: New appointment
 status: active
+description: Books a new appointment with pre-filled patient and practitioner details.
 mapping:
   - reference: urn:uuid:Mapping:new-appointment-prefilled-extract
 launchContext:

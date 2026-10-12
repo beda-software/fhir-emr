@@ -1,0 +1,310 @@
+resourceType: Mapping
+id: pre-visit-intake-medical-history-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - patientId: "{{ %QuestionnaireResponse.answers('patient-id') }}"
+    - patientRef: "{{ iif(%patientId.exists(), 'Patient/' & %patientId, %QuestionnaireResponse.subject.reference) }}"
+    - qrId: "{{ %QuestionnaireResponse.id }}"
+    - qrVersion: "{{ %QuestionnaireResponse.meta.versionId }}"
+    - recordedDate: "{{ now() }}"
+
+    - conditionRows: "{[ %QuestionnaireResponse.repeat(item).where(linkId='conditions') ]}"
+    - surgeryRows: "{[ %QuestionnaireResponse.repeat(item).where(linkId='surgeries-list') ]}"
+    - hospitalizationRows: "{[ %QuestionnaireResponse.repeat(item).where(linkId='hospitalizations-list') ]}"
+    - allergyRows: "{[ %QuestionnaireResponse.repeat(item).where(linkId='allergies') ]}"
+    - treatmentRows: "{[ %QuestionnaireResponse.repeat(item).where(linkId='ongoing-treatments-list') ]}"
+    - vaccinationRows: "{[ %QuestionnaireResponse.repeat(item).where(linkId='vaccinations-list') ]}"
+    - lastCheckupDate: "{{ %QuestionnaireResponse.answers('last-checkup-date') }}"
+    - lastCheckupProvider: "{{ %QuestionnaireResponse.answers('last-checkup-provider') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    # Past / Chronic conditions -> AU Core Condition
+    - "{% for index, row in %conditionRows %}":
+        "{% assign %}":
+          - conditionCoding: "{{ %row.item.where(linkId='condition-name').answer.valueCoding.first() }}"
+          - conditionStatus: "{{ %row.item.where(linkId='condition-clinical-status').answer.valueCoding.first() }}"
+          - conditionStatusCode: "{{ %conditionStatus.code }}"
+          - conditionOnset: "{{ %row.item.where(linkId='condition-onset-date').answer.valueDate.first() }}"
+          - conditionAbatement: "{{ %row.item.where(linkId='condition-abatement-date').answer.valueDate.first() }}"
+          - conditionNote: "{{ %row.item.where(linkId='condition-note').answer.valueString.first() }}"
+        "{% if %conditionCoding.exists() %}":
+          fullUrl: "{{ 'urn:uuid:condition-' & %index.toString() }}"
+          request:
+            method: POST
+            url: /Condition
+          resource:
+            resourceType: Condition
+            meta:
+              profile:
+                - http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition
+            subject:
+              reference: "{{ %patientRef }}"
+            recordedDate: "{{ %recordedDate }}"
+            category:
+              - coding:
+                  - system: http://terminology.hl7.org/CodeSystem/condition-category
+                    code: problem-list-item
+                    display: Problem List Item
+            code:
+              coding:
+                - "{{ %conditionCoding }}"
+            clinicalStatus:
+              coding:
+                - "{{ %conditionStatus }}"
+            verificationStatus:
+              coding:
+                - system: http://terminology.hl7.org/CodeSystem/condition-ver-status
+                  code: unconfirmed
+                  display: Unconfirmed
+            onsetDateTime:
+              "{% if %conditionOnset.exists() %}": "{{ %conditionOnset }}"
+            abatementDateTime:
+              "{% if %conditionStatusCode = 'resolved' and %conditionAbatement.exists() %}": "{{ %conditionAbatement }}"
+            note:
+              - "{% if %conditionNote.exists() %}":
+                  text: "{{ %conditionNote }}"
+
+    # Surgeries / Procedures -> AU Core Procedure
+    - "{% for index, row in %surgeryRows %}":
+        "{% assign %}":
+          - surgeryCoding: "{{ %row.item.where(linkId='surgery-name').answer.valueCoding.first() }}"
+          - surgeryReason: "{{ %row.item.where(linkId='surgery-reason').answer.valueString.first() }}"
+          - surgeryDate: "{{ %row.item.where(linkId='surgery-date').answer.valueDate.first() }}"
+          - surgeryHospital: "{{ %row.item.where(linkId='surgery-hospital').answer.valueString.first() }}"
+          - surgeryNote: "{{ %row.item.where(linkId='surgery-note').answer.valueString.first() }}"
+        "{% if %surgeryCoding.exists() %}":
+          fullUrl: "{{ 'urn:uuid:procedure-' & %index.toString() }}"
+          request:
+            method: POST
+            url: /Procedure
+          resource:
+            resourceType: Procedure
+            meta:
+              profile:
+                - http://hl7.org.au/fhir/core/StructureDefinition/au-core-procedure
+            status: completed
+            subject:
+              reference: "{{ %patientRef }}"
+            code:
+              coding:
+                - "{{ %surgeryCoding }}"
+            performedDateTime:
+              "{% if %surgeryDate.exists() %}": "{{ %surgeryDate }}"
+            reasonCode:
+              - "{% if %surgeryReason.exists() %}":
+                  text: "{{ %surgeryReason }}"
+            note:
+              - "{% if %surgeryHospital.exists() %}":
+                  text: "{{ 'Hospital / Clinic: ' & %surgeryHospital }}"
+              - "{% if %surgeryNote.exists() %}":
+                  text: "{{ %surgeryNote }}"
+
+    # Hospitalizations -> AU Core Encounter (inpatient)
+    - "{% for index, row in %hospitalizationRows %}":
+        "{% assign %}":
+          - hospReason: "{{ %row.item.where(linkId='hospitalization-reason').answer.valueString.first() }}"
+          - hospDate: "{{ %row.item.where(linkId='hospitalization-date').answer.valueDate.first() }}"
+          - hospDuration: "{{ %row.item.where(linkId='hospitalization-duration').answer.valueString.first() }}"
+          - hospFacility: "{{ %row.item.where(linkId='hospitalization-hospital').answer.valueString.first() }}"
+          - hospNote: "{{ %row.item.where(linkId='hospitalization-note').answer.valueString.first() }}"
+        "{% if %hospReason.exists() or %hospDate.exists() or %hospFacility.exists() %}":
+          fullUrl: "{{ 'urn:uuid:encounter-hosp-' & %index.toString() }}"
+          request:
+            method: POST
+            url: /Encounter
+          resource:
+            resourceType: Encounter
+            meta:
+              profile:
+                - http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter
+            status: finished
+            class:
+              system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+              code: IMP
+              display: inpatient encounter
+            subject:
+              reference: "{{ %patientRef }}"
+            period:
+              start:
+                "{% if %hospDate.exists() %}": "{{ %hospDate }}"
+            reasonCode:
+              - "{% if %hospReason.exists() %}":
+                  text: "{{ %hospReason }}"
+
+    # Allergies / Intolerances -> AU Core AllergyIntolerance
+    - "{% for index, row in %allergyRows %}":
+        "{% assign %}":
+          - allergySubstance: "{{ %row.item.where(linkId='allergy-substance').answer.valueCoding.first() }}"
+          - allergyCategoryCode: "{{ %row.item.where(linkId='allergy-category').answer.valueCoding.code.first() }}"
+          - allergyStatus: "{{ %row.item.where(linkId='allergy-clinical-status').answer.valueCoding.first() }}"
+          - allergyReaction: "{{ %row.item.where(linkId='allergy-reaction').answer.valueCoding.first() }}"
+          - allergyNote: "{{ %row.item.where(linkId='allergy-note').answer.valueString.first() }}"
+        "{% if %allergySubstance.exists() %}":
+          fullUrl: "{{ 'urn:uuid:allergy-' & %index.toString() }}"
+          request:
+            method: POST
+            url: /AllergyIntolerance
+          resource:
+            resourceType: AllergyIntolerance
+            meta:
+              profile:
+                - http://hl7.org.au/fhir/core/StructureDefinition/au-core-allergyintolerance
+            patient:
+              reference: "{{ %patientRef }}"
+            recordedDate: "{{ %recordedDate }}"
+            code:
+              coding:
+                - "{{ %allergySubstance }}"
+            clinicalStatus:
+              coding:
+                - "{{ %allergyStatus }}"
+            verificationStatus:
+              coding:
+                - system: http://terminology.hl7.org/CodeSystem/allergyintolerance-verification
+                  code: unconfirmed
+                  display: Unconfirmed
+            category:
+              - "{% if %allergyCategoryCode.exists() %}": "{{ %allergyCategoryCode }}"
+            reaction:
+              - "{% if %allergyReaction.exists() %}":
+                  manifestation:
+                    - coding:
+                        - "{{ %allergyReaction }}"
+            note:
+              - "{% if %allergyNote.exists() %}":
+                  text: "{{ %allergyNote }}"
+
+    # Previous / Ongoing care -> Procedure (in-progress)
+    - "{% for index, row in %treatmentRows %}":
+        "{% assign %}":
+          - treatmentType: "{{ %row.item.where(linkId='treatment-type').answer.valueString.first() }}"
+          - treatmentProvider: "{{ %row.item.where(linkId='treatment-provider').answer.valueString.first() }}"
+          - treatmentReason: "{{ %row.item.where(linkId='treatment-reason').answer.valueString.first() }}"
+          - treatmentStart: "{{ %row.item.where(linkId='treatment-start-date').answer.valueDate.first() }}"
+          - treatmentFrequency: "{{ %row.item.where(linkId='treatment-frequency').answer.valueString.first() }}"
+        "{% if %treatmentType.exists() %}":
+          fullUrl: "{{ 'urn:uuid:treatment-' & %index.toString() }}"
+          request:
+            method: POST
+            url: /Procedure
+          resource:
+            resourceType: Procedure
+            status: in-progress
+            subject:
+              reference: "{{ %patientRef }}"
+            code:
+              text: "{{ %treatmentType }}"
+            performedPeriod:
+              start:
+                "{% if %treatmentStart.exists() %}": "{{ %treatmentStart }}"
+            reasonCode:
+              - "{% if %treatmentReason.exists() %}":
+                  text: "{{ %treatmentReason }}"
+            note:
+              - "{% if %treatmentProvider.exists() %}":
+                  text: "{{ 'Provider / Clinic: ' & %treatmentProvider }}"
+              - "{% if %treatmentFrequency.exists() %}":
+                  text: "{{ 'Frequency: ' & %treatmentFrequency }}"
+
+    # Vaccinations -> AU Core Immunization
+    - "{% for index, row in %vaccinationRows %}":
+        "{% assign %}":
+          - vaccineCoding: "{{ %row.item.where(linkId='vaccination-name').answer.valueCoding.first() }}"
+          - vaccineDate: "{{ %row.item.where(linkId='vaccination-date').answer.valueDate.first() }}"
+          - vaccineLot: "{{ %row.item.where(linkId='vaccination-lot-number').answer.valueString.first() }}"
+          - vaccineNote: "{{ %row.item.where(linkId='vaccination-note').answer.valueString.first() }}"
+        "{% if %vaccineCoding.exists() %}":
+          fullUrl: "{{ 'urn:uuid:immunization-' & %index.toString() }}"
+          request:
+            method: POST
+            url: /Immunization
+          resource:
+            resourceType: Immunization
+            meta:
+              profile:
+                - http://hl7.org.au/fhir/core/StructureDefinition/au-core-immunization
+            status: completed
+            patient:
+              reference: "{{ %patientRef }}"
+            vaccineCode:
+              coding:
+                - "{{ %vaccineCoding }}"
+            occurrenceDateTime:
+              "{% if %vaccineDate.exists() %}": "{{ %vaccineDate }}"
+            lotNumber:
+              "{% if %vaccineLot.exists() %}": "{{ %vaccineLot }}"
+            note:
+              - "{% if %vaccineNote.exists() %}":
+                  text: "{{ %vaccineNote }}"
+
+    # Last general check-up -> AU Core Encounter (ambulatory wellness)
+    - "{% if %lastCheckupDate.exists() %}":
+        fullUrl: "{{ 'urn:uuid:encounter-last-checkup' }}"
+        request:
+          method: POST
+          url: /Encounter
+        resource:
+          resourceType: Encounter
+          meta:
+            profile:
+              - http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter
+          status: finished
+          class:
+            system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+            code: AMB
+            display: ambulatory
+          subject:
+            reference: "{{ %patientRef }}"
+          type:
+            - coding:
+                - system: http://snomed.info/sct
+                  code: "185349003"
+                  display: Encounter for check up
+          period:
+            start: "{{ %lastCheckupDate }}"
+            end: "{{ %lastCheckupDate }}"
+
+    # Provenance over all created resources
+    - request:
+        method: POST
+        url: /Provenance
+      resource:
+        resourceType: Provenance
+        recorded: "{{ %recordedDate }}"
+        target:
+          - "{% for index, row in %conditionRows %}":
+              "{% if %row.item.where(linkId='condition-name').answer.valueCoding.exists() %}":
+                uri: "{{ 'urn:uuid:condition-' & %index.toString() }}"
+          - "{% for index, row in %surgeryRows %}":
+              "{% if %row.item.where(linkId='surgery-name').answer.valueCoding.exists() %}":
+                uri: "{{ 'urn:uuid:procedure-' & %index.toString() }}"
+          - "{% for index, row in %hospitalizationRows %}":
+              "{% if %row.item.where(linkId='hospitalization-reason').answer.valueString.exists() or %row.item.where(linkId='hospitalization-date').answer.valueDate.exists() or %row.item.where(linkId='hospitalization-hospital').answer.valueString.exists() %}":
+                uri: "{{ 'urn:uuid:encounter-hosp-' & %index.toString() }}"
+          - "{% for index, row in %allergyRows %}":
+              "{% if %row.item.where(linkId='allergy-substance').answer.valueCoding.exists() %}":
+                uri: "{{ 'urn:uuid:allergy-' & %index.toString() }}"
+          - "{% for index, row in %treatmentRows %}":
+              "{% if %row.item.where(linkId='treatment-type').answer.valueString.exists() %}":
+                uri: "{{ 'urn:uuid:treatment-' & %index.toString() }}"
+          - "{% for index, row in %vaccinationRows %}":
+              "{% if %row.item.where(linkId='vaccination-name').answer.valueCoding.exists() %}":
+                uri: "{{ 'urn:uuid:immunization-' & %index.toString() }}"
+          - "{% if %lastCheckupDate.exists() %}":
+              uri: "{{ 'urn:uuid:encounter-last-checkup' }}"
+        activity:
+          coding:
+            - system: http://terminology.hl7.org/CodeSystem/v3-DataOperation
+              code: CREATE
+              display: create
+        agent:
+          - who:
+              reference: "{{ %Author.resourceType & '/' & %Author.id }}"
+              display: "{{ iif(%Author.resourceType = 'Organization', %Author.name, %Author.name.first().given.first() & ' ' & %Author.name.first().family) }}"
+        entity:
+          - role: source
+            what:
+              uri: "{{ 'QuestionnaireResponse/' & %qrId & '/_history/' & %qrVersion }}"

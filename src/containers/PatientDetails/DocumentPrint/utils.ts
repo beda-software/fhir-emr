@@ -39,6 +39,39 @@ export function getQuestionnaireItemValue(
     )(questionnaireResponse);
 }
 
+export function flattenFlexColumnsForPaging(root: HTMLElement) {
+    const elements = root.querySelectorAll<HTMLElement>('*');
+
+    elements.forEach((el) => {
+        const computed = window.getComputedStyle(el);
+
+        if (computed.display !== 'flex' && computed.display !== 'inline-flex') {
+            return;
+        }
+
+        const direction = computed.flexDirection;
+        if (direction !== 'column' && direction !== 'column-reverse') {
+            return;
+        }
+
+        const gap = parseFloat(computed.rowGap) || 0;
+
+        if (gap > 0) {
+            const children = Array.from(el.children) as HTMLElement[];
+            children.forEach((child, index) => {
+                if (index === 0) {
+                    return;
+                }
+                const existingMargin = parseFloat(window.getComputedStyle(child).marginTop) || 0;
+                child.style.marginTop = `${existingMargin + gap}px`;
+            });
+        }
+
+        el.style.display = 'block';
+        el.style.breakInside = 'auto';
+    });
+}
+
 export function flattenQuestionnaireGroupItems(item: QuestionnaireItem): QuestionnaireItem[] {
     if (item.type !== 'group') {
         return [item];

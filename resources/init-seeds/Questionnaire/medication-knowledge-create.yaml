@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: medication-knowledge-create
 title: medication-knowledge create
 status: active
+description: Registers a new medication-knowledge record.
 mapping:
   - reference: urn:uuid:Mapping:medication-knowledge-create-extract
 item:

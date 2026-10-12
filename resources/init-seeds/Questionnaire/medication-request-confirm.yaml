@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: medication-request-confirm
 status: active
 title: Medication Request Confirm
+description: Confirms an existing medication request.
 mapping:
   - reference: urn:uuid:Mapping:prescription-confirm
 launchContext:

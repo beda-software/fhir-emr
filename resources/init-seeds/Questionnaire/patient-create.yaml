@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: patient-create
 title: Patient create
 status: active
+description: Registers a new patient in the system.
 mapping:
   - reference: urn:uuid:Mapping:patient-create
 item:

@@ -1,6 +1,7 @@
 resourceType: Questionnaire
 title: Heavy Menstrual Bleeding Screening Questionnaire (HMB)
 status: active
+description: Screens patients for heavy menstrual bleeding to guide diagnostic workup and management.
 id: heavy-menstrual-bleeding-screening
 url: heavy-menstrual-bleeding-screening
 name: heavy-menstrual-bleeding-screening
@@ -18,6 +19,14 @@ useContext:
     CodeableConcept:
       coding:
       - code: form-library
+- code:
+    code: category
+    system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+  value:
+    CodeableConcept:
+      coding:
+      - code: other
+        system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient

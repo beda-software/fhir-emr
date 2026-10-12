@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: creatinine-test
 title: Creatinine test
 status: active
+description: Records the result of a serum creatinine lab test.
 subjectType:
   - Patient
 launchContext:

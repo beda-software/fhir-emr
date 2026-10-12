@@ -12,6 +12,7 @@ import {
     persistSaveService,
     questionnaireIdLoader,
 } from 'src/hooks/questionnaire-response-form-data';
+import { getCurrentLocale } from 'src/services/i18n';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
@@ -55,6 +56,7 @@ export function QuestionanireModal({
                 maskClosable={false}
             >
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     initialQuestionnaireResponse={{
                         questionnaire: parseFHIRReference(questionnaire).id,
                         subject,

@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: glucose-test
 title: Glucose test
 status: active
+description: Records the result of a blood glucose lab test.
 subjectType:
   - Patient
 launchContext:

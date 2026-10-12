@@ -3,6 +3,7 @@ name: encounter-create-from-appointment
 resourceType: Questionnaire
 title: Encounter create from the selected appointment
 status: active
+description: Creates a new encounter linked to the selected appointment.
 mapping:
   - reference: urn:uuid:Mapping:encounter-create-extract
 launchContext:

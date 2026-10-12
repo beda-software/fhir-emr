@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: practitioner-create
 title: Practitioner create
 status: active
+description: Registers a new practitioner in the system.
 mapping:
   - reference: urn:uuid:Mapping:practitioner-create
 item:

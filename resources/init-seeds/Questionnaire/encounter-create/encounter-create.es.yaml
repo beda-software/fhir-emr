@@ -1,0 +1,31 @@
+id: encounter-create.es
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/encounter-create
+language: es
+status: active
+title: Crear encuentro
+description: Crea un nuevo encuentro clínico.
+item:
+  - text: Id del paciente
+    type: string
+    linkId: patientId
+  - text: Nombre del paciente
+    type: string
+    linkId: patientName
+  - text: Profesional
+    type: reference
+    linkId: practitioner-role
+  - text: Servicio
+    type: choice
+    linkId: service
+    answerOption:
+      - valueCoding:
+          code: consultation
+          display: La primera cita
+      - valueCoding:
+          code: follow-up
+          display: Una visita de seguimiento
+  - text: Fecha
+    type: dateTime
+    linkId: date
+

@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: nsw-health-standard-maternal-observation-chart
 title: NSW Health Standard Maternal Observation Chart
 status: active
+description: Standard NSW Health maternal observation chart used to monitor vital signs and detect deterioration during the antenatal and postnatal period.
 subjectType:
   - Patient
   - Encounter
@@ -18,6 +19,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: paediatrics
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient

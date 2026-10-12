@@ -4,9 +4,11 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
+import { getCurrentLocale } from 'src/services/i18n';
 
 import { S } from './styles';
 import {
@@ -51,21 +53,28 @@ export function RecordQuestionnaireAction<R extends Resource>({
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
                         ...defaultLaunchContext,
                         { name: resource.resourceType, resource: resource as any },
                     ]}
-                    onSuccess={() => {
-                        notification.success({
-                            message: t`Successfully submitted`,
-                        });
-                        reload();
-                        closeModal();
-                    }}
-                    onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
+                    onSuccess={(response) => {
+                        if (!action.extra?.qrfProps?.onSuccess) {
+                            notification.success({
+                                message: t`Successfully submitted`,
+                            });
+                        }
+                        reload();
+                        action.extra?.qrfProps?.onSuccess?.(response);
+                        closeModal();
+                    }}
+                    onCancel={() => {
+                        action.extra?.qrfProps?.onCancel?.();
+                        closeModal();
+                    }}
                 />
             )}
         </ModalTrigger>
@@ -91,16 +100,23 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
+                    language={getCurrentLocale()}
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Successfully submitted` });
-                        reload();
-                    }}
                     launchContextParameters={defaultLaunchContext}
-                    onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
                     {...(action.extra?.qrfProps ?? {})}
+                    onSuccess={(response) => {
+                        if (!action.extra?.qrfProps?.onSuccess) {
+                            notification.success({ message: t`Successfully submitted` });
+                        }
+                        reload();
+                        action.extra?.qrfProps?.onSuccess?.(response);
+                        closeModal();
+                    }}
+                    onCancel={() => {
+                        action.extra?.qrfProps?.onCancel?.();
+                        closeModal();
+                    }}
                 />
             )}
         </ModalTrigger>
@@ -133,6 +149,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
             >
                 {({ closeModal }) => (
                     <QuestionnaireResponseForm
+                        language={getCurrentLocale()}
                         questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                         launchContextParameters={[
                             ...defaultLaunchContext,
@@ -142,14 +159,20 @@ export function BatchQuestionnaireAction<R extends Resource>({
                                 resource: bundle as Bundle,
                             },
                         ]}
-                        onSuccess={() => {
-                            closeModal();
-                            notification.success({ message: t`Successfully submitted` });
-                            reload();
-                        }}
-                        onCancel={closeModal}
                         saveButtonTitle={t`Submit`}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
+                        onSuccess={(response) => {
+                            if (!action.extra?.qrfProps?.onSuccess) {
+                                notification.success({ message: t`Successfully submitted` });
+                            }
+                            reload();
+                            action.extra?.qrfProps?.onSuccess?.(response);
+                            closeModal();
+                        }}
+                        onCancel={() => {
+                            action.extra?.qrfProps?.onCancel?.();
+                            closeModal();
+                        }}
                     />
                 )}
             </ModalTrigger>

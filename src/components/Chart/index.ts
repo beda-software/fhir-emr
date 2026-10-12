@@ -1,7 +1,14 @@
 export { Chart, chartActiveDotSpec, chartDotSpec } from './Chart';
 export { createCategoricalAxis } from './categoricalAxis';
 export { ChartCard } from './ChartCard';
-export type { ChartCardProps, ChartDatumBase, ChartProps, ChartVariant } from './Chart.types';
+export type {
+    ChartCardProps,
+    ChartConfigProps,
+    ChartDatumBase,
+    ChartProps,
+    ChartReferenceArea,
+    ChartVariant,
+} from './Chart.types';
 export type { CategoricalAxis, OrderedCategory } from './categoricalAxis';
 export {
     CHART_X_SEPARATOR,

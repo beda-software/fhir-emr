@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: medication-request-cancel
 status: active
 title: Medication Request Cancel
+description: Cancels an existing medication request.
 name: medication-request-cancel
 mapping:
   - reference: urn:uuid:Mapping:prescription-cancel

@@ -6,6 +6,7 @@ meta:
 name: e-request
 title: Laboratory procedure eRequest
 status: active
+description: Places an electronic request for a laboratory procedure.
 subjectType:
     - Encounter
 launchContext:

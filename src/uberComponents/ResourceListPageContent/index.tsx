@@ -45,12 +45,13 @@ export function ResourceListPageContent<R extends Resource>({
     getSorters,
     getTableColumns,
     defaultLaunchContext,
+    getClinicalContext,
     getReportColumns,
     maxWidth,
     tableProps,
     uniqueOrderSortSearchParam,
 }: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
-    const allFilters = getFilters?.() ?? [];
+    const allFilters = getFilters?.({}) ?? [];
     const allSorters = getSorters?.() ?? [];
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
@@ -204,6 +205,7 @@ export function ResourceListPageContent<R extends Resource>({
                                   getRecordActions,
                                   reload,
                                   defaultLaunchContext: defaultLaunchContext ?? [],
+                                  getClinicalContext,
                               }),
                           ]
                         : []),

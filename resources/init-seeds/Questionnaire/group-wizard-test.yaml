@@ -2,6 +2,7 @@ name: Group wizard test
 title: Group wizard test
 resourceType: Questionnaire
 status: active
+description: Test questionnaire for the wizard group layout.
 id: group-wizard-test
 meta:
   profile:

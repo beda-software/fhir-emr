@@ -7,6 +7,7 @@ meta:
 name: medication-request
 title: Medication Prescription
 status: active
+description: Prescribes a medication for the patient.
 subjectType:
   - Encounter
 mapping:

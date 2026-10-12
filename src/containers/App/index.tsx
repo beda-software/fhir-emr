@@ -74,7 +74,7 @@ export function App(props: AppProps) {
     // Define the default anonymous routes
     const defaultAnonymousRoutes = (
         <>
-            <Route path="/signin" element={<SignIn originPathName={window.location.pathname} />} />
+            <Route path="/signin" element={<SignIn />} />
             <Route path="/reset-password/:code" element={<SetPassword />} />
             <Route
                 path="/appointment/book"

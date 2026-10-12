@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: phq2-phq9-depression-screening
 title: PHQ-2/PHQ-9 Depression Screening
 status: active
+description: Patient Health Questionnaire (PHQ-2 followed by PHQ-9 when indicated); screens for depression and rates symptom severity.
 subjectType:
   - Encounter
   - Patient
@@ -14,6 +15,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: mental-health
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 mapping:
   - reference: urn:uuid:Mapping:phq2phq9-extract
 launchContext:

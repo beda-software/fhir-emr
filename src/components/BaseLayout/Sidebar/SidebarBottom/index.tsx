@@ -4,6 +4,9 @@ import type { ItemType } from 'antd/es/menu/interface';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
+import config from '@beda.software/emr-config';
+
+import { Assistant } from 'src/components/Assistant';
 import { MenuIcon } from 'src/icons/general/Menu';
 import { getToken } from 'src/services/auth';
 import { dynamicActivate, setCurrentLocale, getCurrentLocale, localesConfig } from 'src/services/i18n';
@@ -24,16 +27,24 @@ export function SidebarBottom(props: Props) {
     const { collapsed, toggleCollapsed, onItemClick, enableLocaleSwitcher = true, ...other } = props;
     const appToken = getToken();
     const isAnonymousUser = !appToken;
+    const enableAssistant = !!config.aiAssistantServiceUrl;
 
     return (
         <S.Container
+            $collapsed={collapsed}
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
             {...other}
         >
-            <S.Divider $hidden={collapsed} />
-            {enableLocaleSwitcher && <LocaleSwitcher onItemClick={onItemClick} />}
+            {enableAssistant && (
+                <>
+                    <S.FullWidthDivider $collapsed={collapsed} />
+                    <Assistant variant={collapsed ? 'sidebarFolded' : 'sidebarExpanded'} />
+                </>
+            )}
+            <S.FullWidthDivider $collapsed={collapsed} />
+            {enableLocaleSwitcher && !collapsed && <LocaleSwitcher onItemClick={onItemClick} />}
             {!isAnonymousUser ? (
                 <>
                     <S.Divider $hidden={collapsed} />

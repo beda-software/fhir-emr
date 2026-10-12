@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: upload-file-control
 title: Uploading file
 status: active
+description: Demo questionnaire showing the file-upload control.
 subjectType:
   - Encounter
   - Patient

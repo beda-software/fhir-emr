@@ -1,0 +1,36 @@
+.form {
+    :global .ant-form-item-label {
+        font-weight: bold;
+    }
+
+    :global .ant-form-item-row {
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    :global .ant-form-item-label {
+        text-align: start;
+        white-space: normal;
+
+        label {
+            display: flex;
+            height: auto;
+
+            &:after {
+                display: none;
+            }
+        }
+    }
+
+    :global .ant-form-item-control {
+        flex-grow: 0;
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}

@@ -1,6 +1,7 @@
 resourceType: Questionnaire
 title: Heavy Menstrual Bleeding (HMB)
 status: active
+description: Detailed heavy menstrual bleeding assessment.
 id: heavy-menstrual-bleeding
 url: heavy-menstrual-bleeding
 name: heavy-menstrual-bleeding

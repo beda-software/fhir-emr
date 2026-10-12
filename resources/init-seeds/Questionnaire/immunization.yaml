@@ -3,6 +3,23 @@ resourceType: Questionnaire
 name: immunization
 title: Immunization
 status: active
+description: Records administered vaccines including product, dose, lot, and route.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
   - Patient

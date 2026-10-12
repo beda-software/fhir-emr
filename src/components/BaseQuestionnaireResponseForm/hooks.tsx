@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormAnswerItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
-import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
+import { getFieldErrorMessage } from '@beda.software/web-item-controls/controls';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';

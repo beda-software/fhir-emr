@@ -1,0 +1,128 @@
+resourceType: Questionnaire
+id: edit-appointment-new
+status: active
+launchContext:
+  - type:
+      - Appointment
+    name:
+      code: Appointment
+    description: The edited appointment
+title: Edit appointment New
+contained:
+  - resourceType: Bundle
+    id: CurrentAppointmentBundle
+    type: transaction
+    entry:
+      - request:
+          url: >-
+            /Appointment?_id={{%Appointment.id}}&_include=Appointment:actor:PractitionerRole
+          method: GET
+url: >-
+  https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/edit-appointment-new
+mapping:
+  - resourceType: Mapping
+    id: edit-appointment-extract
+sourceQueries:
+  - localRef: Bundle#CurrentAppointmentBundle
+item:
+  - linkId: root-group
+    type: group
+    item:
+      - linkId: current-appointment-id
+        text: Current Appointment ID
+        type: string
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').id
+      - linkId: practitioner-role
+        text: Practitioner
+        type: reference
+        required: true
+        hidden: false
+        referenceResource:
+          - PractitionerRole
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').first().participant.actor.where(reference.startsWith('PractitionerRole'))
+        choiceColumn:
+          - forDisplay: true
+            path: >-
+              practitioner.resource.name.given.first() + ' ' +
+              practitioner.resource.name.family + ' - ' +
+              specialty.first().coding.display
+        answerExpression:
+          language: application/x-fhir-query
+          expression: PractitionerRole?_assoc=practitioner
+      - linkId: practitioner-role-id
+        text: PractitionerRoleId
+        type: string
+        required: true
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').first().participant.actor.where(reference.startsWith('PractitionerRole')).reference.split('/')[1]
+        choiceColumn:
+          - forDisplay: true
+            path: >-
+              practitioner.resource.name.given.first() + ' ' +
+              practitioner.resource.name.family + ' - ' +
+              specialty.first().coding.display
+        answerExpression:
+          language: application/x-fhir-query
+          expression: PractitionerRole?_assoc=practitioner
+      - linkId: patient
+        text: Patient
+        type: reference
+        required: true
+        referenceResource:
+          - Patient
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').first().participant.actor.where(reference.startsWith('Patient'))
+        choiceColumn:
+          - forDisplay: true
+            path: name.given.first() + ' ' + name.family
+        answerExpression:
+          language: application/x-fhir-query
+          expression: Patient
+      - linkId: service-type
+        text: Service
+        type: reference
+        enableBehavior: any
+        enableWhen:
+          - answerBoolean: true
+            operator: exists
+            question: practitioner-role
+        required: true
+        referenceResource:
+          - HealthcareService
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').participant.actor.where(reference.startsWith('HealthcareService'))
+        choiceColumn:
+          - forDisplay: true
+            path: type.first().coding.first().display
+        answerExpression:
+          language: application/x-fhir-query
+          expression: >-
+            HealthcareService?active=true&_has:PractitionerRole:service:id={{QuestionnaireResonse.repeat(item).where(linkId='practitioner-role-id').answer.value.string}}
+      - linkId: start-datetime
+        text: Start datetime
+        type: dateTime
+        required: true
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').first().start
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+  extension:
+    - url: ex:createdAt
+      valueInstant: '2025-04-18T14:39:19.961352Z'

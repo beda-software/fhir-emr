@@ -6,12 +6,14 @@ import { useState } from 'react';
 
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
+import { DocumentCategory } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal/categories';
 
 interface Props {
     patient: Patient;
     hideCreateButton?: boolean;
     title?: string;
     context?: string;
+    categories?: DocumentCategory[];
     openNewTab?: boolean;
     displayShareButton?: boolean;
 }
@@ -35,6 +37,7 @@ export const PatientDocuments = (props: Props) => {
                         patient={patient}
                         subjectType="Patient"
                         context={props.context}
+                        categories={props.categories}
                         openNewTab={props.openNewTab}
                         displayShareButton={props.displayShareButton}
                     />

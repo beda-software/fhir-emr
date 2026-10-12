@@ -2,6 +2,7 @@ id: repeatable-group-full-example
 name: Repeatable Group Full Example
 title: Repeatable Group Full Example
 status: active
+description: Demo questionnaire showcasing all options of repeatable groups.
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: healthcare-service-edit
 title: healthcare-service edit
 status: active
+description: Edits an existing healthcare service.
 launchContext:
   - name:
       code: HealthcareService
@@ -91,4 +92,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/fhir/Questionnaire/healthcare-service-create
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/healthcare-service-edit

@@ -1,5 +1,6 @@
 name: Group wizard
 title: Group wizard
+description: Demo of a horizontal wizard group layout.
 subjectType:
   - Encounter
   - Patient
@@ -146,7 +147,7 @@ item:
       - linkId: conditional-step-2
         text: Conditional Step 2
         type: group
-        enableWhenExpression: 
+        enableWhenExpression:
           language: text/fhirpath
           expression: "iif(%resource.repeat(item).where(linkId='q11').answer.valueInteger > 5, true, false)"
         item:

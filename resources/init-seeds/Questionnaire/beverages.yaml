@@ -34,6 +34,7 @@ meta:
 name: beverages
 title: Beverages
 status: draft
+description: Records the patient's typical beverage consumption.
 subjectType:
   - Patient
 id: beverages

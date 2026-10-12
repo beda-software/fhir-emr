@@ -1,6 +1,7 @@
 
 name: CQF Examples
 title: CQF Examples
+description: Demo questionnaire showcasing CQF (Clinical Quality Framework) integrations.
 subjectType:
     - Encounter
     - Patient

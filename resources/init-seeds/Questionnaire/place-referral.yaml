@@ -6,6 +6,7 @@ meta:
 name: e-request
 title: eReferral
 status: active
+description: Places an electronic referral to another provider or service.
 subjectType:
     - Patient
 launchContext:

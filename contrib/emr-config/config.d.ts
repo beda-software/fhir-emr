@@ -11,6 +11,11 @@ export type LocalesConfig = Record<string, LocaleData>;
 
 declare const config: {
     clientId: string;
+    /**
+     * Sign-in flow. `'implicit'` (default) or `'code'`, the authorization code flow with PKCE.
+     * `'code'` requires `authTokenPath` and `authClientRedirectURL`.
+     */
+    authFlow?: 'implicit' | 'code';
     authTokenPath?: string;
     authClientRedirectURL?: string;
 
@@ -27,7 +32,8 @@ declare const config: {
     jitsiMeetServer: string;
     wearablesDataStreamService: string;
     metriportIdentifierSystem: string;
-    aiAssistantServiceUrl: string;
+    aiAssistantServiceUrl?: string | null;
+    bedaFormsUrl?: string | null;
     inactiveMapping?: Record<string, {
         searchField: string;
         statusField: string;

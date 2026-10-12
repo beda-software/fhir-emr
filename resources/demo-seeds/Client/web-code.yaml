@@ -1,0 +1,13 @@
+id: web-code
+resourceType: Client
+auth:
+  authorization_code:
+    redirect_uri: "${FHIR_EMR_AUTH_URL}"
+    pkce: true
+    secret_required: false
+    refresh_token: true
+    access_token_expiration: 60 # seconds
+    refresh_token_expiration: 300 # seconds
+first_party: true
+grant_types:
+  - authorization_code

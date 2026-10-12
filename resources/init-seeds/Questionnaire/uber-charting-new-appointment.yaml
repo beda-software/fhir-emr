@@ -1,0 +1,62 @@
+resourceType: Questionnaire
+id: uber-charting-appointment-new
+name: uber-charting-appointment-new
+title: New appointment
+status: active
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+    description: Patient resource
+mapping:
+  - id: new-appointment-extract
+    resourceType: Mapping
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: PatientId
+        type: string
+        linkId: predefined-patient-id
+        hidden: false
+        initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+      - text: Practitioner
+        type: reference
+        referenceResource:
+          - PractitionerRole
+        required: true
+        linkId: practitioner-role
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "PractitionerRole?_assoc=practitioner"
+        choiceColumn:
+          - forDisplay: true
+            path: >-
+              practitioner.resource.name.given.first() + ' ' +
+              practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+      - text: Service
+        type: reference
+        referenceResource:
+          - HealthcareService
+        required: true
+        linkId: service-type
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "HealthcareService?active=true"
+        choiceColumn:
+          - forDisplay: true
+            path: type.first().coding.first().display
+      - text: Start time
+        required: true
+        type: dateTime
+        linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%appointment.start"
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/uber-charting-new-appointment

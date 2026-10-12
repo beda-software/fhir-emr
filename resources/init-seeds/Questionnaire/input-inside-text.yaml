@@ -3,6 +3,7 @@ name: input-inside-text
 title: Input inside text test
 resourceType: Questionnaire
 status: active
+description: Demo questionnaire showing inputs embedded within text.
 subjectType:
   - Encounter
   - Patient
