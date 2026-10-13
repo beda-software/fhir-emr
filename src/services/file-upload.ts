@@ -18,6 +18,11 @@ interface UploadUrlOptions {
     contentType?: string;
 }
 
+interface DownloadHeadersResponse {
+    url: string;
+    headers: { [key: string]: string };
+}
+
 export async function generateUploadUrl(filename: string, options?: UploadUrlOptions) {
     return mapSuccess(
         await aidboxService<UploadUrlResponse>({
@@ -53,14 +58,14 @@ export async function generateDownloadUrl(key: string, options?: DownloadUrlOpti
 }
 
 export async function generateDownloadHeaders(key: string) {
-    return aidboxService<{[key: string]: string}>({
-            baseURL: config.baseURL,
-            url: '/$generate-download-headers',
-            method: 'POST',
-            data: {
-                key,
-            },
-        })
+    return aidboxService<DownloadHeadersResponse>({
+        baseURL: config.baseURL,
+        url: '/$generate-download-headers',
+        method: 'POST',
+        data: {
+            key,
+        },
+    });
 }
 
 export type CustomUploadRequestOption = Pick<UploadRequestOption, 'file' | 'onProgress' | 'onError' | 'onSuccess'>;
