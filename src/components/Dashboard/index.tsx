@@ -13,7 +13,7 @@ export function Dashboards(props: Props) {
     const dashboardComponents = widgets.map((widgetInfo, index) => {
         const WidgetComponent = widgetInfo.widget;
 
-        return <WidgetComponent key={index} patient={patient} widgetInfo={widgetInfo} />;
+        return <WidgetComponent key={widgetInfo.key ?? index} patient={patient} widgetInfo={widgetInfo} />;
     });
 
     return <>{dashboardComponents}</>;

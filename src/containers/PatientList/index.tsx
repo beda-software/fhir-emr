@@ -92,6 +92,7 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
         const patient = getPatientFromConsent(record.resource, record.bundle);
         return [
             navigationAction(<Trans>Chart</Trans>, `/patients/${patient?.id}`),
+            navigationAction(<Trans>AI Chart</Trans>, `/ai-chart/${patient?.id}`),
             navigationAction(<Trans>Forms</Trans>, `/patients/${patient?.id}/forms`),
             questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
         ];
@@ -129,6 +130,7 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
 
     const getRecordActions = (record: RecordType<Patient>) => [
         navigationAction(<Trans>Chart</Trans>, `/patients/${record.resource.id}`),
+        navigationAction(<Trans>AI Chart</Trans>, `/ai-chart/${record.resource.id}`),
         navigationAction(<Trans>Forms</Trans>, `/patients/${record.resource.id}/forms`),
         questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
     ];

@@ -15,6 +15,7 @@ export interface WidgetProps {
 export type DashboardAreas = 'top' | 'right' | 'left' | 'bottom';
 
 export interface WidgetInfo {
+    key?: string;
     widget: React.FunctionComponent<WidgetProps>;
     query?: Query;
 }
