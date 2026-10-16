@@ -14,6 +14,7 @@ export interface StandardCardProps<T extends Resource> {
     action?: QuestionnaireActionType;
     getLaunchContext?: () => Array<ParametersParameter>;
     seeAllThreshold: number;
+    extraActions?: React.ReactNode;
 }
 
 export function StandardCard<T extends Resource>({
@@ -24,6 +25,7 @@ export function StandardCard<T extends Resource>({
     action,
     getLaunchContext,
     seeAllThreshold,
+    extraActions,
 }: StandardCardProps<T>) {
     const location = useLocation();
     const showSeeAllButton = (card?.total ?? 0) > seeAllThreshold;
@@ -54,6 +56,7 @@ export function StandardCard<T extends Resource>({
                             ]}
                         />
                     ) : null}
+                    {extraActions}
                 </>
             }
         >

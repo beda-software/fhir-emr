@@ -288,6 +288,10 @@ msgstr ""
 msgid "Active Medications"
 msgstr ""
 
+#: src/containers/AIChart/AIChartDashboard.tsx:20
+msgid "Active problems"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:183
 msgid "Activities"
 msgstr ""
@@ -299,6 +303,10 @@ msgstr ""
 #: src/controls/Group/RepeatableGroups/index.tsx:87
 #~ msgid "Add {text}"
 #~ msgstr ""
+
+#: src/containers/AIChart/AIChartDashboard.tsx:90
+msgid "Add a widget to build the AI chart for this patient"
+msgstr ""
 
 #: src/controls/Group/RepeatableGroups/index.tsx:87
 #~ msgid "Add another answer"
@@ -354,6 +362,10 @@ msgstr ""
 msgid "Add questionnaire"
 msgstr ""
 
+#: src/containers/AIChart/AIChartDashboard.tsx:64
+msgid "Add widget"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:86
 msgid "Adjust Last Option Right"
 msgstr ""
@@ -361,6 +373,13 @@ msgstr ""
 #: src/containers/FormList/index.tsx:37
 #: src/containers/QuestionnaireList/index.tsx:38
 msgid "AI builder"
+msgstr ""
+
+#: src/containers/AIChart/AIChartDashboard.tsx:55
+#: src/containers/AIChart/index.tsx:51
+#: src/containers/PatientList/index.tsx:95
+#: src/containers/PatientList/index.tsx:133
+msgid "AI Chart"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/SummaryCard/index.tsx:31
@@ -377,6 +396,7 @@ msgstr ""
 msgid "Aidbox Forms Builder"
 msgstr ""
 
+#: src/containers/AIChart/AIChartDashboard.tsx:22
 #: src/containers/PatientDetails/PatientResources/utils.tsx:113
 msgid "Allergies"
 msgstr ""
@@ -531,7 +551,7 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientDetailsTabs/index.tsx:18
 #: src/containers/PatientList/index.tsx:94
-#: src/containers/PatientList/index.tsx:131
+#: src/containers/PatientList/index.tsx:132
 msgid "Chart"
 msgstr ""
 
@@ -692,8 +712,16 @@ msgstr ""
 msgid "CRP"
 msgstr ""
 
+#: src/containers/AIChart/AIChartDashboard.tsx:21
+msgid "Current medications"
+msgstr ""
+
 #: src/utils/relative-date.ts:25
 msgid "d.o."
+msgstr ""
+
+#: src/containers/AIChart/index.tsx:23
+msgid "Dashboard"
 msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:90
@@ -760,6 +788,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:96
 msgid "Describe what to adjust in the questionnaire"
+msgstr ""
+
+#: src/containers/AIChart/AIChartDashboard.tsx:62
+msgid "Describe what you want to see on the patient chart"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:479
@@ -830,8 +862,8 @@ msgstr ""
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:253
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:23
-#: src/containers/PatientList/index.tsx:96
-#: src/containers/PatientList/index.tsx:133
+#: src/containers/PatientList/index.tsx:97
+#: src/containers/PatientList/index.tsx:135
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:71
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:87
 msgid "Edit"
@@ -882,7 +914,7 @@ msgstr ""
 msgid "End date"
 msgstr ""
 
-#: src/containers/MagicSearchPage/index.tsx:120
+#: src/containers/MagicSearchPage/MagicSearchBar.tsx:48
 msgid "Enter your search query"
 msgstr ""
 
@@ -970,8 +1002,8 @@ msgid "Form successfully saved"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientDetailsTabs/index.tsx:21
-#: src/containers/PatientList/index.tsx:95
-#: src/containers/PatientList/index.tsx:132
+#: src/containers/PatientList/index.tsx:96
+#: src/containers/PatientList/index.tsx:134
 msgid "Forms"
 msgstr ""
 
@@ -988,6 +1020,10 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/GeneralInformationDashboard/index.tsx:22
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:65
 msgid "General Information"
+msgstr ""
+
+#: src/containers/AIChart/AIChartDashboard.tsx:65
+msgid "Generating..."
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:147
@@ -1112,6 +1148,10 @@ msgstr ""
 msgid "Intensity of Menstrual Bleeding"
 msgstr ""
 
+#: src/containers/MagicSearchPage/utils.tsx:218
+msgid "Invalid expression"
+msgstr ""
+
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:27
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:44
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:49
@@ -1137,6 +1177,10 @@ msgstr ""
 
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:36
 msgid "Last name"
+msgstr ""
+
+#: src/containers/AIChart/AIChartDashboard.tsx:23
+msgid "Latest vital signs"
 msgstr ""
 
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:67
@@ -1332,6 +1376,10 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+#: src/containers/AIChart/index.tsx:54
+msgid "Open patient chart"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:165
 msgid "Option {0}"
 msgstr ""
@@ -1423,8 +1471,8 @@ msgstr ""
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:38
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:47
 #: src/containers/PatientDetails/PatientHeader/index.tsx:34
-#: src/containers/PatientList/index.tsx:102
-#: src/containers/PatientList/index.tsx:138
+#: src/containers/PatientList/index.tsx:103
+#: src/containers/PatientList/index.tsx:140
 msgid "Patients"
 msgstr ""
 
@@ -1556,9 +1604,13 @@ msgstr ""
 msgid "Reaction"
 msgstr ""
 
-#: src/controls/Group/GroupCard/index.tsx:85
-#~ msgid "Remove"
-#~ msgstr ""
+#: src/containers/AIChart/AIChartDashboard.tsx:24
+msgid "Recent encounters"
+msgstr ""
+
+#: src/containers/AIChart/AIChartWidget.tsx:45
+msgid "Remove"
+msgstr ""
 
 #: src/controls/ImageAnnotation/index.tsx:59
 #~ msgid "Remove annotation"
@@ -1651,7 +1703,7 @@ msgstr ""
 msgid "SDC IDE"
 msgstr ""
 
-#: src/containers/MagicSearchPage/index.tsx:150
+#: src/containers/MagicSearchPage/MagicSearchBar.tsx:25
 msgid "Search"
 msgstr ""
 
@@ -1682,11 +1734,11 @@ msgstr ""
 msgid "Search orders"
 msgstr ""
 
-#: src/containers/MagicSearchPage/index.tsx:150
+#: src/containers/MagicSearchPage/MagicSearchBar.tsx:26
 msgid "Searching..."
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/index.tsx:42
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/index.tsx:44
 msgid "See all"
 msgstr ""
 
@@ -1903,11 +1955,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:100
+#: src/containers/App/index.tsx:102
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:99
+#: src/containers/App/index.tsx:101
 msgid "Thank you!"
 msgstr ""
 
@@ -1995,6 +2047,10 @@ msgstr ""
 #: src/readonly-controls/Boolean/index.tsx:21
 #~ msgid "True"
 #~ msgstr ""
+
+#: src/containers/AIChart/AIChartDashboard.tsx:68
+msgid "Try:"
+msgstr ""
 
 #: src/containers/Scheduling/available-time.ts:14
 msgid "Tuesday"

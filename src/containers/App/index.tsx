@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 import { AnonymousLayout } from 'src/components/BaseLayout';
 import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { AIChart } from 'src/containers/AIChart';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { FormList } from 'src/containers/FormList';
@@ -67,6 +68,7 @@ export function App(props: AppProps) {
             <Route path="/questionnaires/:id/aidbox-forms-builder/edit" element={<AidboxFormsBuilder />} />
             <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
             <Route path="/magic-search" element={<MagicSearchPage />} />
+            <Route path="/ai-chart/:id/*" element={<AIChart />} />
             <Route path="/healthcare-services" element={<HealthcareServiceList />} />
         </>
     );
