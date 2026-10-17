@@ -23,7 +23,6 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { aiService } from 'src/services/ai.ts';
-import { getToken } from 'src/services/auth';
 import { saveFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
@@ -64,7 +63,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
             method: 'POST',
             url: '/transcribe',
             data: formData,
-            headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+            headers: { 'Content-Type': 'multipart' },
         });
 
         if (isSuccess(response)) {
@@ -268,7 +267,6 @@ function Extract(props: ExtractProps) {
                             questionnaire: qId,
                             source: { reference: `Communication/${communication.id}` },
                         },
-                        headers: { Authorization: `Bearer ${getToken()}` },
                     });
                 }),
             ),
