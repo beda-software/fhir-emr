@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-pain-severity-score
+url: ViewDefinition/obs-pain-severity-score
+name: obs_pain_severity_score
+title: "Pain severity score"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Pain severity score' Observation for ViewChart dashboards. Codes: LOINC 72514-3 (Pain severity - 0-10 verbal numeric rating [Score] - Reported); LOINC 38208-5 (Pain severity - Reported)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '72514-3') or (system = 'http://loinc.org' and code = '38208-5')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Pain severity score'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

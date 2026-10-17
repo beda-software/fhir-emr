@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-influenza-virus-a-rna-presence-in-respiratory-system
+url: ViewDefinition/obs-influenza-virus-a-rna-presence-in-respiratory-system
+name: obs_influenza_virus_a_rna_presence_in_respiratory_system
+title: "Influenza virus A RNA [Presence] in Respiratory system specimen by NAA with probe detection"
+status: active
+resource: Observation
+description: "One row per 'Influenza virus A RNA [Presence] in Respiratory system specimen by NAA with probe detection' Observation for ViewChart dashboards. Codes: LOINC 92142-9 (Influenza virus A RNA [Presence] in Respiratory system specimen by NAA with probe detection)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '92142-9')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Influenza virus A RNA [Presence] in Respiratory system specimen by NAA with probe detection'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

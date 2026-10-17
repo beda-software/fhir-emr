@@ -503,6 +503,10 @@ msgstr ""
 msgid "Birth date"
 msgstr ""
 
+#: src/uberComponents/ViewChart/observationChart.ts:42
+msgid "Blood pressure"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:41
 msgid "BMI"
 msgstr ""
@@ -796,6 +800,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:479
 msgid "Description:"
+msgstr ""
+
+#: src/uberComponents/ViewChart/observationChart.ts:52
+msgid "Diastolic"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:505
@@ -1148,7 +1156,7 @@ msgstr ""
 msgid "Intensity of Menstrual Bleeding"
 msgstr ""
 
-#: src/containers/MagicSearchPage/utils.tsx:218
+#: src/containers/MagicSearchPage/utils.tsx:226
 msgid "Invalid expression"
 msgstr ""
 
@@ -1309,6 +1317,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
+#: src/containers/AIChart/AIChartViewChart.tsx:37
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
 #: src/uberComponents/ResourceListPage/index.tsx:232
@@ -1608,7 +1617,7 @@ msgstr ""
 msgid "Recent encounters"
 msgstr ""
 
-#: src/containers/AIChart/AIChartWidget.tsx:45
+#: src/containers/AIChart/RemoveWidgetButton.tsx:7
 msgid "Remove"
 msgstr ""
 
@@ -1738,6 +1747,7 @@ msgstr ""
 msgid "Searching..."
 msgstr ""
 
+#: src/containers/AIChart/AIChartWidget.tsx:78
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/index.tsx:44
 msgid "See all"
 msgstr ""
@@ -1932,6 +1942,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:256
 msgid "System"
+msgstr ""
+
+#: src/uberComponents/ViewChart/observationChart.ts:51
+msgid "Systolic"
 msgstr ""
 
 #: src/controls/GroupTable/index.tsx:56

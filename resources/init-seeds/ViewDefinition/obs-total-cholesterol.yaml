@@ -1,0 +1,60 @@
+resourceType: ViewDefinition
+id: obs-total-cholesterol
+url: ViewDefinition/obs-total-cholesterol
+name: obs_total_cholesterol
+title: "Total Cholesterol"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Total Cholesterol' Observation for ViewChart dashboards. Codes: LOINC 2093-3 (Cholesterol [Mass/volume] in Serum or Plasma); LOINC 14647-2 (Cholesterol [Moles/volume] in Serum or Plasma). value_quantity is converted to mg/dL from mmol/L (x38.67)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '2093-3') or (system = 'http://loinc.org' and code = '14647-2')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Total Cholesterol'"
+        type: string
+      - name: unit
+        path: "'mg/dL'"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: reference_range
+        path: "referenceRange"
+        collection: true
+  - unionAll:
+      - forEach: "value.ofType(Quantity).where(code = 'mmol/L' or unit = 'mmol/L')"
+        column:
+          - name: value_quantity
+            path: "value * 38.67"
+            type: decimal
+      - forEach: "value.ofType(Quantity).where(code != 'mmol/L' and unit != 'mmol/L')"
+        column:
+          - name: value_quantity
+            path: value
+            type: decimal

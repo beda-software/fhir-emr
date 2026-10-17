@@ -14,6 +14,8 @@ export type { ReferenceRange } from './referenceChart';
 export { buildReferenceChart, sortByAxisLabel } from './referenceChart';
 export type { CategoricalReferenceChartOptions } from './categoricalReferenceChart';
 export { buildCategoricalReferenceChart } from './categoricalReferenceChart';
+export type { ObservationChartRow } from './observationChart';
+export { buildBloodPressureChart, buildNumericObservationChart } from './observationChart';
 
 export function ViewChart<TRow extends ReferenceChartRow>(props: ViewChartProps<TRow>) {
     const {

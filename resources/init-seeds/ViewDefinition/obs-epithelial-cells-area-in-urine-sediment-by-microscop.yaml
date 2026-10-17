@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-epithelial-cells-area-in-urine-sediment-by-microscop
+url: ViewDefinition/obs-epithelial-cells-area-in-urine-sediment-by-microscop
+name: obs_epithelial_cells_area_in_urine_sediment_by_microscop
+title: "Epithelial cells [#/area] in Urine sediment by Microscopy high power field"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Epithelial cells [#/area] in Urine sediment by Microscopy high power field' Observation for ViewChart dashboards. Codes: LOINC 5787-7 (Epithelial cells [#/area] in Urine sediment by Microscopy high power field)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '5787-7')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Epithelial cells [#/area] in Urine sediment by Microscopy high power field'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

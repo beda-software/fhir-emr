@@ -489,6 +489,10 @@ msgstr "Chargennummer"
 msgid "Birth date"
 msgstr "Geburtsdatum"
 
+#: src/uberComponents/ViewChart/observationChart.ts:42
+msgid "Blood pressure"
+msgstr "Blutdruck"
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:41
 msgid "BMI"
 msgstr "BMI"
@@ -783,6 +787,10 @@ msgstr ""
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:479
 msgid "Description:"
 msgstr "Beschreibung:"
+
+#: src/uberComponents/ViewChart/observationChart.ts:52
+msgid "Diastolic"
+msgstr "Diastolisch"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:505
 msgid "Display"
@@ -1134,7 +1142,7 @@ msgstr "Intensität"
 msgid "Intensity of Menstrual Bleeding"
 msgstr "Intensität der Menstruationsblutung"
 
-#: src/containers/MagicSearchPage/utils.tsx:218
+#: src/containers/MagicSearchPage/utils.tsx:226
 msgid "Invalid expression"
 msgstr ""
 
@@ -1296,6 +1304,7 @@ msgstr "Nein"
 #~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
+#: src/containers/AIChart/AIChartViewChart.tsx:37
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
 #: src/uberComponents/ResourceListPage/index.tsx:232
@@ -1595,7 +1604,7 @@ msgstr "Reaktion"
 msgid "Recent encounters"
 msgstr ""
 
-#: src/containers/AIChart/AIChartWidget.tsx:45
+#: src/containers/AIChart/RemoveWidgetButton.tsx:7
 msgid "Remove"
 msgstr ""
 
@@ -1725,6 +1734,7 @@ msgstr "Aufträge suchen"
 msgid "Searching..."
 msgstr "Suche läuft..."
 
+#: src/containers/AIChart/AIChartWidget.tsx:78
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/index.tsx:44
 msgid "See all"
 msgstr "Alle anzeigen"
@@ -1920,6 +1930,10 @@ msgstr "Sonntag"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:256
 msgid "System"
 msgstr "System"
+
+#: src/uberComponents/ViewChart/observationChart.ts:51
+msgid "Systolic"
+msgstr "Systolisch"
 
 #: src/controls/GroupTable/index.tsx:56
 #~ msgid "Table View"

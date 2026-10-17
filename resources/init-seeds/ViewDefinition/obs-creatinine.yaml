@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-creatinine
+url: ViewDefinition/obs-creatinine
+name: obs_creatinine
+title: "Creatinine"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Creatinine' Observation for ViewChart dashboards. Codes: LOINC 38483-4 (Creatinine); LOINC 2160-0 (Creatinine [Mass/volume] in Serum or Plasma)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '38483-4') or (system = 'http://loinc.org' and code = '2160-0')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Creatinine'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

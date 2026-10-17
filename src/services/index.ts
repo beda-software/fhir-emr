@@ -10,4 +10,5 @@ export * from './questionnaire.ts';
 export * from './questionnaire-builder.ts';
 export * from './sessionRejection.ts';
 export * from './valueset-expand.ts';
+export * from './view-chart.ts';
 export * from './history.ts';

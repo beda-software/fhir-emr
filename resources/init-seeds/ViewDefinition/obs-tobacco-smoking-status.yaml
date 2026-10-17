@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-tobacco-smoking-status
+url: ViewDefinition/obs-tobacco-smoking-status
+name: obs_tobacco_smoking_status
+title: "Tobacco smoking status"
+status: active
+resource: Observation
+description: "One row per 'Tobacco smoking status' Observation for ViewChart dashboards. Codes: LOINC 72166-2 (Tobacco smoking status NHIS); SNOMED 1747861000168109 (Smoking status)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '72166-2') or (system = 'http://snomed.info/sct' and code = '1747861000168109')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Tobacco smoking status'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

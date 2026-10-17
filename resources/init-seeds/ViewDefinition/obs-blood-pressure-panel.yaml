@@ -1,0 +1,55 @@
+resourceType: ViewDefinition
+id: obs-blood-pressure-panel
+url: ViewDefinition/obs-blood-pressure-panel
+name: obs_blood_pressure_panel
+title: "Blood pressure panel"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: blood-pressure
+description: "One row per 'Blood pressure panel' Observation for ViewChart dashboards. Codes: LOINC 55284-4 (Blood Pressure); LOINC 85354-9 (Blood pressure panel with all children optional); SNOMED 75367002 (Blood pressure). value_quantity is systolic, value_quantity_line is diastolic."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '55284-4') or (system = 'http://loinc.org' and code = '85354-9') or (system = 'http://snomed.info/sct' and code = '75367002')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Blood pressure panel'"
+        type: string
+      - name: unit
+        path: "'mm[Hg]'"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: reference_range
+        path: "referenceRange"
+        collection: true
+      - name: value_quantity
+        path: "component.where(code.coding.where((system = 'http://loinc.org' and code = '8480-6') or (system = 'http://snomed.info/sct' and code = '271649006')).exists()).value.ofType(Quantity).value.first()"
+        type: decimal
+      - name: value_quantity_line
+        path: "component.where(code.coding.where((system = 'http://loinc.org' and code = '8462-4') or (system = 'http://snomed.info/sct' and code = '271650006')).exists()).value.ofType(Quantity).value.first()"
+        type: decimal

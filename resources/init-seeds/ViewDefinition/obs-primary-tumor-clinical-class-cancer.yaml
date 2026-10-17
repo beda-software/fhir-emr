@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-primary-tumor-clinical-class-cancer
+url: ViewDefinition/obs-primary-tumor-clinical-class-cancer
+name: obs_primary_tumor_clinical_class_cancer
+title: "Primary tumor.clinical [Class] Cancer"
+status: active
+resource: Observation
+description: "One row per 'Primary tumor.clinical [Class] Cancer' Observation for ViewChart dashboards. Codes: LOINC 21905-5 (Primary tumor.clinical [Class] Cancer)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '21905-5')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Primary tumor.clinical [Class] Cancer'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true
