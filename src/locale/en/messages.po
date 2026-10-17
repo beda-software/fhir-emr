@@ -503,7 +503,7 @@ msgstr ""
 msgid "Birth date"
 msgstr ""
 
-#: src/uberComponents/ViewChart/observationChart.ts:42
+#: src/containers/AIChart/observationChart.ts:40
 msgid "Blood pressure"
 msgstr ""
 
@@ -802,7 +802,7 @@ msgstr ""
 msgid "Description:"
 msgstr ""
 
-#: src/uberComponents/ViewChart/observationChart.ts:52
+#: src/containers/AIChart/observationChart.ts:50
 msgid "Diastolic"
 msgstr ""
 
@@ -1317,7 +1317,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
-#: src/containers/AIChart/AIChartViewChart.tsx:37
+#: src/containers/AIChart/AIChartViewChart.tsx:32
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
 #: src/uberComponents/ResourceListPage/index.tsx:232
@@ -1944,7 +1944,7 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: src/uberComponents/ViewChart/observationChart.ts:51
+#: src/containers/AIChart/observationChart.ts:49
 msgid "Systolic"
 msgstr ""
 

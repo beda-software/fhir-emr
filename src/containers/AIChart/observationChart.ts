@@ -1,11 +1,9 @@
 import { t } from '@lingui/macro';
 
 import type { ChartDatumBase } from 'src/components/Chart';
+import { buildReferenceChart, transformRows } from 'src/uberComponents/ViewChart';
+import type { ReferenceChartRow, ViewChartConfig } from 'src/uberComponents/ViewChart';
 
-import { buildReferenceChart, transformRows } from './referenceChart';
-import type { ReferenceChartRow, ViewChartConfig } from './types';
-
-// Rows of the generated Observation ViewDefinitions (resources/init-seeds/ViewDefinition/obs-*.yaml)
 export interface ObservationChartRow extends ReferenceChartRow {
     unit: string | null;
     // Second series of panels, e.g. diastolic blood pressure

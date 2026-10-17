@@ -4,14 +4,9 @@ import { Patient } from 'fhir/r4b';
 import { ReactNode } from 'react';
 
 import { ViewChartKind } from 'src/services';
-import {
-    buildBloodPressureChart,
-    buildNumericObservationChart,
-    ObservationChartRow,
-    ViewChart,
-    ViewChartConfig,
-} from 'src/uberComponents/ViewChart';
+import { ViewChart, ViewChartConfig } from 'src/uberComponents/ViewChart';
 
+import { buildBloodPressureChart, buildNumericObservationChart, ObservationChartRow } from './observationChart';
 import { AIChartViewChartWidgetConfig } from './utils';
 
 const CHART_BUILDERS: Record<ViewChartKind, (rows: ObservationChartRow[]) => ViewChartConfig<ObservationChartRow>> = {

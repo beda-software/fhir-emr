@@ -443,7 +443,7 @@ msgstr "Número de lote"
 msgid "Birth date"
 msgstr "Fecha de nacimiento"
 
-#: src/uberComponents/ViewChart/observationChart.ts:42
+#: src/containers/AIChart/observationChart.ts:40
 msgid "Blood pressure"
 msgstr "Presión arterial"
 
@@ -779,7 +779,7 @@ msgstr ""
 msgid "Description:"
 msgstr "Descripción:"
 
-#: src/uberComponents/ViewChart/observationChart.ts:52
+#: src/containers/AIChart/observationChart.ts:50
 msgid "Diastolic"
 msgstr "Diastólica"
 
@@ -1407,7 +1407,7 @@ msgstr "No"
 #~ msgstr ""
 
 #: src/components/ResourceTable/index.tsx:65
-#: src/containers/AIChart/AIChartViewChart.tsx:37
+#: src/containers/AIChart/AIChartViewChart.tsx:32
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
 #: src/uberComponents/ResourceListPage/index.tsx:232
@@ -2087,7 +2087,7 @@ msgstr "Domingo"
 msgid "System"
 msgstr "Sistema"
 
-#: src/uberComponents/ViewChart/observationChart.ts:51
+#: src/containers/AIChart/observationChart.ts:49
 msgid "Systolic"
 msgstr "Sistólica"
 
