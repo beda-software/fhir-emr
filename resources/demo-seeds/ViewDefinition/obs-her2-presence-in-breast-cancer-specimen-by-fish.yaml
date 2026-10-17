@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-her2-presence-in-breast-cancer-specimen-by-fish
+url: ViewDefinition/obs-her2-presence-in-breast-cancer-specimen-by-fish
+name: obs_her2_presence_in_breast_cancer_specimen_by_fish
+title: "HER2 [Presence] in Breast cancer specimen by FISH"
+status: active
+resource: Observation
+description: "One row per 'HER2 [Presence] in Breast cancer specimen by FISH' Observation for ViewChart dashboards. Codes: LOINC 85318-4 (HER2 [Presence] in Breast cancer specimen by FISH)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '85318-4')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'HER2 [Presence] in Breast cancer specimen by FISH'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

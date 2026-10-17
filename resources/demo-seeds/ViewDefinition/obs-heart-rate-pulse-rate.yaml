@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-heart-rate-pulse-rate
+url: ViewDefinition/obs-heart-rate-pulse-rate
+name: obs_heart_rate_pulse_rate
+title: "Heart rate / Pulse rate"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Heart rate / Pulse rate' Observation for ViewChart dashboards. Codes: LOINC 8867-4 (Heart rate); SNOMED 364075005 (Heart rate); SNOMED 78564009 (Pulse rate); SNOMED 271636001 (Pulse regular); SNOMED 164883002:{263502005=255227004} (ECG: extrasystole:{Clinical course=Recurrent}); SNOMED 164905008 (ECG: Mobitz type I second degree atrioventricular block); SNOMED 164883002:{263502005=7087005} (ECG: extrasystole:{Clinical course=Intermittent}); SNOMED 271637005 (Pulse irregularly irregular)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '8867-4') or (system = 'http://snomed.info/sct' and code = '364075005') or (system = 'http://snomed.info/sct' and code = '78564009') or (system = 'http://snomed.info/sct' and code = '271636001') or (system = 'http://snomed.info/sct' and code = '164883002:{263502005=255227004}') or (system = 'http://snomed.info/sct' and code = '164905008') or (system = 'http://snomed.info/sct' and code = '164883002:{263502005=7087005}') or (system = 'http://snomed.info/sct' and code = '271637005')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Heart rate / Pulse rate'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

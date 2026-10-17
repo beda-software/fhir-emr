@@ -1,11 +1,31 @@
 import { useCallback, useState } from 'react';
 
 import { uuid4 } from '@beda.software/fhir-react';
-import { mapSuccess } from '@beda.software/remote-data';
+import { isSuccess, mapSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
-import { performMagicSearch } from 'src/services';
+import { performMagicSearch, selectViewChart } from 'src/services';
 
 import { AIChartWidgetConfig, buildAIChartPrompt, loadAIChartWidgets, saveAIChartWidgets } from './utils';
+
+// A request for one measurement over time becomes a ViewDefinition chart, anything else a FHIR search table.
+// The chart selection is best effort: when it fails or finds nothing, the table is generated instead.
+async function generateAIChartWidget(prompt: string): Promise<RemoteDataResult<AIChartWidgetConfig>> {
+    const id = uuid4();
+    const chartResponse = await selectViewChart(prompt);
+
+    if (isSuccess(chartResponse)) {
+        const { viewDefinition, chartKind, title } = chartResponse.data;
+
+        if (viewDefinition && chartKind) {
+            return success({ kind: 'chart', id, prompt, viewDefinition, chartKind, title: title ?? prompt });
+        }
+    }
+
+    return mapSuccess(
+        await performMagicSearch(buildAIChartPrompt(prompt)),
+        (query): AIChartWidgetConfig => ({ kind: 'table', id, prompt, query }),
+    );
+}
 
 export function useAIChartWidgets() {
     const [widgets, setWidgets] = useState<AIChartWidgetConfig[]>(loadAIChartWidgets);
@@ -21,8 +41,7 @@ export function useAIChartWidgets() {
 
     const addWidget = useCallback(
         async (prompt: string) =>
-            mapSuccess(await performMagicSearch(buildAIChartPrompt(prompt)), (query) => {
-                const widget: AIChartWidgetConfig = { id: uuid4(), prompt, query };
+            mapSuccess(await generateAIChartWidget(prompt), (widget) => {
                 updateWidgets((current) => [...current, widget]);
 
                 return widget;

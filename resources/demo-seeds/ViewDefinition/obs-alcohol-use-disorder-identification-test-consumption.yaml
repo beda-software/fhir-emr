@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-alcohol-use-disorder-identification-test-consumption
+url: ViewDefinition/obs-alcohol-use-disorder-identification-test-consumption
+name: obs_alcohol_use_disorder_identification_test_consumption
+title: "Alcohol use disorder identification test - consumption total score"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Alcohol use disorder identification test - consumption total score' Observation for ViewChart dashboards. Codes: LOINC 75626-2 (Alcohol use disorder identification test - consumption total score)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '75626-2')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Alcohol use disorder identification test - consumption total score'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

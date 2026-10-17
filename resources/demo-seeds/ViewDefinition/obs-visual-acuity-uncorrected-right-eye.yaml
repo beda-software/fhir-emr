@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-visual-acuity-uncorrected-right-eye
+url: ViewDefinition/obs-visual-acuity-uncorrected-right-eye
+name: obs_visual_acuity_uncorrected_right_eye
+title: "Visual acuity uncorrected Right eye"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Visual acuity uncorrected Right eye' Observation for ViewChart dashboards. Codes: SNOMED 413078003 (LogMAR visual acuity right eye (observable entity)); LOINC 98499-7 (Visual acuity uncorrected Right eye)."
+where:
+  - path: "code.coding.where((system = 'http://snomed.info/sct' and code = '413078003') or (system = 'http://loinc.org' and code = '98499-7')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Visual acuity uncorrected Right eye'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

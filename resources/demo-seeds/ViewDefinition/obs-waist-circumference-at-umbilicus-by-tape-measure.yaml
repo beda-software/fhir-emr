@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-waist-circumference-at-umbilicus-by-tape-measure
+url: ViewDefinition/obs-waist-circumference-at-umbilicus-by-tape-measure
+name: obs_waist_circumference_at_umbilicus_by_tape_measure
+title: "Waist Circumference at umbilicus by Tape measure"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Waist Circumference at umbilicus by Tape measure' Observation for ViewChart dashboards. Codes: LOINC 8280-0 (Waist Circumference at umbilicus by Tape measure); SNOMED 276361009 (Waist circumference)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '8280-0') or (system = 'http://snomed.info/sct' and code = '276361009')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Waist Circumference at umbilicus by Tape measure'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

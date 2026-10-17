@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-hpv-dna-high-risk-types-in-cervix
+url: ViewDefinition/obs-hpv-dna-high-risk-types-in-cervix
+name: obs_hpv_dna_high_risk_types_in_cervix
+title: "HPV DNA (high-risk types) in Cervix"
+status: active
+resource: Observation
+description: "One row per 'HPV DNA (high-risk types) in Cervix' Observation for ViewChart dashboards. Codes: LOINC 21440-3 (Human papilloma virus 16+18+31+33+35+39+45+51+52+56+58+59+68 DNA [Presence] in Cervix by Probe); SNOMED 171149006 (Screening for malignant neoplasm of cervix)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '21440-3') or (system = 'http://snomed.info/sct' and code = '171149006')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'HPV DNA (high-risk types) in Cervix'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

@@ -11,7 +11,7 @@ import type { ReferenceChartRow, ViewChartProps } from './types';
 export type { ViewChartConfig, ViewChartProps, ReferenceChartRow } from './types';
 export type { ViewChartDataSource } from './hooks';
 export type { ReferenceRange } from './referenceChart';
-export { buildReferenceChart, sortByAxisLabel } from './referenceChart';
+export { buildReferenceChart, sortByAxisLabel, transformRows } from './referenceChart';
 export type { CategoricalReferenceChartOptions } from './categoricalReferenceChart';
 export { buildCategoricalReferenceChart } from './categoricalReferenceChart';
 

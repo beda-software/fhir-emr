@@ -1,0 +1,60 @@
+resourceType: ViewDefinition
+id: obs-glucose-in-blood-serum
+url: ViewDefinition/obs-glucose-in-blood-serum
+name: obs_glucose_in_blood_serum
+title: "Glucose in blood/serum"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Glucose in blood/serum' Observation for ViewChart dashboards. Codes: LOINC 2339-0 (Glucose); LOINC 2345-7 (Glucose [Mass/volume] in Serum or Plasma); SNOMED 33747003 (Glucose measurement, blood); SNOMED 271062006 (Fasting blood glucose measurement). value_quantity is converted to mg/dL from mmol/L (x18.016)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '2339-0') or (system = 'http://loinc.org' and code = '2345-7') or (system = 'http://snomed.info/sct' and code = '33747003') or (system = 'http://snomed.info/sct' and code = '271062006')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Glucose in blood/serum'"
+        type: string
+      - name: unit
+        path: "'mg/dL'"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: reference_range
+        path: "referenceRange"
+        collection: true
+  - unionAll:
+      - forEach: "value.ofType(Quantity).where(code = 'mmol/L' or unit = 'mmol/L')"
+        column:
+          - name: value_quantity
+            path: "value * 18.016"
+            type: decimal
+      - forEach: "value.ofType(Quantity).where(code != 'mmol/L' and unit != 'mmol/L')"
+        column:
+          - name: value_quantity
+            path: value
+            type: decimal

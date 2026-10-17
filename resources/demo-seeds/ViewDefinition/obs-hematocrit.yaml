@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-hematocrit
+url: ViewDefinition/obs-hematocrit
+name: obs_hematocrit
+title: "Hematocrit"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Hematocrit' Observation for ViewChart dashboards. Codes: LOINC 4544-3 (Hematocrit [Volume Fraction] of Blood by Automated count); LOINC 20570-8 (Hematocrit [Volume Fraction] of Blood by calculation)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '4544-3') or (system = 'http://loinc.org' and code = '20570-8')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Hematocrit'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

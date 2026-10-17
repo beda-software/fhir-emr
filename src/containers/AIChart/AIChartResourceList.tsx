@@ -5,7 +5,8 @@ import { WithId } from '@beda.software/fhir-react';
 import { buildDynamicColumns } from 'src/containers/MagicSearchPage/utils';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
 
-import { AIChartWidgetConfig, scopeSearchParamsToPatient } from './utils';
+import { AIChartViewChart } from './AIChartViewChart';
+import { AIChartTableWidgetConfig, AIChartWidgetConfig, scopeSearchParamsToPatient } from './utils';
 
 interface Props {
     patient: WithId<Patient>;
@@ -13,6 +14,14 @@ interface Props {
 }
 
 export function AIChartResourceList({ patient, widget }: Props) {
+    if (widget.kind === 'chart') {
+        return <AIChartViewChart patient={patient} widget={widget} />;
+    }
+
+    return <AIChartTableResourceList patient={patient} widget={widget} />;
+}
+
+function AIChartTableResourceList({ patient, widget }: { patient: WithId<Patient>; widget: AIChartTableWidgetConfig }) {
     const { resourceType, searchParams, tableColumns } = widget.query;
 
     return (

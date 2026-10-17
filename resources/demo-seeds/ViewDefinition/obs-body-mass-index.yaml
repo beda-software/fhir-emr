@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-body-mass-index
+url: ViewDefinition/obs-body-mass-index
+name: obs_body_mass_index
+title: "Body mass index"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Body mass index' Observation for ViewChart dashboards. Codes: LOINC 39156-5 (Body Mass Index); SNOMED 60621009 (Body mass index)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '39156-5') or (system = 'http://snomed.info/sct' and code = '60621009')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Body mass index'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

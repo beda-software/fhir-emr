@@ -8,6 +8,8 @@ import { aidboxService, service } from 'src/services/fhir';
 
 type ViewChartRunParameter = NonNullable<Parameters['parameter']>[number];
 
+const DEFAULT_VIEW_DEFINITION_LIMIT = 1000;
+
 export type ViewChartDataSource = Reference & {
     reference: string;
     type: 'AidboxQuery' | 'ViewDefinition' | 'Library';
@@ -59,7 +61,14 @@ export function useViewChartRows<TRow>(
                     url: `/ViewDefinition/${id}/$run`,
                     data: {
                         resourceType: 'Parameters',
-                        parameter: [...parameters, { name: '_format', valueCode: 'json' }],
+                        parameter: [
+                            ...parameters,
+                            // Aidbox returns only 100 rows unless _limit is set
+                            ...(parameters.some((parameter) => parameter.name === '_limit')
+                                ? []
+                                : [{ name: '_limit', valueInteger: DEFAULT_VIEW_DEFINITION_LIMIT }]),
+                            { name: '_format', valueCode: 'json' },
+                        ],
                     },
                 });
             case 'Library':

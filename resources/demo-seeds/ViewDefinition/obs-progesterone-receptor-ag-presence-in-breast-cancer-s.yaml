@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-progesterone-receptor-ag-presence-in-breast-cancer-s
+url: ViewDefinition/obs-progesterone-receptor-ag-presence-in-breast-cancer-s
+name: obs_progesterone_receptor_ag_presence_in_breast_cancer_s
+title: "Progesterone receptor Ag [Presence] in Breast cancer specimen by Immune stain"
+status: active
+resource: Observation
+description: "One row per 'Progesterone receptor Ag [Presence] in Breast cancer specimen by Immune stain' Observation for ViewChart dashboards. Codes: LOINC 85339-0 (Progesterone receptor Ag [Presence] in Breast cancer specimen by Immune stain)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '85339-0')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Progesterone receptor Ag [Presence] in Breast cancer specimen by Immune stain'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

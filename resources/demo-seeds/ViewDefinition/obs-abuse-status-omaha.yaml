@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-abuse-status-omaha
+url: ViewDefinition/obs-abuse-status-omaha
+name: obs_abuse_status_omaha
+title: "Abuse Status [OMAHA]"
+status: active
+resource: Observation
+description: "One row per 'Abuse Status [OMAHA]' Observation for ViewChart dashboards. Codes: LOINC 28245-9 (Abuse Status [OMAHA])."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '28245-9')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Abuse Status [OMAHA]'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

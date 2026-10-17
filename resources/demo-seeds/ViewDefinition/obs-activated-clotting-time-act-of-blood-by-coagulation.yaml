@@ -1,0 +1,52 @@
+resourceType: ViewDefinition
+id: obs-activated-clotting-time-act-of-blood-by-coagulation
+url: ViewDefinition/obs-activated-clotting-time-act-of-blood-by-coagulation
+name: obs_activated_clotting_time_act_of_blood_by_coagulation
+title: "Activated clotting time (ACT) of Blood by Coagulation assay"
+status: active
+resource: Observation
+meta:
+  tag:
+    - system: https://emr.beda.software/CodeSystem/view-chart
+      code: numeric
+description: "One row per 'Activated clotting time (ACT) of Blood by Coagulation assay' Observation for ViewChart dashboards. Codes: LOINC 3184-9 (Activated clotting time (ACT) of Blood by Coagulation assay)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '3184-9')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Activated clotting time (ACT) of Blood by Coagulation assay'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true

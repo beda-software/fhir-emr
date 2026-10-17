@@ -37,12 +37,38 @@ describe('useViewChartRows', () => {
                 resourceType: 'Parameters',
                 parameter: [
                     { name: 'patient', valueReference: { reference: 'Patient/p-1' } },
+                    { name: '_limit', valueInteger: 1000 },
                     { name: '_format', valueCode: 'json' },
                 ],
             },
         });
         expect(aidboxService).not.toHaveBeenCalled();
         expect(result.current[0]).toEqual(success([{ id: 'a' }, { id: 'b' }]));
+    });
+
+    it('ViewDefinition source keeps a caller provided _limit', async () => {
+        vi.mocked(service).mockResolvedValue(success([]));
+
+        const { result } = renderHook(() =>
+            useViewChartRows<{ id: string }>(
+                { type: 'ViewDefinition', reference: 'ViewDefinition/test-view' },
+                { parameters: [{ name: '_limit', valueInteger: 5 }] },
+            ),
+        );
+
+        await waitFor(() => expect(result.current[0].status).toBe('Success'));
+
+        expect(service).toHaveBeenCalledWith(
+            expect.objectContaining({
+                data: {
+                    resourceType: 'Parameters',
+                    parameter: [
+                        { name: '_limit', valueInteger: 5 },
+                        { name: '_format', valueCode: 'json' },
+                    ],
+                },
+            }),
+        );
     });
 
     it('AidboxQuery source gets /$query with flattened params and unwraps the data envelope', async () => {

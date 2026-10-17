@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-operative-status
+url: ViewDefinition/obs-operative-status
+name: obs_operative_status
+title: "Operative Status"
+status: active
+resource: Observation
+description: "One row per 'Operative Status' Observation for ViewChart dashboards. Codes: LOINC X9999-0 (Operative Status)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = 'X9999-0')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Operative Status'"
+        type: string
+      - name: unit
+        path: "'{score}'"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: reference_range
+        path: "referenceRange"
+        collection: true
+      - name: value_quantity
+        path: "component.where(code.coding.where((system = 'http://loinc.org' and code = 'X9999-2')).exists()).value.ofType(Quantity).value.first()"
+        type: decimal
+      - name: value_string
+        path: "component.where(code.coding.where((system = 'http://loinc.org' and code = 'X9999-1')).exists()).value.ofType(string).first()"
+        type: string

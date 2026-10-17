@@ -1,0 +1,48 @@
+resourceType: ViewDefinition
+id: obs-protein-presence-in-urine-by-test-strip
+url: ViewDefinition/obs-protein-presence-in-urine-by-test-strip
+name: obs_protein_presence_in_urine_by_test_strip
+title: "Protein [Presence] in Urine by Test strip"
+status: active
+resource: Observation
+description: "One row per 'Protein [Presence] in Urine by Test strip' Observation for ViewChart dashboards. Codes: LOINC 20454-5 (Protein [Presence] in Urine by Test strip)."
+where:
+  - path: "code.coding.where((system = 'http://loinc.org' and code = '20454-5')).exists()"
+select:
+  - column:
+      - name: id
+        path: "getResourceKey()"
+        type: string
+      - name: patient_id
+        path: "subject.getReferenceKey(Patient)"
+        type: string
+      - name: axis_label
+        path: "effective.ofType(dateTime)"
+        type: dateTime
+      - name: title
+        path: "'Protein [Presence] in Urine by Test strip'"
+        type: string
+      - name: unit
+        path: "value.ofType(Quantity).unit"
+        type: string
+      - name: value_integer
+        path: "value.ofType(integer)"
+        type: integer
+      - name: value_code
+        path: "{}"
+        type: code
+      - name: value_concept_code
+        path: "value.ofType(CodeableConcept).coding.code.first()"
+        type: code
+      - name: value_display
+        path: "value.ofType(CodeableConcept).coding.display.first()"
+        type: string
+      - name: value_string
+        path: "value.ofType(string)"
+        type: string
+      - name: value_quantity
+        path: "value.ofType(Quantity).value"
+        type: decimal
+      - name: reference_range
+        path: "referenceRange"
+        collection: true
