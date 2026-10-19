@@ -4,6 +4,9 @@ import type { SignOutReason } from 'src/services/auth';
 
 export interface SessionRejectionDeps {
     baseURL: string;
+    // Other servers that accept the Session's token. A 401 from one of them is refreshed and replayed like
+    // Aidbox's, but its replay's 401 keeps the Session: such a server can reject a token Aidbox accepts.
+    serviceBaseURLs?: string[];
     getToken: () => string | undefined;
     endSession: (reason: SignOutReason) => void | Promise<void>;
     // Resolves the new access token; undefined means there is no refresh credential. Rejects with the
@@ -58,7 +61,8 @@ function isSessionManagementRequest(url: URL, baseURL: string): boolean {
 // Session's own token, so they are not Session rejections. A token that a refresh has just
 // replaced still counts: its request was in flight when the refresh finished.
 function isSessionRejection(error: AxiosError, deps: SessionRejectionDeps, wasReplaced: WasReplaced): boolean {
-    const { config, response } = error;
+    const config = error.config as ReplayableConfig | undefined;
+    const { response } = error;
     const token = deps.getToken();
 
     if (!config || response?.status !== 401 || !token) {
@@ -69,13 +73,22 @@ function isSessionRejection(error: AxiosError, deps: SessionRejectionDeps, wasRe
     }
 
     const url = resolveRequestUrl(config);
+    if (!url) {
+        return false;
+    }
 
-    return (
-        !!url &&
-        url.origin === new URL(deps.baseURL).origin &&
-        url.pathname.startsWith(new URL(deps.baseURL).pathname) &&
-        !isSessionManagementRequest(url, deps.baseURL)
-    );
+    // Checked before `baseURL`, so a service nested under it keeps its own rules.
+    if (deps.serviceBaseURLs?.some((serviceBaseURL) => isUnderBaseURL(url, serviceBaseURL))) {
+        return !config._sessionReplayed;
+    }
+
+    return isUnderBaseURL(url, deps.baseURL) && !isSessionManagementRequest(url, deps.baseURL);
+}
+
+function isUnderBaseURL(url: URL, baseURL: string): boolean {
+    const base = new URL(baseURL);
+
+    return url.origin === base.origin && url.pathname.startsWith(base.pathname);
 }
 
 // Returns the release function. A client gets one interceptor however many callers install it:
