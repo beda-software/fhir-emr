@@ -98,6 +98,24 @@ installSessionRejectionInterceptor(axiosInstance, {
 
 A client gets one interceptor however many times it is installed; `EMR` reuses the earlier one, and the first installation's options apply. Install it at startup or before `EMR` renders, not in an effect of a component that already renders `EMR`: React runs `EMR`'s effects first, so `EMR` would install it with its own options.
 
+### Other servers that accept the Session token
+
+A 401 counts as a Session rejection only for requests under `baseURL`. A request sent with the Session token to another server, such as the AI assistant service, gets no Token Refresh unless that server is listed in `serviceBaseURLs`:
+
+```ts
+installSessionRejectionInterceptor(axiosInstance, {
+    baseURL: config.baseURL,
+    serviceBaseURLs: config.aiAssistantServiceUrl ? [config.aiAssistantServiceUrl] : [],
+    getToken,
+    endSession: doLogout,
+    refreshSession,
+});
+```
+
+A 401 from a listed server refreshes the token and replays the request once, like a 401 from Aidbox. If the replayed request is rejected too, the 401 reaches the caller and the Session is kept, because that server can reject a token Aidbox still accepts. A rejected refresh token still ends the Session with an Expired Sign-Out. A listed server nested under `baseURL` follows these rules, not Aidbox's.
+
+When `EMR` installs the interceptor itself, it lists `aiAssistantServiceUrl` if it is set. An app that installs it first, as above, lists its servers there, since the first installation's options apply.
+
 ## What refresh does not do
 
 -   **Reactive only.** Refresh runs only in response to a 401 on a request (including the Session restore on page load). There is no timer and no proactive renewal.

@@ -16,6 +16,7 @@ export function useSessionRejectionInterceptor() {
         () =>
             installSessionRejectionInterceptor(axiosInstance, {
                 baseURL: config.baseURL,
+                serviceBaseURLs: config.aiAssistantServiceUrl ? [config.aiAssistantServiceUrl] : [],
                 getToken,
                 endSession: doLogout,
                 refreshSession,

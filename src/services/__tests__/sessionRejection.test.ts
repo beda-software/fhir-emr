@@ -5,13 +5,15 @@ import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { installSessionRejectionInterceptor, type SessionRejectionDeps } from 'src/services/sessionRejection';
 
 const BASE_URL = 'https://aidbox.test';
+const SERVICE_URL = 'https://ai.test';
 
 interface Setup {
     token?: string;
     refreshSession?: () => Promise<string | undefined>;
+    serviceBaseURLs?: string[];
 }
 
-function setup({ token = 'live', refreshSession = async () => undefined }: Setup = {}) {
+function setup({ token = 'live', refreshSession = async () => undefined, serviceBaseURLs }: Setup = {}) {
     const endSession = vi.fn();
     let currentToken: string | undefined = token;
     const respond = vi.fn<[InternalAxiosRequestConfig], { status: number; data?: unknown }>();
@@ -28,6 +30,7 @@ function setup({ token = 'live', refreshSession = async () => undefined }: Setup
     });
     const eject = installSessionRejectionInterceptor(instance, {
         baseURL: BASE_URL,
+        serviceBaseURLs,
         getToken: () => currentToken,
         endSession,
         refreshSession: async () => {
@@ -229,6 +232,62 @@ describe('session rejection interceptor', () => {
             });
 
             expect(t.endSession).toHaveBeenCalledWith('expired');
+        });
+
+        it('refreshes and replays a 401 from a service that accepts the Session token', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession, serviceBaseURLs: [SERVICE_URL] });
+            replayingAdapter(t, 'fresh');
+
+            const response = await t.instance.get('/transcribe', { baseURL: SERVICE_URL, headers: bearer('live') });
+            expect(response.data).toEqual({ ok: true });
+            expect(refreshSession).toHaveBeenCalledTimes(1);
+            expect(t.endSession).not.toHaveBeenCalled();
+        });
+
+        it('keeps the Session when a service rejects the replayed request too', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession, serviceBaseURLs: [SERVICE_URL] });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(
+                t.instance.get('/transcribe', { baseURL: SERVICE_URL, headers: bearer('live') }),
+            ).rejects.toMatchObject({ response: { status: 401 } });
+            expect(refreshSession).toHaveBeenCalledTimes(1);
+            expect(t.respond).toHaveBeenCalledTimes(2);
+            expect(t.endSession).not.toHaveBeenCalled();
+        });
+
+        it('keeps the Session when a service nested under baseURL rejects the replayed request too', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession, serviceBaseURLs: [`${BASE_URL}/ai`] });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(t.instance.get('/ai/transcribe', { headers: bearer('live') })).rejects.toBeDefined();
+            expect(t.respond).toHaveBeenCalledTimes(2);
+            expect(t.endSession).not.toHaveBeenCalled();
+        });
+
+        it('ends as expired when a service 401 meets a rejected refresh token', async () => {
+            t = setup({ refreshSession: () => Promise.reject(refreshFailedWith(401)), serviceBaseURLs: [SERVICE_URL] });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(
+                t.instance.get('/transcribe', { baseURL: SERVICE_URL, headers: bearer('live') }),
+            ).rejects.toBeDefined();
+            expect(t.endSession).toHaveBeenCalledWith('expired');
+        });
+
+        it('passes a 401 from an unlisted origin through untouched', async () => {
+            const refreshSession = vi.fn().mockResolvedValue('fresh');
+            t = setup({ refreshSession, serviceBaseURLs: [SERVICE_URL] });
+            t.respond.mockReturnValue({ status: 401 });
+
+            await expect(
+                t.instance.get('https://smart.example/api', { headers: bearer('live') }),
+            ).rejects.toBeDefined();
+            expect(refreshSession).not.toHaveBeenCalled();
+            expect(t.endSession).not.toHaveBeenCalled();
         });
 
         it('allows a later refresh once the previous one has settled', async () => {
