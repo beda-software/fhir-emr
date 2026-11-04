@@ -1,4 +1,6 @@
-FROM node:lts as builder
+FROM node:lts AS builder
+
+RUN npm install -g yarn
 
 RUN mkdir -p /app/src
 
