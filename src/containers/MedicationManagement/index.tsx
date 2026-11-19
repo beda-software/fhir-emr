@@ -1,19 +1,14 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
 import { FhirResource, MedicationKnowledge } from 'fhir/r4b';
 
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { navigationAction } from 'src/uberComponents/ResourceListPage/actions';
-import type { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import type { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst, getResourceClinicalContext } from 'src/utils';
 
 // FHIRPath helpers
-const getMedicationName = compileAsFirst<MedicationKnowledge, string>(
-    'MedicationKnowledge.code.coding.first().display',
-);
-const getCostValue = compileAsFirst<MedicationKnowledge, number>('MedicationKnowledge.cost.first().cost.value');
 const getCostCurrency = compileAsFirst<MedicationKnowledge, string>('MedicationKnowledge.cost.first().cost.currency');
 
 export function MedicationManagement() {
@@ -27,19 +22,19 @@ export function MedicationManagement() {
         },
     ];
 
-    const getTableColumns = (): ColumnsType<RecordType<MedicationKnowledge>> => [
+    const getTableColumns = (): FhirPathTableColumn<MedicationKnowledge>[] => [
         {
             title: <Trans>Name</Trans>,
             dataIndex: 'name',
             key: 'name',
-            render: (_text, record) => getMedicationName(record.resource),
+            getter: 'MedicationKnowledge.code.coding.first().display',
         },
         {
             title: <Trans>Cost</Trans>,
             dataIndex: 'cost',
             key: 'cost',
-            render: (_text, record) => {
-                const value = getCostValue(record.resource);
+            getter: 'MedicationKnowledge.cost.first().cost.value',
+            format: (value, record) => {
                 const currency = getCostCurrency(record.resource);
                 return value && currency ? `${value} ${currency}` : '';
             },

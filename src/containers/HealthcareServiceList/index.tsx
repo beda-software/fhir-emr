@@ -1,18 +1,13 @@
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/es/table/interface';
 import { HealthcareService } from 'fhir/r4b';
 
 import { SearchBarColumn, SearchBarColumnType, SorterColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { FhirPathTableColumn, RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst } from 'src/utils';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
-// FHIRPath compiled expressions
-const getName = compileAsFirst<HealthcareService, string>('HealthcareService.name');
-const getDuration = compileAsFirst<HealthcareService, number>(
-    "HealthcareService.extension('urn:extensions:healthcare-service-duration').valueInteger",
-);
+// FHIRPath helpers
 const getActive = compileAsFirst<HealthcareService, boolean>('HealthcareService.active');
 
 export function HealthcareServiceList() {
@@ -37,27 +32,28 @@ export function HealthcareServiceList() {
         },
     ];
 
-    const getTableColumns = (manager: TableManager): ColumnsType<RecordType<HealthcareService>> => [
+    const getTableColumns = (_manager: TableManager): FhirPathTableColumn<HealthcareService>[] => [
         {
             title: <Trans>Type</Trans>,
             dataIndex: 'type',
             key: 'type',
             width: '20%',
-            render: (_text, record) => getName(record.resource),
+            getter: 'HealthcareService.name',
         },
         {
             title: <Trans>Duration (minutes)</Trans>,
             dataIndex: 'duration',
             key: 'duration',
             width: '20%',
-            render: (_text, record) => getDuration(record.resource),
+            getter: "HealthcareService.extension('urn:extensions:healthcare-service-duration').valueInteger",
         },
         {
             title: <Trans>Status</Trans>,
             dataIndex: 'active',
             key: 'active',
             width: '20%',
-            render: (_text, record) => (getActive(record.resource) ? t`Active` : t`Inactive`),
+            getter: 'HealthcareService.active',
+            format: (value) => (value ? t`Active` : t`Inactive`),
         },
     ];
 
