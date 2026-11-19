@@ -9,6 +9,7 @@ import { AIChart } from 'src/containers/AIChart';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { FormList } from 'src/containers/FormList';
+import { GPQI } from 'src/containers/GPQI';
 import { MagicSearchPage } from 'src/containers/MagicSearchPage';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
@@ -70,6 +71,7 @@ export function App(props: AppProps) {
             <Route path="/magic-search" element={<MagicSearchPage />} />
             <Route path="/ai-chart/:id/*" element={<AIChart />} />
             <Route path="/healthcare-services" element={<HealthcareServiceList />} />
+            <Route path="/gp-qi" element={<GPQI />} />
         </>
     );
 

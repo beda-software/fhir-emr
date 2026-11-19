@@ -2,6 +2,7 @@ import { t } from '@lingui/macro';
 import { Patient } from 'fhir/r4b';
 import { createContext } from 'react';
 
+import { DashboardIcon } from 'src/icons/menu/DashboardIcon';
 import { EncountersIcon } from 'src/icons/menu/EncountersIcon';
 import { InvoicesIcon } from 'src/icons/menu/InvoicesIcon';
 import { MagicSearchIcon } from 'src/icons/menu/MagicSearchIcon.tsx';
@@ -32,6 +33,7 @@ export const defaultMenuLayout: MenuLayoutValue = () =>
             { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
             { label: t`Forms Library`, path: '/forms', icon: <QuestionnairesIcon /> },
             { label: t`Magic Search`, path: '/magic-search', icon: <MagicSearchIcon /> },
+            { label: t`GP QI`, path: '/gp-qi', icon: <DashboardIcon /> },
         ],
         [Role.Practitioner]: () => [
             { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
