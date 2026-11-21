@@ -29,7 +29,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
-import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
+import { WithId, extractBundleResources, formatFHIRDate } from '@beda.software/fhir-react';
 
 import { LinkToEdit } from 'src/components/LinkToEdit';
 import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
@@ -37,7 +37,7 @@ import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynam
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
 import { QuestionanireModal } from 'src/uberComponents/QuestionnaireModal';
 import { compileAsFirst, compileAsArray, selectCurrentUserRoleResource } from 'src/utils';
-import { formatHumanDate, formatPeriodDateTime } from 'src/utils/date';
+import { formatHumanDate, formatHumanTime, formatPeriodDateTime } from 'src/utils/date';
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
@@ -332,8 +332,8 @@ export function prepareAppointmentDetails(appointment: Appointment) {
         {
             title: t`Time`,
             value: _.compact([
-                appointment.start ? parseFHIRDateTime(appointment.start).format('HH:mm') : undefined,
-                appointment.end ? parseFHIRDateTime(appointment.end).format('HH:mm') : undefined,
+                appointment.start ? formatHumanTime(appointment.start) : undefined,
+                appointment.end ? formatHumanTime(appointment.end) : undefined,
             ]).join('–'),
         },
     ];

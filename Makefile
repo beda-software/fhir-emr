@@ -20,6 +20,9 @@ up-video:
 	docker compose build
 	docker compose -f compose.yaml -f compose.video.yaml up -d
 
+up-imaging:
+	docker compose -f compose.yaml -f compose.imaging.yaml up -d
+
 up-matchbox:
 	docker compose -f compose.yaml -f compose.matchbox.yaml pull --quiet
 	docker compose build

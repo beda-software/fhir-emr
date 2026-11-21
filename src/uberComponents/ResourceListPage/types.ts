@@ -74,7 +74,9 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      *
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
-    getHeaderActions?: () => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link>>;
+    getHeaderActions?: (
+        manager: TableManager,
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
 
     /**
      * Batch actions that are available when rows are selected
