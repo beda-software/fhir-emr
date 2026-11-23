@@ -25,6 +25,7 @@ export * from './SignIn';
 export * from './VideoCall';
 export * from './AidboxFormsBuilder';
 export * from './PatientDetails/PatientHeader';
+export * from './PatientDetails/PatientImaging';
 export * from './PatientDetails/PatientOverviewDynamic';
 export * from './PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 export * from './PatientDetails/PatientOverviewDynamic/components/StandardCard';

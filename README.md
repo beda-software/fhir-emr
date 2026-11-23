@@ -37,6 +37,14 @@ __EMR Template__: https://github.com/beda-software/emr-template/
   - extraction FHIR data from QuestionnaireResponse on save
 - EMR Questionnaire form builder
 - HealthcareService management
+- Imaging: DICOM server integration through the fhir-imaging Aidbox app (Orthanc as the DICOM server, OHIF as the viewer)
+  - search studies on the DICOM server by patient details, dates, modality and other DICOM attributes
+  - attach a study to a Patient and an optional Encounter as an ImagingStudy; a study is attached to at most one Patient
+  - list a Patient's ImagingStudies, filtered by modality, including ones created by other systems
+  - view a study in the DICOM viewer
+  - study details looked up live on the DICOM server: current series and image counts, the device's patient record
+  - detach a study; its images stay on the DICOM server
+  - see [Imaging and display configuration](#imaging-and-display-configuration)
 - Invoice management
 - Medication management
   - Warehouse management
@@ -83,3 +91,29 @@ Started as part of [https://github.com/HealthSamurai/xmas-hackathon-2021](https:
 
 -------------
 Made with ❤️ by Beda Software
+
+## Imaging and display configuration
+
+`PatientImaging` is exported from `@beda.software/emr/containers`, with building
+blocks for pages it doesn't fit: the action components (`AttachStudy`,
+`ViewStudy`, `StudyDetails`, `DetachStudy`), the fhir-imaging service functions
+(`searchImagingStudies`, `attachImagingStudy`, `fetchImagingStudyViewerUrl`,
+`findImagingStudies`, `detachImagingStudy`), study helpers (`readStudyInstanceUid`,
+`canAttachStudy`, `canDetachStudy`, ...) and the List's `buildListSearchParams` and
+`IMAGING_COLUMNS`. A study is
+attached to at most one Patient: the picker disables studies already attached to
+any Patient. This controls the picker only: the host must enforce it on the
+server, including concurrent writes.
+
+Remote search results carry transient Identifying Data and have no persisted id.
+The module distinguishes `RemoteImagingStudy`, `StoredImagingStudy` and
+`VersionedImagingStudy`; View needs a stored id and Detach also needs a version
+and the host's ownership marker. Never persist or log remote search results.
+
+Set `displayTimeZone` in `@beda.software/emr-config` to an IANA zone such as
+`Australia/Sydney`. Shared date/time formatters display timestamps in that zone,
+including daylight saving. Date-only and time-only values remain unchanged.
+Omit the setting to keep browser-local timestamp display.
+
+Run the imaging and date-format tests without Aidbox with
+`yarn test --run --config vitest.imaging.config.ts`.

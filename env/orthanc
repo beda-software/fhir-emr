@@ -1,0 +1,6 @@
+ORTHANC__NAME=fhir-emr-orthanc
+ORTHANC__AUTHENTICATION_ENABLED=true
+ORTHANC__REGISTERED_USERS={"admin": "admin", "imaging": "imaging-secret"}
+ORTHANC__DICOM_WEB__ENABLE=true
+OHIF_PLUGIN_ENABLED=true
+ORTHANC__OHIF__DATA_SOURCE=dicom-web

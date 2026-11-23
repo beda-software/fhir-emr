@@ -12,6 +12,7 @@ import { FormList } from 'src/containers/FormList';
 import { MagicSearchPage } from 'src/containers/MagicSearchPage';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
+import { PatientImaging } from 'src/containers/PatientDetails/PatientImaging';
 import { PatientList } from 'src/containers/PatientList';
 import { PatientQuestionnaire } from 'src/containers/PatientQuestionnaire';
 import { PractitionerDetails } from 'src/containers/PractitionerDetails';
@@ -54,7 +55,43 @@ export function App(props: AppProps) {
             <Route path="/invoices" element={<InvoiceList />} />
             <Route path="/invoices/:id" element={<InvoiceDetails />} />
             <Route path="/patients" element={<PatientList />} />
-            <Route path="/patients/:id/*" element={<PatientDetails />} />
+            <Route
+                path="/patients/:id/*"
+                element={
+                    <PatientDetails
+                        embeddedPages={(patient) => [
+                            {
+                                label: t`Imaging`,
+                                path: '/imaging',
+                                routes: [
+                                    <Route
+                                        key="imaging"
+                                        path="/imaging"
+                                        element={<PatientImaging patient={patient} />}
+                                    />,
+                                ],
+                            },
+                            {
+                                label: t`Ultrasound`,
+                                path: '/ultrasound',
+                                routes: [
+                                    <Route
+                                        key="ultrasound"
+                                        path="/ultrasound"
+                                        element={
+                                            <PatientImaging
+                                                patient={patient}
+                                                modalities={['US']}
+                                                emptyText={t`No ultrasound studies attached to the patient`}
+                                            />
+                                        }
+                                    />,
+                                ],
+                            },
+                        ]}
+                    />
+                }
+            />
             <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
             <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />

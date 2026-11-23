@@ -41,6 +41,7 @@ declare const config: {
     }>;
     localesConfig?: LocalesConfig;
     defaultLocale?: string;
+    displayTimeZone?: string;
 };
 
 export default config;

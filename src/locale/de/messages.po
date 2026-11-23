@@ -250,12 +250,17 @@ msgstr "{path} Tupelwert hat zu wenige Elemente, erwartete Länge {typeLen}, abe
 msgid "{path} tuple value has too many items, expected a length of {typeLen} but got {0} for value: `{1}`"
 msgstr "{path} Tupelwert hat zu viele Elemente, erwartete Länge {typeLen}, aber {0} für Wert: `{1}`"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:203
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:37
+msgid "Accession number"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
 msgid "Action"
 msgstr "Aktion"
 
 #: src/containers/DocumentsList/index.tsx:69
-#: src/uberComponents/ResourceListPage/index.tsx:295
+#: src/uberComponents/ResourceListPage/index.tsx:297
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -286,17 +291,9 @@ msgstr "Aktivitäten"
 msgid "Activity"
 msgstr "Aktivität"
 
-#: src/controls/Group/RepeatableGroups/index.tsx:87
-#~ msgid "Add {text}"
-#~ msgstr ""
-
 #: src/containers/AIChart/AIChartDashboard.tsx:90
 msgid "Add a widget to build the AI chart for this patient"
 msgstr ""
-
-#: src/controls/Group/RepeatableGroups/index.tsx:87
-#~ msgid "Add another answer"
-#~ msgstr ""
 
 #: src/containers/MedicationManagementDetail/index.tsx:77
 msgid "Add batch"
@@ -305,10 +302,6 @@ msgstr "Charge hinzufügen"
 #: src/containers/Scheduling/Availability/index.tsx:119
 msgid "Add break"
 msgstr "Pause hinzufügen"
-
-#: src/controls/GroupTable/index.tsx:68
-#~ msgid "Add entry"
-#~ msgstr ""
 
 #: src/containers/HealthcareServiceList/index.tsx:78
 msgid "Add healthcare service"
@@ -401,11 +394,9 @@ msgstr "Berichtigen"
 msgid "Amount"
 msgstr "Menge"
 
-#: src/controls/ImageAnnotation/AnnotationImage.tsx:45
-#: src/controls/ImageAnnotation/index.tsx:51
-#: src/readonly-controls/ImageAnnotation/index.tsx:39
-#~ msgid "Annotation"
-#~ msgstr ""
+#: src/containers/PatientDetails/PatientImaging/study.ts:88
+msgid "Angiography"
+msgstr ""
 
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:105
 msgid "Appointment"
@@ -448,6 +439,27 @@ msgstr "Möchten Sie dieses Element wirklich löschen?"
 msgid "Assistant"
 msgstr "Assistent"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:71
+msgid "Attach"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/index.tsx:35
+msgid "Attach imaging study"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/columns.tsx:33
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:40
+msgid "Attached on"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:136
+msgid "Attached to another patient"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:129
+msgid "Attached to this patient"
+msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerDetailsTabs/index.tsx:26
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:43
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:83
@@ -464,6 +476,7 @@ msgid "Available services"
 msgstr "Verfügbare Leistungen"
 
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:143
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:68
 msgid "Back"
 msgstr "Zurück"
 
@@ -535,7 +548,7 @@ msgstr "Abgebrochen"
 
 #: src/components/Assistant/index.tsx:93
 #: src/components/AudioRecorder/index.tsx:41
-#: src/containers/EncounterDetails/AIScribe/index.tsx:112
+#: src/containers/EncounterDetails/AIScribe/index.tsx:111
 msgid "Capture in progress"
 msgstr "Aufnahme läuft"
 
@@ -559,19 +572,12 @@ msgstr "Entwurf aus lokalem Speicher löschen und Formular zurücksetzen"
 msgid "Clear filters"
 msgstr "Filter zurücksetzen"
 
-#: src/controls/ImageAnnotation/index.tsx:121
-#~ msgid "Click on the diagram to place a marker"
-#~ msgstr ""
-
-#: src/controls/UploadFileControl/index.tsx:32
-#~ msgid "Click or drag file to this area to upload"
-#~ msgstr ""
-
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:125
 msgid "Clinician successfully updated"
 msgstr "Behandler erfolgreich aktualisiert"
 
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:157
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:72
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:33
 msgid "Close"
 msgstr "Schließen"
@@ -584,10 +590,6 @@ msgstr "Code"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:61
 msgid "Col (default)"
 msgstr "Spalte (Standard)"
-
-#: src/controls/GroupTable/index.tsx:65
-#~ msgid "Collapse all"
-#~ msgstr ""
 
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:16
 msgid "Common"
@@ -652,10 +654,6 @@ msgstr "Link kopieren"
 msgid "Cost"
 msgstr "Kosten"
 
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:604
-#~ msgid "Could not find image source in markdown"
-#~ msgstr ""
-
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:121
 msgid "Create"
 msgstr "Erstellen"
@@ -701,6 +699,10 @@ msgstr "Erstellungsdatum"
 #: src/containers/PatientDetails/PatientOrders/index.tsx:163
 msgid "CRP"
 msgstr "CRP"
+
+#: src/containers/PatientDetails/PatientImaging/study.ts:81
+msgid "CT"
+msgstr ""
 
 #: src/containers/AIChart/AIChartDashboard.tsx:21
 msgid "Current medications"
@@ -751,6 +753,19 @@ msgstr "Entnahmedatum"
 msgid "Date created"
 msgstr "Erstellungsdatum"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:45
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:101
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:204
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:57
+msgid "Date of birth"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:105
+#: src/containers/PatientDetails/PatientImaging/columns.tsx:13
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:21
+msgid "Date/time"
+msgstr ""
+
 #: src/components/Calendar/index.tsx:32
 msgid "Day"
 msgstr "Tag"
@@ -784,9 +799,28 @@ msgstr "Beschreiben Sie, was am Fragebogen angepasst werden soll"
 msgid "Describe what you want to see on the patient chart"
 msgstr ""
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:104
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:206
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:18
+msgid "Description"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:479
 msgid "Description:"
 msgstr "Beschreibung:"
+
+#: src/containers/PatientDetails/PatientImaging/DetachStudy.tsx:25
+#: src/containers/PatientDetails/PatientImaging/DetachStudy.tsx:63
+msgid "Detach"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/DetachStudy.tsx:22
+msgid "Detach study"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/DetachStudy.tsx:57
+msgid "Detach the study of {0} from this patient? Its images stay on the Imaging Server."
+msgstr ""
 
 #: src/containers/AIChart/observationChart.ts:50
 msgid "Diastolic"
@@ -801,7 +835,7 @@ msgstr "Anzeige"
 msgid "Documents"
 msgstr "Dokumente"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:277
+#: src/containers/EncounterDetails/AIScribe/index.tsx:275
 msgid "Documents have been successfully extracted"
 msgstr "Dokumente wurden erfolgreich extrahiert"
 
@@ -852,7 +886,7 @@ msgstr "Dauer (Min.)"
 msgid "Duration (minutes)"
 msgstr "Dauer (Minuten)"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:218
+#: src/containers/EncounterDetails/AIScribe/index.tsx:217
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:253
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:23
@@ -880,6 +914,7 @@ msgstr "Behandlerdaten bearbeiten"
 msgid "Email"
 msgstr "E-Mail"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:61
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:66
 msgid "Encounter"
 msgstr "Behandlungskontakt"
@@ -908,6 +943,10 @@ msgstr "Ende"
 msgid "End date"
 msgstr "Enddatum"
 
+#: src/containers/PatientDetails/PatientImaging/study.ts:90
+msgid "Endoscopy"
+msgstr ""
+
 #: src/containers/MagicSearchPage/MagicSearchBar.tsx:48
 msgid "Enter your search query"
 msgstr "Suchbegriff eingeben"
@@ -930,29 +969,21 @@ msgstr "Fehler beim Speichern des Entwurfs:"
 msgid "Error while amending the document"
 msgstr "Fehler beim Berichtigen des Dokuments"
 
-#: src/controls/GroupTable/index.tsx:65
-#~ msgid "Expand all"
-#~ msgstr ""
-
 #: src/containers/MedicationManagementDetail/index.tsx:85
 msgid "Expiration date"
 msgstr "Ablaufdatum"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:323
+#: src/containers/EncounterDetails/AIScribe/index.tsx:321
 msgid "Extract"
 msgstr "Extrahieren"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:294
+#: src/containers/EncounterDetails/AIScribe/index.tsx:292
 msgid "Extract documents"
 msgstr "Dokumente extrahieren"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:290
+#: src/containers/EncounterDetails/AIScribe/index.tsx:288
 msgid "Extract medical documents"
 msgstr "Medizinische Dokumente extrahieren"
-
-#: src/readonly-controls/Boolean/index.tsx:21
-#~ msgid "False"
-#~ msgstr ""
 
 #: src/components/TextWithMacroFill/index.tsx:38
 msgid "Fill"
@@ -990,6 +1021,10 @@ msgstr "Vorname"
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:149
 msgid "Flow Volume"
 msgstr "Flussvolumen"
+
+#: src/containers/PatientDetails/PatientImaging/study.ts:89
+msgid "Fluoroscopy"
+msgstr ""
 
 #: src/components/QuestionnaireResponseForm/utils.tsx:68
 msgid "Form successfully saved"
@@ -1031,11 +1066,6 @@ msgstr "Zum Behandlungskontakt"
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:15
 msgid "GP"
 msgstr "Hausarzt"
-
-#: src/controls/Group/GroupCard/index.tsx:67
-#: src/controls/Group/GroupCard/index.tsx:97
-#~ msgid "Group"
-#~ msgstr ""
 
 #: components/__tests__/questionnaire/custom-validation.test.ts:19
 #: components/__tests__/questionnaire/custom-validation.test.ts:32
@@ -1084,22 +1114,31 @@ msgstr "HMB-Bewertung"
 msgid "HMB Diagnostic"
 msgstr "HMB-Diagnostik"
 
+#: src/containers/PatientDetails/PatientImaging/study.ts:49
+msgid "ID {0}"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOrders/index.tsx:155
 msgid "IL-6"
 msgstr "IL-6"
 
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:247
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:303
-#~ msgid "Image upload failed"
-#~ msgstr ""
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:107
+#: src/containers/PatientDetails/PatientImaging/columns.tsx:28
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:32
+msgid "Images"
+msgstr ""
 
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:360
-#~ msgid "Image upload is not supported"
-#~ msgstr ""
+#: src/containers/App/index.tsx:64
+msgid "Imaging"
+msgstr ""
 
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:278
-#~ msgid "Image uploaded"
-#~ msgstr ""
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:47
+msgid "Imaging Server unavailable"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:23
+msgid "Imaging study details"
+msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:214
 #: src/containers/PatientDetails/PatientResources/utils.tsx:152
@@ -1121,6 +1160,10 @@ msgstr "In Bearbeitung"
 #: src/containers/HealthcareServiceList/index.tsx:60
 msgid "Inactive"
 msgstr "Inaktiv"
+
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:26
+msgid "Info"
+msgstr ""
 
 #: src/containers/MedicationManagementDetail/index.tsx:57
 msgid "Ingridients"
@@ -1157,10 +1200,6 @@ msgstr "Rechnungen"
 msgid "Issued"
 msgstr "Ausgestellt"
 
-#: src/controls/Group/RepeatableGroups/RepeatableGroupCard/index.tsx:19
-#~ msgid "Item"
-#~ msgstr ""
-
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:100
 msgid "Item Control"
 msgstr "Elementsteuerung"
@@ -1181,15 +1220,11 @@ msgstr ""
 msgid "Light"
 msgstr "Leicht"
 
-#: src/controls/GroupTable/index.tsx:98
-#~ msgid "linkIdX or linkIdY not defined"
-#~ msgstr ""
-
 #: src/components/AudioRecorder/index.tsx:70
 msgid "Listen to the audio"
 msgstr "Audio anhören"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:338
+#: src/containers/EncounterDetails/AIScribe/index.tsx:336
 msgid "Loading..."
 msgstr "Wird geladen..."
 
@@ -1224,6 +1259,10 @@ msgstr "Gemacht mit"
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:34
 msgid "Magic Search"
 msgstr "Magische Suche"
+
+#: src/containers/PatientDetails/PatientImaging/study.ts:85
+msgid "Mammography"
+msgstr ""
 
 #: src/containers/InvoiceDetails/index.tsx:96
 msgid "Medical Services Invoice"
@@ -1260,6 +1299,10 @@ msgstr "Mäßig"
 msgid "Monday"
 msgstr "Montag"
 
+#: src/containers/PatientDetails/PatientImaging/study.ts:82
+msgid "MRI"
+msgstr ""
+
 #: src/utils/questionnaire.ts:179
 #: components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm/utils.tsx:118
 #~ msgid "Must be a valid time (HH:mm:ss)"
@@ -1269,6 +1312,10 @@ msgstr "Montag"
 #: src/containers/HealthcareServiceList/index.tsx:31
 #: src/containers/InvoiceDetails/index.tsx:56
 #: src/containers/MedicationManagement/index.tsx:32
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:40
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:93
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:200
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:56
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:55
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:111
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:144
@@ -1291,6 +1338,10 @@ msgstr "Name"
 msgid "New Appointment"
 msgstr "Neuer Termin"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:119
+msgid "Next"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:212
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:240
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:137
@@ -1298,17 +1349,12 @@ msgstr "Neuer Termin"
 msgid "No"
 msgstr "Nein"
 
-#: src/controls/ImageAnnotation/index.tsx:145
-#: src/readonly-controls/ImageAnnotation/index.tsx:48
-#~ msgid "No annotations"
-#~ msgstr ""
-
 #: src/components/ResourceTable/index.tsx:65
 #: src/containers/AIChart/AIChartViewChart.tsx:32
 #: src/containers/PatientDetails/PatientWearables/index.tsx:87
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
-#: src/uberComponents/ResourceListPage/index.tsx:232
-#: src/uberComponents/ResourceListPageContent/index.tsx:194
+#: src/uberComponents/ResourceListPage/index.tsx:234
+#: src/uberComponents/ResourceListPageContent/index.tsx:201
 msgid "No data"
 msgstr "Keine Daten"
 
@@ -1328,6 +1374,18 @@ msgstr "Kein vorbereiteter Text"
 msgid "No questionnaires available"
 msgstr "Keine Fragebögen verfügbar"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:89
+msgid "No studies found. Widen the search or check the device has sent them."
+msgstr ""
+
+#: src/containers/App/index.tsx:85
+msgid "No ultrasound studies attached to the patient"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:55
+msgid "Not found on the Imaging Server"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:77
 msgid "Note"
 msgstr "Notiz"
@@ -1339,6 +1397,10 @@ msgstr "Notiz erfolgreich erstellt"
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/index.tsx:32
 msgid "Notes"
 msgstr "Notizen"
+
+#: src/containers/PatientDetails/PatientImaging/study.ts:87
+msgid "Nuclear medicine"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:49
 msgid "Number (default)"
@@ -1399,6 +1461,10 @@ msgstr "Auftrag hinzugefügt"
 msgid "Orders"
 msgstr "Aufträge"
 
+#: src/containers/PatientDetails/PatientImaging/study.ts:91
+msgid "Other"
+msgstr ""
+
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:17
 msgid "Others"
 msgstr "Sonstige"
@@ -1445,6 +1511,7 @@ msgstr "Passwort"
 #: src/containers/EncounterList/index.tsx:97
 #: src/containers/InvoiceDetails/index.tsx:40
 #: src/containers/InvoiceList/index.tsx:67
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:52
 #: src/containers/Prescriptions/index.tsx:74
 #: src/containers/Prescriptions/index.tsx:85
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:67
@@ -1458,6 +1525,12 @@ msgstr "Patienteneinwilligung erforderlich"
 #: src/containers/PatientDetails/PatientDocument/index.tsx:66
 msgid "Patient context is required"
 msgstr "Patientenkontext erforderlich"
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:97
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:199
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:55
+msgid "Patient ID"
+msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:45
 msgid "Patient saved"
@@ -1494,6 +1567,10 @@ msgstr "PCT"
 msgid "Period Pain Severity & Score"
 msgstr "Periodenschmerz-Schwere & -Wert"
 
+#: src/containers/PatientDetails/PatientImaging/study.ts:86
+msgid "PET"
+msgstr ""
+
 #: src/containers/App/DefaultUserWithNoRoles.tsx:32
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:45
 msgid "Phone number"
@@ -1502,10 +1579,6 @@ msgstr "Telefonnummer"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:42
 msgid "Phone widget"
 msgstr "Telefon-Widget"
-
-#: src/controls/ImageAnnotation/index.tsx:145
-#~ msgid "Place a marker on the diagram to add an annotation"
-#~ msgstr ""
 
 #: src/containers/App/DefaultUserWithNoRoles.tsx:21
 msgid "Please ask administrator to add a role for your user"
@@ -1604,13 +1677,18 @@ msgstr "Reaktion"
 msgid "Recent encounters"
 msgstr ""
 
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:94
+msgid "Recorded by the device"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:207
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:58
+msgid "Referring physician"
+msgstr ""
+
 #: src/containers/AIChart/RemoveWidgetButton.tsx:7
 msgid "Remove"
 msgstr ""
-
-#: src/controls/ImageAnnotation/index.tsx:59
-#~ msgid "Remove annotation"
-#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:54
 msgid "Repeats"
@@ -1661,7 +1739,7 @@ msgid "Saturday"
 msgstr "Samstag"
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:106
-#: src/containers/EncounterDetails/AIScribe/index.tsx:205
+#: src/containers/EncounterDetails/AIScribe/index.tsx:204
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
 #: src/containers/Scheduling/Availability/index.tsx:73
@@ -1690,7 +1768,7 @@ msgstr "Terminkalender"
 msgid "Scheduling"
 msgstr "Terminplanung"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:191
+#: src/containers/EncounterDetails/AIScribe/index.tsx:190
 msgid "Scribe results"
 msgstr "Diktat-Ergebnisse"
 
@@ -1700,6 +1778,7 @@ msgid "SDC IDE"
 msgstr "SDC-IDE"
 
 #: src/containers/MagicSearchPage/MagicSearchBar.tsx:25
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:60
 msgid "Search"
 msgstr "Suchen"
 
@@ -1760,9 +1839,10 @@ msgstr "Datum wählen"
 msgid "Select time"
 msgstr "Uhrzeit wählen"
 
-#: src/controls/Choice/index.tsx:NaN
-#~ msgid "Select..."
-#~ msgstr ""
+#: src/containers/PatientDetails/PatientImaging/columns.tsx:23
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:27
+msgid "Series"
+msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:139
 msgid "Serum creatinin"
@@ -1898,6 +1978,27 @@ msgstr "Stoppwert"
 msgid "Stopped"
 msgstr "Gestoppt"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:53
+msgid "Study (from device)"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/hooks.ts:87
+msgid "Study attached"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:202
+msgid "Study date"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:208
+msgid "Study ID"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:205
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:43
+msgid "Study Instance UID"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:62
 msgid "Subject Type"
 msgstr "Subjekttyp"
@@ -1935,10 +2036,6 @@ msgstr "System"
 msgid "Systolic"
 msgstr "Systolisch"
 
-#: src/controls/GroupTable/index.tsx:56
-#~ msgid "Table View"
-#~ msgstr ""
-
 #: src/containers/InvoiceDetails/index.tsx:76
 msgid "Tax"
 msgstr "Steuer"
@@ -1956,13 +2053,18 @@ msgstr "Text (Standard)"
 msgid "Text with macro"
 msgstr "Text mit Makro"
 
-#: src/containers/App/index.tsx:102
+#: src/containers/App/index.tsx:139
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Vielen Dank für das Ausfüllen des Fragebogens. Sie können diese Seite jetzt schließen."
 
-#: src/containers/App/index.tsx:101
+#: src/containers/App/index.tsx:138
 msgid "Thank you!"
 msgstr "Vielen Dank!"
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/AttachConfirm.tsx:30
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:91
+msgid "The dates of birth differ. Check this study belongs to the patient."
+msgstr ""
 
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:101
 msgid "The document does not exist"
@@ -1986,21 +2088,38 @@ msgstr "Das Erstellen oder Aktualisieren eines Fragebogens kann einige Zeit in A
 msgid "The questionnaire is saved"
 msgstr "Der Fragebogen wurde gespeichert"
 
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/hooks.ts:40
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:69
+msgid "The studies could not be loaded"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/hooks.ts:90
+msgid "The study could not be attached"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/hooks.ts:22
+msgid "The study could not be detached"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientImaging/hooks.ts:43
+msgid "The study could not be opened"
+msgstr ""
+
 #: src/containers/DocumentsList/index.tsx:108
 msgid "There are no documents yet"
 msgstr "Es sind noch keine Dokumente vorhanden"
+
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:36
+msgid "These studies come from imaging devices and may belong to any patient. Check the name and date of birth match before attaching."
+msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:96
 msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr "Dieses Audio kann in Safari nicht abgespielt werden. Bitte laden Sie das Audio herunter oder verwenden Sie den Chrome-Browser"
 
-#: src/controls/EditableGroup/index.tsx:52
-#~ msgid "This itemControl is designed for non-repeatable groups"
-#~ msgstr ""
-
-#: src/controls/GroupTable/index.tsx:103
-#~ msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
-#~ msgstr ""
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:61
+msgid "This Study Instance UID matches {total} studies on the Imaging Server."
+msgstr ""
 
 #: src/containers/Scheduling/available-time.ts:16
 msgid "Thursday"
@@ -2046,10 +2165,6 @@ msgstr "Gesamt"
 msgid "Total {0}"
 msgstr "Gesamt {0}"
 
-#: src/readonly-controls/Boolean/index.tsx:21
-#~ msgid "True"
-#~ msgstr ""
-
 #: src/containers/AIChart/AIChartDashboard.tsx:68
 msgid "Try:"
 msgstr ""
@@ -2059,8 +2174,17 @@ msgid "Tuesday"
 msgstr "Dienstag"
 
 #: src/containers/HealthcareServiceList/index.tsx:42
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:106
+#: src/containers/PatientDetails/PatientImaging/AttachStudy/RemoteStudySearch.tsx:201
+#: src/containers/PatientDetails/PatientImaging/columns.tsx:18
+#: src/containers/PatientDetails/PatientImaging/studyFields.ts:24
 msgid "Type"
 msgstr "Typ"
+
+#: src/containers/App/index.tsx:75
+#: src/containers/PatientDetails/PatientImaging/study.ts:80
+msgid "Ultrasound"
+msgstr ""
 
 #: src/components/RenderBundleResourceContext/index.tsx:45
 msgid "Unable to resolve Bundle context for {resourceType}"
@@ -2077,17 +2201,9 @@ msgstr "Bundle-Kontext für {resourceType} konnte nicht aufgelöst werden"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:290
-#~ msgid "Unknown error"
-#~ msgstr ""
-
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard/index.tsx:20
 msgid "Upcoming appointment"
 msgstr "Anstehender Termin"
-
-#: src/controls/EditableGroup/index.tsx:36
-#~ msgid "Update"
-#~ msgstr ""
 
 #: src/components/ChangesDiff/index.tsx:31
 msgid "Updated"
@@ -2096,11 +2212,6 @@ msgstr "Aktualisiert"
 #: src/containers/QuestionnaireBuilder/QuestionnaireFromPdfButton/index.tsx:27
 msgid "Upload file"
 msgstr "Datei hochladen"
-
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:265
-#: src/controls/MDEditorControl/MarkDownEditor/hooks.tsx:327
-#~ msgid "Uploading image"
-#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:484
 msgid "Url:"
@@ -2146,6 +2257,11 @@ msgstr "Sehr schwer"
 msgid "Video call"
 msgstr "Videoanruf"
 
+#: src/containers/PatientDetails/PatientImaging/PatientImaging.tsx:80
+#: src/containers/PatientDetails/PatientImaging/StudyDetails.tsx:75
+msgid "View"
+msgstr ""
+
 #: src/containers/Scheduling/available-time.ts:15
 msgid "Wednesday"
 msgstr "Mittwoch"
@@ -2157,6 +2273,11 @@ msgstr "Woche"
 #: src/containers/SignIn/index.tsx:32
 msgid "Welcome to"
 msgstr "Willkommen bei"
+
+#: src/containers/PatientDetails/PatientImaging/study.ts:83
+#: src/containers/PatientDetails/PatientImaging/study.ts:84
+msgid "X-ray"
+msgstr ""
 
 #: src/utils/relative-date.ts:18
 msgid "y.o."

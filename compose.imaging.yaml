@@ -1,0 +1,24 @@
+services:
+    imaging:
+        image: fhir-imaging:latest
+        pull_policy: never
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+            orthanc:
+                condition: service_healthy
+        env_file:
+            - ./env/imaging
+
+    # Imaging Server with DICOMweb and the OHIF viewer
+    orthanc:
+        image: orthancteam/orthanc:26.11.0
+        ports:
+            - "8042:8042"
+        env_file:
+            - ./env/orthanc
+        healthcheck:
+            test: ["CMD", "/probes/test-aliveness.py"]
+            interval: 5s
+            timeout: 5s
+            retries: 20

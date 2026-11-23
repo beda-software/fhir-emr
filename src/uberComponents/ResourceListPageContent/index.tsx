@@ -21,6 +21,7 @@ import { HeaderNavigationAction, HeaderQuestionnaireAction, WebExtra } from '../
 import { BatchActions } from '../ResourceListPage/BatchActions';
 import { useResourceListPage, useTableSorter } from '../ResourceListPage/hooks';
 import {
+    isCustomAction,
     isNavigationAction,
     isQuestionnaireAction,
     RecordType,
@@ -31,6 +32,8 @@ import {
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
+    // Shown when the search returns nothing; defaults to "No data".
+    emptyText?: React.ReactNode;
 };
 
 export function ResourceListPageContent<R extends Resource>({
@@ -50,6 +53,7 @@ export function ResourceListPageContent<R extends Resource>({
     maxWidth,
     tableProps,
     uniqueOrderSortSearchParam,
+    emptyText,
 }: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
@@ -110,7 +114,7 @@ export function ResourceListPageContent<R extends Resource>({
         currentSorter,
         onChange: onChangeColumnFilter,
     });
-    const headerActions = getHeaderActions?.() ?? [];
+    const headerActions = getHeaderActions?.({ reload }) ?? [];
     const batchActions = getBatchActions?.(selectedResourcesBundle) ?? [];
 
     const renderHeader = () => {
@@ -150,6 +154,8 @@ export function ResourceListPageContent<R extends Resource>({
                                     <HeaderNavigationAction action={action} />
                                 </React.Fragment>
                             );
+                        } else if (isCustomAction(action)) {
+                            return <React.Fragment key={index}>{action.control}</React.Fragment>;
                         }
                     })}
                 </S.HeaderRightColumn>
@@ -191,7 +197,10 @@ export function ResourceListPageContent<R extends Resource>({
                         </>
                     ) : (
                         <>
-                            <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                            <Empty
+                                description={emptyText ?? <Trans>No data</Trans>}
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            />
                         </>
                     ),
                 }}

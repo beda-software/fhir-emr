@@ -1,0 +1,14 @@
+APP_ID=imaging
+APP_URL=http://imaging:8081
+APP_SECRET=imaging-secret
+
+APP_INIT_URL=http://devbox:8080
+APP_INIT_CLIENT_ID=root
+APP_INIT_CLIENT_SECRET=secret
+
+IMAGING_SERVER_URL=http://orthanc:8042
+IMAGING_SERVER_USER=imaging
+IMAGING_SERVER_PASSWORD=imaging-secret
+IMAGING_CLIENT_SECRET=imaging-client-secret
+IMAGING_TIME_ZONE=Europe/Berlin
+IMAGING_VIEWER_URL_TEMPLATE=http://localhost:8042/ohif/viewer?StudyInstanceUIDs={StudyInstanceUID}
